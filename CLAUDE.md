@@ -6,6 +6,14 @@ Instructions for Claude Code (and other coding agents) working in this repo.
 
 - [PROJECT.md](PROJECT.md): what we're building, MVP scope and the judging lens. **Source of truth for scope.**
 - [CONTEXT.md](CONTEXT.md): the hackathon briefs (Exasol Challenge 3 primary, BMD Challenge 1 secondary).
+- [SETUP.md](SETUP.md): local environment, all of it verified working. Read before touching the database.
+
+## Database
+
+Exasol 2026.2.0 runs locally at `127.0.0.1:8563` (user `sys`). Connect from Python with
+`src/hackathon26/db.py`, which resolves credentials on its own — don't hardcode a password anywhere.
+The Exasol MCP server is registered in `.mcp.json`, so agents can explore the schema and run SQL directly.
+`exasol status` tells you whether it's up; `exasol start` if not.
 
 ## Ground rules
 
