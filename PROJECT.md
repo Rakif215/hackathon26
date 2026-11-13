@@ -119,6 +119,16 @@ Real patient data, diagnosis, dosing advice, prescribing, live audio capture.
 
 ## Status
 
+Listener foundation is implemented: a stateless FastAPI endpoint and direct-invocation Lambda adapter
+share a conservative scripted-English mention detector. See [docs/listener.md](docs/listener.md).
+Read-only patient-list candidate resolution is also implemented against the canonical Exasol tables;
+it still needs verification against the completed data foundation. Durable processing, interaction retrieval and cloud deployment remain pending;
+this foundation does not complete the combined mention-detection/resolution MVP item below.
+
+A read-only evidence-check endpoint now verifies exact quotations and section hashes and returns dated
+lab context with clinician-review limitations. Canonical source ingestion and end-to-end seed verification
+remain pending; this does not yet complete the interaction/lab MVP items.
+
 - [x] Exasol schema (`sql/01_schema.sql`) — 16 tables, applied
 - [ ] Seed data: synthetic patient, medications, labs
 - [ ] FDA label ingestion (openFDA) for the demo drug set
