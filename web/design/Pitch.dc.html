@@ -159,9 +159,27 @@ a{color:#2F5BEA}a:hover{color:#1E3FB0}
 
             <!-- the suggested question or action -->
             <sc-if value="{{card.hasAsk}}" hint-placeholder-val="{{false}}">
-              <div style="background: #FFFFFF; border: 1px solid #C7D2FE; border-radius: 12px; padding: 10px 14px;">
-                <div style="font-size: 12px; font-weight: 700; color: #475467;">{{card.askLabel}}</div>
-                <div style="font-family: Outfit, system-ui, sans-serif; font-size: 19px; color: #1E3FB0;">{{card.ask}}</div>
+              <div style="background: #FFFFFF; border: 1px solid #C7D2FE; border-radius: 12px; padding: 10px 14px; display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; gap: 10px; align-items: flex-start; flex-wrap: wrap;">
+                  <div style="min-width: 0; flex: 1 1 220px;">
+                    <div style="font-size: 12px; font-weight: 700; color: #475467;">{{card.askLabel}}</div>
+                    <div style="font-family: Outfit, system-ui, sans-serif; font-size: 19px; color: #1E3FB0;">{{card.ask}}</div>
+                  </div>
+                  <sc-if value="{{card.hasMore}}" hint-placeholder-val="{{false}}">
+                    <button class="choice choice-alt" style="font-size: 13px; padding: 8px 12px; min-height: 36px;" onClick="{{toggleMore}}">{{card.moreLabel}}</button>
+                  </sc-if>
+                </div>
+                <sc-if value="{{card.moreOpen}}" hint-placeholder-val="{{false}}">
+                  <div class="pv-in" style="border-top: 1px solid #EEF1F5; padding-top: 8px; display: flex; flex-direction: column; gap: 6px;">
+                    <div style="font-size: 12px; font-weight: 700; color: #667085;">Related questions</div>
+                    <sc-for list="{{card.more}}" as="q">
+                      <div style="display: flex; gap: 8px; align-items: baseline; font-size: 15px;">
+                        <span style="color: #2F5BEA; flex: none;">›</span>
+                        <span><span style="color: #1E3FB0;">{{q.q}}</span> <span style="font-size: 12.5px; color: #98A2B3;">{{q.why}}</span></span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
               </div>
             </sc-if>
 
@@ -347,7 +365,8 @@ class Component extends DCLogic {
         // 2
         { ex: ['How have the last few months been?', [['Fine, mostly. But I get '], ['dizzy when I stand up', 'hl'], ['.']]],
           card: { say: 'Dizziness noted. Two of her tablets can lower blood pressure: ramipril and furosemide.', askLabel: 'Suggested', ask: 'Check her blood pressure standing up?',
-            choice: ['Add to this visit', 'Skip'], task: 'Blood pressure, standing' },
+            choice: ['Add to this visit', 'Skip'], task: 'Blood pressure, standing',
+            more: [['“Have you fallen, or nearly fallen?”', 'falls matter more at 72'], ['“Is it worse in the morning?”', 'right after the tablets'], ['“Do you drink enough during the day?”', 'water tablet + heat']] },
           flow: [R.listen('“dizzy when I stand up”'),
             R.look(['rec', 'leaf'], 'Which of her medicines can lower blood pressure?', "SELECT drug FROM prescription JOIN leaflet WHERE patient = 1042 AND effect = 'low blood pressure'"),
             R.suggest()] },
@@ -355,30 +374,42 @@ class Component extends DCLogic {
         { ex: ['Let’s go through your tablets.', [['The '], ['red capsule', 'hl'], [' in the morning, and '], ['the white one', 'hl'], ['.']]],
           rx: { ram: 'confirmed' },
           card: { say: 'The red capsule fits ramipril. “The white one” could be two of her medicines.', cands: 'open',
-            askLabel: 'You could ask', ask: '“Is it round, or more oval?”' },
+            askLabel: 'You could ask', ask: '“Is it round, or more oval?”',
+            more: [['“Is there a line across it?”', 'metoprolol has one, furosemide doesn’t'], ['“Is it bigger or smaller than the red one?”', 'size differs'], ['“What do you take it for?”', 'heart rhythm vs. water tablet']] },
           flow: [R.listen('“red capsule” · “the white one”'),
             R.look(['rec', 'pill'], 'What on her prescription looks like a red capsule? And what is white?', 'SELECT drug, colour, shape, size FROM prescription JOIN pill_db WHERE patient = 1042'),
             R.found('Red capsule: only ramipril. White: two candidates, metoprolol and furosemide.', 'red capsule → ramipril · white → metoprolol 52% / furosemide 48%', 'white → 2 candidates'),
             R.suggest('Claude picks the one question that separates them best: the shape.')] },
         // 4
         { ex: ['Is it round, or more oval?', [['Oval. With '], ['a line across', 'hl'], ['.']]],
-          card: { say: 'Oval with a line across fits metoprolol.', cands: 'answered', askLabel: 'Please confirm', ask: 'Is “the white one” her metoprolol?',
-            choice: ['It’s metoprolol', 'Not sure'], rxOnPick: ['met', 'confirmed', 'not sure'] },
+          card: { say: 'Oval with a line across fits metoprolol. One more question would make it certain.', cands: 'answered', askLabel: 'You could ask', ask: '“Is that the one you take with breakfast?”',
+            choice: ['Ask her', 'Skip'],
+            more: [['“Is it the one for your heart rhythm?”', 'what it is for'], ['“How long have you had this one?”', 'rules out a new maker'], ['“Could you bring the box next time?”', 'if still unsure']] },
           flow: [R.listen('“oval, with a line across”'),
             R.look(['pill'], 'Shape and score line compared with both candidates.', "SELECT drug FROM pill_db WHERE shape = 'oval' AND scored = true AND drug IN (metoprolol, furosemide)"),
-            R.found('Oval and scored: metoprolol 91%, furosemide 9%. The doctor confirms.', 'oval + scored → metoprolol 91%', 'metoprolol 91%'),
-            R.suggest('Claude asks the doctor to confirm, rather than deciding.')] },
+            R.found('Oval and scored: metoprolol 91%, furosemide 9%.', 'oval + scored → metoprolol 91%', 'metoprolol 91%'),
+            R.suggest('Claude suggests one more question instead of deciding.')] },
+        // 4b · only if the doctor asked
+        { onlyIf: [3, 0],
+          ex: ['Is that the one you take with breakfast?', [['Yes, '], ['with my coffee', 'hl'], [', every morning.']]],
+          card: { say: 'Oval, a line across, taken with breakfast: that all matches metoprolol on her prescription.', askLabel: 'Your call', ask: 'Mark “the white one” as metoprolol?',
+            choice: ['Yes, metoprolol', 'Not sure'], rxOnPick: ['met', 'confirmed', 'not sure'] },
+          flow: [R.listen('“with my coffee, every morning”'),
+            R.look(['rec'], 'Her prescription says metoprolol is taken with breakfast.', "SELECT timing FROM prescription WHERE patient = 1042 AND drug = 'metoprolol'"),
+            R.found('Shape, line and timing all match: metoprolol 97%.', 'timing: with breakfast → metoprolol 97%', 'metoprolol 97%'),
+            R.suggest('Claude hands the decision to the doctor.')] },
         // 5
         { ex: ['And the water tablet?', [['The '], ['small round one', 'hl'], ['. I sometimes skip it, it keeps me up at night.']]],
           rx: { fur: 'confirmed · skipped sometimes' },
           card: { say: 'That is furosemide. She skips it sometimes, which can matter for her heart.', askLabel: 'You could ask', ask: '“How often do you skip it?”',
-            choice: ['Ask her', 'Skip'] },
+            choice: ['Ask her', 'Skip'],
+            more: [['“Have your ankles been swelling?”', 'a sign of missed doses'], ['“Are you short of breath at night?”', 'same reason'], ['“When do you usually take it?”', 'timing can be discussed']] },
           flow: [R.save('Dr. Vogel’s confirmation is saved: “white oval” = metoprolol.', 'confirmed metoprolol · appearance saved'),
             R.listen('“small round one” · “sometimes skip it”'),
             R.look(['rec', 'pill'], 'Matches her water tablet on the prescription.', "SELECT drug FROM prescription JOIN pill_db WHERE patient = 1042 AND shape = 'round'"),
             R.suggest()] },
         // 5b · only if the doctor chose to ask
-        { onlyIf: [4, 0],
+        { onlyIf: [5, 0],
           ex: ['How often do you skip it?', [['Maybe '], ['twice a week', 'hl'], [', when I go out. I don’t want to look for a toilet.']]],
           rx: { fur: 'confirmed · skipped ~2×/week' },
           card: { say: 'Noted: furosemide skipped about twice a week, on days out. Added to her record so it can be looked at together with her symptoms.', askLabel: 'Next', ask: 'Ask about anything else she takes?' },
@@ -389,7 +420,8 @@ class Component extends DCLogic {
         { ex: ['Anything else? Even from another doctor?', [['My GP gave me '], ['small round white ones', 'hl'], [' for my knee. Only for the pain.']]],
           addRx: 'ibu?',
           card: { say: 'Something for pain that is not on her prescription.', like: true, askLabel: 'You could ask', ask: '“Do you know the name, or have the box?”',
-            choice: ['Ask her', 'Skip'] },
+            choice: ['Ask her', 'Skip'],
+            more: [['“How many a day do you take?”', 'dose matters'], ['“Since when?”', 'how long the kidneys were exposed'], ['“Do you buy anything else at the pharmacy?”', 'other hidden medicines']] },
           flow: [R.listen('“small round white ones” · “for my knee”'),
             R.look(['rec', 'pill'], 'Is anything like this on her prescription? And what looks like it?', "SELECT drug FROM prescription JOIN pill_db WHERE patient = 1042 AND colour = 'white' AND shape = 'round'"),
             R.found('Not on her prescription. It looks like her water tablet.', 'no match on prescription · look-alike: furosemide', 'new · looks like furosemide'),
@@ -483,6 +515,7 @@ class Component extends DCLogic {
     list.forEach((x, k) => {
       const applies = k < b || (k === b && last);
       if (!applies) return;
+      if (x.onlyIf) { const pp = pick[x.onlyIf[0]] !== undefined ? pick[x.onlyIf[0]] : 0; if (pp !== x.onlyIf[1]) return; }
       Object.keys(x.rx || {}).forEach((key) => { status[key] = x.rx[key]; });
       if (x.addRx === 'ibu?') ibu = { name: 'Painkiller, unknown', what: 'from her GP · white round', status: 'not prescribed' };
       if (x.addRx === 'ibu') ibu = { name: 'Ibuprofen 400 mg', what: 'painkiller (NSAID) · from her GP', status: (ibu && ibu.status) || 'not prescribed' };
@@ -528,7 +561,10 @@ class Component extends DCLogic {
         hasRisk: !!c.risk, hasAsk: !!c.ask, askLabel: c.askLabel || '', ask: c.ask || '',
         hasChoice: !!c.choice, c1: c.choice ? c.choice[0] : '', c2: c.choice ? c.choice[1] : '',
         c1cls: ch === 0 ? 'choice-on' : ch === 1 ? 'choice-off' : '', c2cls: ch === 1 ? 'choice-on' : ch === 0 ? 'choice-off' : '',
-        picked: ch === undefined ? '' : '✓ Dr. Vogel decided'
+        picked: ch === undefined ? '' : '✓ Dr. Vogel decided',
+        hasMore: !!(c.more && c.more.length), moreOpen: !!(this.state.more && c.more),
+        moreLabel: this.state.more ? 'Fewer questions ▴' : 'More questions ▾',
+        more: (c.more || []).map((m) => ({ q: m[0], why: m[1] }))
       };
     }
 
@@ -545,7 +581,7 @@ class Component extends DCLogic {
       let tb = Math.max(0, Math.min(to, total - 1));
       const dir = to >= b ? 1 : -1;
       while (!allowed(tb) && tb + dir >= 0 && tb + dir < total) tb += dir;
-      this.setState({ b: tb, s: sub0 });
+      this.setState({ b: tb, s: sub0, more: false });
       if (sub0 === 0) {
         this.timer = setInterval(() => {
           const flen = list[this.state.b].flow.length;
@@ -576,6 +612,7 @@ class Component extends DCLogic {
       stepNo: b + 1, stepTotal: total,
       nextLabel: b >= total - 1 ? 'Done' : 'Next →',
       pick1: () => choose(0), pick2: () => choose(1),
+      toggleMore: () => this.setState({ more: !this.state.more }),
       next: () => go(b + 1, 0),
       prev: () => go(b - 1, 99),
       restart: () => { this.setState({ pick: {} }); go(0, 0); }
