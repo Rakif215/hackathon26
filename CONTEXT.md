@@ -48,11 +48,23 @@ Speaker: Lars Svane (BMD, Denmark). The Biodesign method is need first, then ide
 
 ## Infrastructure we have
 
-- **AWS account**: Bedrock (Claude models), S3, Lambda, etc.
-- **Kiro credits (~1000)**: Kiro IDE + `kiro-cli`. Use for bulk coding to save Claude tokens (see CLAUDE.md).
-- **Exasol Personal**: the database the challenge expects us to use.
+- **AWS account via AWS Workshop Studio** (one shared account per team, event-only and temporary).
+  Dashboard: <https://catalog.us-east-1.prod.workshops.aws/event/dashboard/en-US>
+  - CLI credentials come from the dashboard's **"Get AWS CLI credentials"** button, not from an SSO start URL.
+    They are short-lived and must be re-pasted into `~/.aws/credentials` when they expire.
+  - A browser **code-server IDE** is also provided; its password is in the dashboard's *Event Outputs* pane.
+- **Kiro credits (~1000)**: Kiro IDE + `kiro-cli`. See CLAUDE.md for the model policy.
+- **Exasol Personal**: running locally. See [SETUP.md](SETUP.md).
 
 ## Constraints
 
-- **Synthetic data only.** No real patient data anywhere in the repo.
+- **Synthetic data only.** No real patient data anywhere in the repo. The AWS event terms reinforce this:
+  we must not put personal data, genetic/biometric data or **non-anonymized health data** into the AWS account.
 - Not a medical device. The app must never give dosing or diagnostic advice and always defers to a clinician.
+
+### AWS event rules (binding, from the Workshop Studio brief)
+
+- Use **Oregon `us-west-2`** or **Ireland `eu-west-1`** only. Other regions give access-denied errors.
+- **Bedrock: stay under 1 request/second**, and request access to **no more than 5 models**.
+- No public S3 buckets, no wide-open security groups, no public RDS/EMR. Keep instance count minimal.
+- Data from the [AWS Open Data Registry](https://registry.opendata.aws/) is explicitly allowed.
