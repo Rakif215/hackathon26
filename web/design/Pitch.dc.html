@@ -22,7 +22,11 @@ a{color:#2F5BEA}a:hover{color:#1E3FB0}
 .e-on{animation:pvDash .7s linear infinite}
 .n-on{animation:pvGlow 1.6s ease-in-out infinite}
 .blink{animation:pvBlink 1.1s ease-in-out infinite}
-@media (prefers-reduced-motion: reduce){.pv-in,.e-on,.n-on,.blink{animation:none}.pv-grow{transition:none}}
+@keyframes eqB{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
+.eq{display:inline-flex;align-items:center;gap:2px;height:14px}
+.eq i{display:block;width:3px;height:100%;border-radius:2px;background:#D92D20;transform-origin:center;animation:eqB .9s ease-in-out infinite}
+.eq i:nth-child(2){animation-delay:.18s}.eq i:nth-child(3){animation-delay:.36s}.eq i:nth-child(4){animation-delay:.09s}
+@media (prefers-reduced-motion: reduce){.pv-in,.e-on,.n-on,.blink,.eq i{animation:none}.pv-grow{transition:none}}
 .mono{font-family:'JetBrains Mono',ui-monospace,monospace}
 .hl{background:#E4EBFF;border-bottom:2px solid #2F5BEA;border-radius:3px;padding:0 2px}
 .edge{fill:none;stroke:#24304A;stroke-width:3}
@@ -80,7 +84,10 @@ a{color:#2F5BEA}a:hover{color:#1E3FB0}
             <div style="font-weight: 700;">Conversation</div>
             <div style="font-size: 13px; color: #667085;">Dr. Vogel and Frau Weber</div>
           </div>
-          <span style="margin-left: auto; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #475467;"><span class="blink" style="width: 8px; height: 8px; border-radius: 50%; background: #E8590C;"></span>listening</span>
+          <span style="margin-left: auto; display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; color: #B42318; background: #FEF3F2; border: 1px solid #FECDCA; padding: 4px 11px 4px 8px; border-radius: 999px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2.5" width="6" height="11.5" rx="3" fill="#D92D20"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M9 21h6" fill="none" stroke="#D92D20" stroke-width="2" stroke-linecap="round"/></svg>
+            <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Listening
+          </span>
         </div>
 
         <sc-if value="{{isIntro}}" hint-placeholder-val="{{false}}">
