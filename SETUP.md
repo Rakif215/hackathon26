@@ -105,11 +105,11 @@ Verify anytime:
 
 Claude models are **already enabled**; no access request was needed. Confirmed by a live `converse` call:
 
-| Model id (inference profile) | Verified |
-|---|---|
-| `us.anthropic.claude-opus-5-5` | yes |
+| Model id (inference profile)     | Verified      |
+| -------------------------------- | ------------- |
+| `us.anthropic.claude-opus-5-5`   | yes           |
 | `us.anthropic.claude-sonnet-5-5` | yes (default) |
-| `us.anthropic.claude-haiku-5-5` | yes |
+| `us.anthropic.claude-haiku-5-5`  | yes           |
 
 Use `src/hackathon26/bedrock.py`:
 
@@ -125,6 +125,21 @@ print(ask("...", model_id=OPUS))
 2. **`temperature` is rejected** by the 5.x models (`"temperature is deprecated for this model"`). Omit it.
 
 The helper also enforces the event's **1 request/second** cap — don't bypass it or fan out parallel calls.
+
+**Credential isolation.** `bedrock.session()` uses only the `SANDBOX_AWS_*` settings in `.env` (profile,
+region, optional config/credentials file paths). It ignores the shell's `AWS_ACCESS_KEY_ID` and `AWS_REGION`,
+and it refuses regions other than `us-west-2` and `eu-west-1`. Use it for every AWS client in the app.
+
+### Guardrail and preflight
+
+```bash
+uv run python scripts/create_guardrail.py   # idempotent; confirms the account, publishes a version, probes it
+uv run python scripts/preflight.py          # Exasol, schema, account, model call, Guardrail, openFDA
+```
+
+The Guardrail `medguard-clinical-safety` blocks dosing, diagnosis and prescribing in **model output**
+and checks the transcript input for prompt attacks. Its id and version go in `.env` as `BEDROCK_GUARDRAIL_ID`
+and `BEDROCK_GUARDRAIL_VERSION`.
 
 ## Known gotchas
 
