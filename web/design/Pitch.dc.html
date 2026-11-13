@@ -96,11 +96,23 @@ a{color:#2F5BEA}a:hover{color:#1E3FB0}
 
         <div style="display: flex; flex-direction: column; gap: 10px;">
           <sc-for list="{{talk}}" as="x" hint-placeholder-count="3">
-            <div style="display: flex; flex-direction: column; gap: 6px; opacity: {{x.op}};">
-              <div style="align-self: flex-end; max-width: 88%; background: #2F5BEA; color: #FFFFFF; padding: 9px 13px; border-radius: 14px 14px 4px 14px; font-size: 15.5px;">{{x.doc}}</div>
+            <div style="display: flex; flex-direction: column; gap: 8px; opacity: {{x.op}};">
+              <div style="align-self: flex-end; max-width: 90%; display: flex; gap: 8px; align-items: flex-end;">
+                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 3px; min-width: 0;">
+                  <span style="font-size: 12px; font-weight: 700; color: #2F5BEA;">Dr. Vogel · doctor</span>
+                  <div style="background: #2F5BEA; color: #FFFFFF; padding: 9px 13px; border-radius: 14px 14px 4px 14px; font-size: 15.5px;">{{x.doc}}</div>
+                </div>
+                <span style="width: 30px; height: 30px; border-radius: 50%; background: #E4EBFF; color: #1E3FB0; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex: none;" aria-hidden="true">DV</span>
+              </div>
               <sc-if value="{{x.hasPt}}" hint-placeholder-val="{{true}}">
-                <div style="align-self: flex-start; max-width: 92%; background: #F8FAFC; border: 1px solid #E3E8EF; padding: 9px 13px; border-radius: 14px 14px 14px 4px; font-size: 15.5px;">
-                  <sc-for list="{{x.parts}}" as="p"><span class="{{p.cls}}">{{p.t}}</span></sc-for>
+                <div style="align-self: flex-start; max-width: 92%; display: flex; gap: 8px; align-items: flex-end;">
+                  <span style="width: 30px; height: 30px; border-radius: 50%; background: #F6D4BC; color: #6B2E0C; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex: none;" aria-hidden="true">FW</span>
+                  <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0;">
+                    <span style="font-size: 12px; font-weight: 700; color: #9A5A2E;">Frau Weber · patient</span>
+                    <div style="background: #F8FAFC; border: 1px solid #E3E8EF; padding: 9px 13px; border-radius: 14px 14px 14px 4px; font-size: 15.5px;">
+                      <sc-for list="{{x.parts}}" as="p"><span class="{{p.cls}}">{{p.t}}</span></sc-for>
+                    </div>
+                  </div>
                 </div>
               </sc-if>
             </div>
