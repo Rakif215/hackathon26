@@ -229,10 +229,27 @@ a{color:#2F5BEA}a:hover{color:#1E3FB0}
               <span style="flex: none; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: {{r.bg}}; color: {{r.fg}};">{{r.status}}</span>
             </div>
           </sc-for>
-          <sc-if value="{{hasTasks}}" hint-placeholder-val="{{false}}">
-            <div style="border-top: 1px solid #EEF1F5; padding-top: 10px; display: flex; flex-direction: column; gap: 4px;">
-              <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #667085;">For this visit</div>
-              <sc-for list="{{tasks}}" as="t"><div class="pv-in" style="font-size: 14px;">☐ {{t}}</div></sc-for>
+        </section>
+
+        <!-- today's actions → final report -->
+        <section style="background: #FFFFFF; border: 1.5px solid {{rep.border}}; border-radius: 18px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;">
+            <h3 style="margin: 0; font-family: Outfit, system-ui, sans-serif; font-size: 18px;">{{rep.title}}</h3>
+            <span style="font-size: 12.5px; color: #667085;">{{rep.sub}}</span>
+          </div>
+          <sc-if value="{{rep.empty}}" hint-placeholder-val="{{false}}">
+            <div style="font-size: 14px; color: #98A2B3;">Actions taken during the visit appear here.</div>
+          </sc-if>
+          <sc-for list="{{actions}}" as="a" hint-placeholder-count="3">
+            <label class="pv-in" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14.5px; cursor: pointer; color: {{a.fg}};">
+              <input type="checkbox" checked="{{a.on}}" onChange="{{a.toggle}}" style="width: 18px; height: 18px; margin: 2px 0 0; accent-color: #2F5BEA; flex: none;">
+              <span style="text-decoration: {{a.deco}};">{{a.t}}</span>
+            </label>
+          </sc-for>
+          <sc-if value="{{rep.final}}" hint-placeholder-val="{{false}}">
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; border-top: 1px solid #EEF1F5; padding-top: 10px;">
+              <button class="choice {{rep.signCls}}" onClick="{{sign}}">{{rep.signLabel}}</button>
+              <span style="font-size: 13px; color: #667085;">{{rep.count}}</span>
             </div>
           </sc-if>
         </section>
@@ -398,7 +415,7 @@ class Component extends DCLogic {
         // 2
         { ex: ['How have the last few months been?', [['Fine, mostly. But I get '], ['dizzy when I stand up', 'hl'], ['.']]],
           card: { say: 'Dizziness noted. Two of her tablets can lower blood pressure: ramipril and furosemide.', askLabel: 'Suggested', ask: 'Check her blood pressure standing up?',
-            choice: ['Add to this visit', 'Skip'], task: 'Blood pressure, standing',
+            choice: ['Add to this visit', 'Skip'], acts: ['Blood pressure checked standing'],
             more: [['“Have you fallen, or nearly fallen?”', 'falls matter more at 72'], ['“Is it worse in the morning?”', 'right after the tablets'], ['“Do you drink enough during the day?”', 'water tablet + heat']] },
           flow: [R.listen('“dizzy when I stand up”'),
             R.look(['rec', 'leaf'], 'Which of her medicines can lower blood pressure?', "SELECT drug FROM prescription JOIN leaflet WHERE patient = 1042 AND effect = 'low blood pressure'"),
@@ -426,7 +443,7 @@ class Component extends DCLogic {
         { onlyIf: [3, 0],
           ex: ['Is that the one you take with breakfast?', [['Yes, '], ['with my coffee', 'hl'], [', every morning.']]],
           card: { say: 'Oval, a line across, taken with breakfast: that all matches metoprolol on her prescription.', askLabel: 'Your call', ask: 'Mark “the white one” as metoprolol?',
-            choice: ['Yes, metoprolol', 'Not sure'], rxOnPick: ['met', 'confirmed', 'not sure'] },
+            choice: ['Yes, metoprolol', 'Not sure'], rxOnPick: ['met', 'confirmed', 'not sure'], acts: ['Confirmed “the white one” is metoprolol'] },
           flow: [R.listen('“with my coffee, every morning”'),
             R.look(['rec'], 'Her prescription says metoprolol is taken with breakfast.', "SELECT timing FROM prescription WHERE patient = 1042 AND drug = 'metoprolol'"),
             R.found('Shape, line and timing all match: metoprolol 97%.', 'timing: with breakfast → metoprolol 97%', 'metoprolol 97%'),
@@ -442,7 +459,7 @@ class Component extends DCLogic {
             R.look(['rec', 'pill'], 'Matches her water tablet on the prescription.', "SELECT drug FROM prescription JOIN pill_db WHERE patient = 1042 AND shape = 'round'"),
             R.suggest()] },
         // 5b · only if the doctor chose to ask
-        { onlyIf: [5, 0],
+        { onlyIf: [5, 0], act: 'Noted: furosemide skipped about twice a week',
           ex: ['How often do you skip it?', [['Maybe '], ['twice a week', 'hl'], [', when I go out. I don’t want to look for a toilet.']]],
           rx: { fur: 'confirmed · skipped ~2×/week' },
           card: { say: 'Noted: furosemide skipped about twice a week, on days out. Added to her record so it can be looked at together with her symptoms.', askLabel: 'Next', ask: 'Ask about anything else she takes?' },
@@ -451,7 +468,7 @@ class Component extends DCLogic {
             R.suggest('Claude summarises it and suggests moving on to anything else she takes.')] },
         // 6
         { ex: ['Anything else? Even from another doctor?', [['My GP gave me '], ['small round white ones', 'hl'], [' for my knee. Only for the pain.']]],
-          addRx: 'ibu?',
+          addRx: 'ibu?', act: 'Found a painkiller not on her prescription',
           card: { say: 'Something for pain that is not on her prescription.', like: true, askLabel: 'You could ask', ask: '“Do you know the name, or have the box?”',
             choice: ['Ask her', 'Skip'],
             more: [['“How many a day do you take?”', 'dose matters'], ['“Since when?”', 'how long the kidneys were exposed'], ['“Do you buy anything else at the pharmacy?”', 'other hidden medicines']] },
@@ -463,7 +480,7 @@ class Component extends DCLogic {
         { ex: ['Do you know what they’re called?', [['The box is in my bag… it says '], ['Ibuprofen 400', 'hl'], ['.']]],
           addRx: 'ibu',
           card: { say: 'Ibuprofen 400 mg. Not on her prescription.', askLabel: 'Suggested', ask: 'Check it against her medicines and blood results?',
-            choice: ['Check it', 'Not now'] },
+            choice: ['Check it', 'Not now'], acts: ['Checked ibuprofen against her medicines and blood results'] },
           flow: [R.listen('“Ibuprofen 400”'),
             R.look(['pill'], 'The product name is looked up in the pill database.', "SELECT drug, class FROM pill_db WHERE name = 'Ibuprofen 400'"),
             R.found('Ibuprofen 400 mg, a painkiller of the NSAID group.', 'ibuprofen 400 mg · NSAID', 'ibuprofen · not prescribed'),
@@ -471,7 +488,7 @@ class Component extends DCLogic {
         // 8
         { addRx: 'ibu',
           card: { say: 'The ramipril leaflet mentions this combination and the kidneys. Her kidney score has been falling. It may be worth discussing whether she still needs the ibuprofen.', risk: true,
-            choice: ['Discuss with her', 'Dismiss'] },
+            choice: ['Discuss with her', 'Dismiss'], acts: ['Discussed the kidney risk of ibuprofen with her'] },
           flow: [R.look(['rec', 'lab', 'leaf'], 'Exasol joins the painkiller with her medicines, her kidney results and the ramipril leaflet, in one query.',
               "JOIN prescription · lab_result(eGFR) · leaflet(ramipril §7.5)  WHERE patient = 1042"),
             R.found('Leaflet section 7.5 matches. Her eGFR: 62 → 55 → 48.', 'ramipril §7.5 · NSAIDs · eGFR 62 → 55 → 48', 'risk to discuss'),
@@ -480,7 +497,7 @@ class Component extends DCLogic {
         { ex: ['With your heart tablets, these can strain your kidneys. Let’s find something else for the knee, and do a blood test today.', [['Oh. I didn’t know that.']]],
           addRx: 'ibu',
           card: { say: 'Shall I update her prescription and add a kidney test to this visit?', askLabel: 'Suggested', ask: 'Ibuprofen → “paused”. Kidney test today.',
-            choice: ['Yes, update', 'Not now'], rxOnPick: ['ibu', 'paused', 'not prescribed'], task: 'Kidney test (eGFR, potassium)' },
+            choice: ['Yes, update', 'Not now'], rxOnPick: ['ibu', 'paused', 'not prescribed'], acts: ['Ibuprofen paused on her prescription', 'Kidney test ordered (eGFR, potassium)'] },
           flow: [R.listen('“find something else” · “blood test today”'), R.suggest('MedGuard offers the paperwork. The doctor decides.')] },
         // 10
         { addRx: 'ibu',
@@ -552,6 +569,7 @@ class Component extends DCLogic {
       Object.keys(x.rx || {}).forEach((key) => { status[key] = x.rx[key]; });
       if (x.addRx === 'ibu?') ibu = { name: 'Painkiller, unknown', what: 'from her GP · white round', status: 'not prescribed' };
       if (x.addRx === 'ibu') ibu = { name: 'Ibuprofen 400 mg', what: 'painkiller (NSAID) · from her GP', status: (ibu && ibu.status) || 'not prescribed' };
+      if (x.act) tasks.push(x.act);
       const c = x.card;
       if (c && c.choice) {
         const ch = chosen(k);
@@ -560,9 +578,21 @@ class Component extends DCLogic {
           const val = ch === 0 ? c.rxOnPick[1] : c.rxOnPick[2];
           if (c.rxOnPick[0] === 'ibu') { if (ibu) ibu.status = val; } else status[c.rxOnPick[0]] = val;
         }
-        if (settled && c.task && ch === 0) tasks.push(c.task);
+        if (settled && c.acts && ch === 0) c.acts.forEach((a) => tasks.push(a));
       }
     });
+    // ---------- today's actions / final report ----------
+    const off = this.state.off || {};
+    const finalStep = b === total - 1 && last;
+    const actions = tasks.map((a) => ({ t: a, on: !off[a], fg: off[a] ? '#98A2B3' : '#101828', deco: off[a] ? 'line-through' : 'none',
+      toggle: () => this.setState({ off: Object.assign({}, this.state.off || {}, { [a]: !off[a] }), signed: false }) }));
+    const nOn = actions.filter((a) => a.on).length;
+    const rep = { title: finalStep ? 'Final report' : 'Today’s actions', empty: tasks.length === 0, final: finalStep,
+      sub: finalStep ? 'untick anything that should not go into the report' : 'collected during the visit',
+      border: finalStep ? '#2F5BEA' : '#E3E8EF',
+      signCls: this.state.signed ? 'choice-on' : '', signLabel: this.state.signed ? '✓ Signed by Dr. Vogel' : 'Sign report',
+      count: nOn + ' of ' + actions.length + ' actions included' };
+    const sign = () => this.setState({ signed: !this.state.signed });
     const tone = (t) => (t.indexOf('confirmed') === 0 ? ['#DDF3E6', '#11603A'] : t === 'not sure' || t === 'not prescribed' ? ['#FFF1D6', '#7A4A00']
       : t === 'paused' ? ['#FFE1D6', '#9A3412'] : ['#EEF1F5', '#475467']);
     const rx = Object.keys(RX).map((key) => ({ name: RX[key][0], what: RX[key][1], img: RX[key][2], alt: 'Photo of ' + RX[key][0], status: status[key],
@@ -636,8 +666,7 @@ class Component extends DCLogic {
     };
 
     return {
-      e, n, sub, log, nQ, nSug, nDec, talk, rx, tasks, card, onKey,
-      hasTasks: tasks.length > 0,
+      e, n, sub, log, nQ, nSug, nDec, talk, rx, card, onKey, actions, rep, sign,
       isIntro: st.kind === 'intro',
       hasCard: hasCard && st.kind !== 'intro',
       thinking: !last && st.kind !== 'intro',
@@ -648,7 +677,7 @@ class Component extends DCLogic {
       toggleMore: () => this.setState({ more: !this.state.more }),
       next: () => go(b + 1, 0),
       prev: () => go(b - 1, 99),
-      restart: () => { this.setState({ pick: {} }); go(0, 0); }
+      restart: () => { this.setState({ pick: {}, off: {}, signed: false }); go(0, 0); }
     };
   }
 }
