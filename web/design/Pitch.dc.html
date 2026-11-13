@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MedGuard · Pitch view</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#2F5BEA}a:hover{color:#1E3FB0}
+@keyframes pvIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes pvDash{to{stroke-dashoffset:-36}}
+@keyframes pvGlow{0%,100%{box-shadow:0 0 0 0 rgba(61,220,151,0)}50%{box-shadow:0 0 0 6px rgba(61,220,151,.20)}}
+@keyframes pvBlink{0%,100%{opacity:1}50%{opacity:.25}}
+.pv-in{animation:pvIn .4s cubic-bezier(.2,.7,.2,1) both}
+.e-on{animation:pvDash .7s linear infinite}
+.n-on{animation:pvGlow 1.6s ease-in-out infinite}
+.blink{animation:pvBlink 1.1s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){.pv-in,.e-on,.n-on,.blink{animation:none}}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+.hl{background:#E4EBFF;border-bottom:2px solid #2F5BEA;border-radius:3px;padding:0 2px}
+.edge{fill:none;stroke:#24304A;stroke-width:3}
+.e-done{stroke:#2C6B55}
+.e-on{stroke:#3DDC97;stroke-width:4;stroke-dasharray:12 6}
+.node{position:absolute;box-sizing:border-box;border-radius:14px;border:1.5px solid #23304D;background:#101A2D;color:#8391B2;display:flex;align-items:center;gap:10px;padding:8px 12px;transition:border-color .3s,background .3s,color .3s}
+.node b{display:block;font-size:14.5px;color:#C3CDE6;font-weight:600;line-height:1.2}
+.node span.sub{display:block;font-size:12px;line-height:1.3;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.node svg{flex:none}
+.n-done{border-color:#2C6B55;color:#9FD9C0}
+.n-done b{color:#E4F5EC}
+.n-on{border-color:#3DDC97;background:#0E2A22;color:#C8F5DF}
+.n-on b{color:#FFFFFF}
+.n-exa{background:#0F1F18}
+.pbtn{font:600 15px/1 'Source Sans 3',system-ui,sans-serif;padding:12px 18px;border-radius:10px;border:1px solid #D5DBE5;background:#FFFFFF;color:#101828;cursor:pointer;min-height:44px}
+.pbtn:hover{border-color:#2F5BEA}
+.pbtn:focus-visible{outline:3px solid #9DB4FF;outline-offset:2px}
+.pbtn-main{background:#2F5BEA;border-color:#2F5BEA;color:#FFFFFF}
+.tab{font:600 14px/1.2 'Source Sans 3',system-ui,sans-serif;padding:8px 12px;border-radius:9px;border:1px solid #D5DBE5;background:#FFFFFF;color:#344054;cursor:pointer;min-height:40px}
+.tab-on{background:#101828;border-color:#101828;color:#FFFFFF}
+.tab:focus-visible{outline:3px solid #9DB4FF;outline-offset:2px}
+.lg-listen{color:#8FB0FF}.lg-agent{color:#FFD58A}.lg-exa{color:#7EE2AE}.lg-bed{color:#C9B5FF}
+.k-sure{background:#ECF8F1;color:#11603A}.k-maybe{background:#FFF6E5;color:#7A4A00}.k-new{background:#FFEDE5;color:#9A3412}
+</style>
+</helmet>
+
+<div tabindex="0" onKeyDown="{{onKey}}" aria-label="Pitch view. Press right arrow or space for the next step, left arrow to go back, R to start over." style="min-height: 100%; background: #EEF1F6; color: #101828; font-family: 'Source Sans 3', system-ui, sans-serif; font-size: 16px; line-height: 1.5; outline: none;">
+
+  <div style="max-width: 1600px; margin: 0 auto; padding: 18px 20px 28px; display: flex; flex-direction: column; gap: 16px;">
+
+    <!-- top strip -->
+    <header style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#2F5BEA"/><path d="M10 17.5c0-3.6 2.7-6.5 6-6.5s6 2.9 6 6.5M13 17.5c0-1.9 1.3-3.5 3-3.5s3 1.6 3 3.5M16 17.5v4" stroke="#FFFFFF" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>
+        <span style="font-family: Outfit, system-ui, sans-serif; font-weight: 700; font-size: 20px;">MedGuard</span>
+      </div>
+      <nav aria-label="Stories" style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <sc-for list="{{tabs}}" as="t" hint-placeholder-count="3">
+          <button class="tab {{t.cls}}" onClick="{{t.pick}}">{{t.label}}</button>
+        </sc-for>
+      </nav>
+      <div style="margin-left: auto; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+        <span class="mono" style="font-size: 13px; color: #667085;">step {{stepNo}} / {{stepTotal}}</span>
+        <button class="pbtn" onClick="{{prev}}" aria-label="Previous step">← Back</button>
+        <button class="pbtn pbtn-main" onClick="{{next}}">Next →</button>
+        <button class="pbtn" onClick="{{restart}}">Start over</button>
+      </div>
+    </header>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 18px; align-items: stretch;">
+
+      <!-- ================= LEFT: the app ================= -->
+      <section style="flex: 1 1 420px; min-width: 0; background: #FFFFFF; border: 1px solid #E3E8EF; border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="width: 38px; height: 38px; border-radius: 50%; background: #F6D4BC; color: #6B2E0C; display: inline-flex; align-items: center; justify-content: center; font-family: Outfit, system-ui, sans-serif; font-weight: 700;">{{pt.initials}}</span>
+          <div>
+            <div style="font-weight: 700;">{{pt.name}}, {{pt.age}}</div>
+            <div style="font-size: 13px; color: #667085;">with Dr. Vogel · the app the doctor sees</div>
+          </div>
+          <span style="margin-left: auto; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #475467;"><span class="blink" style="width: 8px; height: 8px; border-radius: 50%; background: #E8590C;"></span>listening</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; flex: 1;">
+          <sc-for list="{{lines}}" as="line" hint-placeholder-count="4">
+            <div class="pv-in" style="display: flex; flex-direction: column; gap: 6px;">
+              <sc-if value="{{line.isDoctor}}" hint-placeholder-val="{{false}}">
+                <div style="align-self: flex-end; max-width: 88%; background: #2F5BEA; color: #FFFFFF; padding: 9px 13px; border-radius: 14px 14px 4px 14px; font-size: 15.5px;">{{line.text}}</div>
+              </sc-if>
+              <sc-if value="{{line.isPatient}}" hint-placeholder-val="{{true}}">
+                <div style="align-self: flex-start; max-width: 92%; background: #F8FAFC; border: 1px solid #E3E8EF; padding: 9px 13px; border-radius: 14px 14px 14px 4px; font-size: 15.5px;">
+                  <sc-for list="{{line.parts}}" as="p"><span class="{{p.cls}}">{{p.t}}</span></sc-for>
+                </div>
+              </sc-if>
+              <sc-for list="{{line.chips}}" as="c">
+                <div class="pv-in" style="margin-left: 14px; display: flex; align-items: center; gap: 10px; background: #FFFFFF; border: 1px solid #E3E8EF; border-radius: 12px; padding: 6px 10px 6px 6px;">
+                  <sc-if value="{{c.hasImg}}" hint-placeholder-val="{{true}}">
+                    <img src="{{c.img}}" alt="{{c.alt}}" style="width: 58px; height: 42px; object-fit: cover; border-radius: 8px; background: #6B6B6B; flex: none;">
+                  </sc-if>
+                  <div style="min-width: 0; flex: 1;">
+                    <div style="font-size: 12.5px; color: #667085;">“{{c.heard}}”</div>
+                    <div style="font-weight: 600; font-size: 15px;">{{c.title}}</div>
+                  </div>
+                  <span class="{{c.kindCls}}" style="font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 999px; white-space: nowrap;">{{c.badge}}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{showWarning}}" hint-placeholder-val="{{true}}">
+          <article class="pv-in" style="background: #FFEDE5; border: 1px solid #F8C2A8; border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px;">
+            <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #9A3412;">Worth checking · 3 / 3 warning signs</div>
+            <div style="font-family: Outfit, system-ui, sans-serif; font-size: 19px; font-weight: 600; line-height: 1.25;">{{al.headline}}</div>
+            <div class="mono" style="font-size: 12px; color: #7A3B1A;">{{al.labText}} · source: {{al.source}}</div>
+            <sc-if value="{{showDecision}}" hint-placeholder-val="{{false}}">
+              <div style="margin-top: 4px; font-size: 14px; font-weight: 700; color: #11603A; background: #ECF8F1; border-radius: 8px; padding: 6px 10px; align-self: flex-start;">✓ Dr. Vogel: {{al.decision}}</div>
+            </sc-if>
+          </article>
+        </sc-if>
+      </section>
+
+      <!-- ================= RIGHT: behind the scenes ================= -->
+      <section style="flex: 999 1 680px; min-width: 0; background: #0A1120; color: #E6EDFF; border-radius: 18px; padding: 20px 22px; display: flex; flex-direction: column; gap: 16px;">
+        <div>
+          <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #3DDC97;">Behind the scenes · {{phaseLabel}}</div>
+          <p class="pv-in" style="margin: 6px 0 0; font-family: Outfit, system-ui, sans-serif; font-size: clamp(20px, 2vw, 27px); line-height: 1.3; font-weight: 500; text-wrap: balance; min-height: 2.6em;">{{caption}}</p>
+        </div>
+
+        <!-- diagram -->
+        <div style="overflow-x: auto;">
+          <div style="position: relative; min-width: 880px; aspect-ratio: 1000 / 600; background-color: #0C1426; background-image: radial-gradient(rgba(61, 220, 151, 0.10) 1px, transparent 1.4px); background-size: 16px 16px; border-radius: 14px; border: 1px solid #18233B;">
+            <svg viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%;">
+              <defs><marker id="pvArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3A4C6E"/></marker></defs>
+              <path class="edge {{e.conv_agent}}" d="M250,80 L400,80" marker-end="url(#pvArrow)"/>
+              <path class="edge {{e.agent_exa}}" d="M484,117 L484,250" marker-end="url(#pvArrow)"/>
+              <path class="edge {{e.exa_agent}}" d="M516,250 L516,117" marker-end="url(#pvArrow)"/>
+              <path class="edge {{e.agent_bed}}" d="M600,80 L750,80" marker-end="url(#pvArrow)"/>
+              <path class="edge {{e.bed_doc}}" d="M850,117 L850,262" marker-end="url(#pvArrow)"/>
+              <path class="edge {{e.exa_ident}}" d="M390,300 L252,300" marker-end="url(#pvArrow)"/>
+              <path class="edge {{e.doc_exa}}" d="M750,300 L612,300" marker-end="url(#pvArrow)"/>
+              <path class="edge {{e.rec_exa}}" d="M125,490 C125,420 420,430 452,350" marker-end="url(#pvArrow)"/>
+              <path class="edge {{e.lab_exa}}" d="M375,490 C375,430 470,420 482,350" marker-end="url(#pvArrow)"/>
+              <path class="edge {{e.pill_exa}}" d="M625,490 C625,430 530,420 518,350" marker-end="url(#pvArrow)"/>
+              <path class="edge {{e.leaf_exa}}" d="M875,490 C875,420 580,430 548,350" marker-end="url(#pvArrow)"/>
+            </svg>
+
+            <!-- top row -->
+            <div class="node {{n.conv}}" style="left: 5%; top: 7.2%; width: 20%; height: 12.3%;">
+              <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              <div style="min-width: 0;"><b>Conversation</b><span class="sub">{{sub.conv}}</span></div>
+            </div>
+            <div class="node {{n.agent}}" style="left: 40%; top: 7.2%; width: 20%; height: 12.3%;">
+              <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="7" width="16" height="12" rx="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3v4M9 13h.01M15 13h.01" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+              <div style="min-width: 0;"><b>MedGuard agent</b><span class="sub">{{sub.agent}}</span></div>
+            </div>
+            <div class="node {{n.bed}}" style="left: 75%; top: 7.2%; width: 20%; height: 12.3%;">
+              <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18h10a4 4 0 0 0 .5-8A6 6 0 0 0 6 9.5 4.3 4.3 0 0 0 7 18Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+              <div style="min-width: 0;"><b>Claude · Bedrock</b><span class="sub">{{sub.bed}}</span></div>
+            </div>
+
+            <!-- middle row -->
+            <div class="node {{n.ident}}" style="left: 5%; top: 43.8%; width: 20%; height: 12.3%;">
+              <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m8 12 3 3 5-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <div style="min-width: 0;"><b>Medicine matched</b><span class="sub">{{sub.ident}}</span></div>
+            </div>
+            <div class="node n-exa {{n.exa}}" style="left: 39%; top: 42%; width: 22%; height: 16%; flex-direction: column; justify-content: center; gap: 4px; text-align: center;">
+              <svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="6" rx="7" ry="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+              <div><b style="font-family: Outfit, system-ui, sans-serif; font-size: 20px; color: #3DDC97;">Exasol</b><span class="sub" style="white-space: normal;">{{sub.exa}}</span></div>
+            </div>
+            <div class="node {{n.doc}}" style="left: 75%; top: 43.8%; width: 20%; height: 12.3%;">
+              <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9 20h6M12 16v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              <div style="min-width: 0;"><b>Doctor's screen</b><span class="sub">{{sub.doc}}</span></div>
+            </div>
+
+            <!-- data sources -->
+            <div style="position: absolute; left: 3%; top: 73.5%; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #5D6E92;">Data sources in Exasol</div>
+            <div class="node {{n.rec}}" style="left: 3%; top: 81.7%; width: 19%; height: 11.7%;">
+              <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              <div style="min-width: 0;"><b>Patient record</b><span class="sub mono">patient_medication</span></div>
+            </div>
+            <div class="node {{n.lab}}" style="left: 28%; top: 81.7%; width: 19%; height: 11.7%;">
+              <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+              <div style="min-width: 0;"><b>Blood tests</b><span class="sub mono">lab_result</span></div>
+            </div>
+            <div class="node {{n.pill}}" style="left: 53%; top: 81.7%; width: 19%; height: 11.7%;">
+              <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="8" width="18" height="8" rx="4" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 12 12)"/><path d="M9.5 7.7l5 8.6" stroke="currentColor" stroke-width="1.8"/></svg>
+              <div style="min-width: 0;"><b>Pill database</b><span class="sub mono">drug_appearance · NLM</span></div>
+            </div>
+            <div class="node {{n.leaf}}" style="left: 78%; top: 81.7%; width: 19%; height: 11.7%;">
+              <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 11h7M9 15h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              <div style="min-width: 0;"><b>Drug leaflets</b><span class="sub mono">drug_label · FDA</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- counters + log -->
+        <div style="display: flex; flex-wrap: wrap; gap: 14px;">
+          <div style="flex: 1 1 200px; min-width: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; align-content: start;">
+            <div style="background: #111A2E; border-radius: 10px; padding: 10px 12px;"><div class="mono" style="font-size: 24px; color: #7EE2AE;">{{nQueries}}</div><div style="font-size: 12.5px; color: #7D8BAA;">Exasol queries</div></div>
+            <div style="background: #111A2E; border-radius: 10px; padding: 10px 12px;"><div class="mono" style="font-size: 24px; color: #7EE2AE;">{{nSources}}</div><div style="font-size: 12.5px; color: #7D8BAA;">sources joined</div></div>
+            <div style="background: #111A2E; border-radius: 10px; padding: 10px 12px;"><div class="mono" style="font-size: 24px; color: #C9B5FF;">{{nAi}}</div><div style="font-size: 12.5px; color: #7D8BAA;">AI calls</div></div>
+          </div>
+          <div class="mono" style="flex: 999 1 420px; min-width: 0; background: #070C17; border-radius: 10px; padding: 10px 14px; font-size: 12.5px; line-height: 1.7; min-height: 150px;">
+            <div style="color: #4E5D7E;">agent log</div>
+            <sc-for list="{{log}}" as="g" hint-placeholder-count="5">
+              <div style="opacity: {{g.op}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="{{g.cls}}">[{{g.tag}}]</span> <span style="color: #C7D2EE;">{{g.text}}</span></div>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <p style="margin: 0; font-size: 12.5px; color: #667085;">Click anywhere on this page, then use → or Space for the next step, ← to go back, R to start over. A presentation clicker works too. Invented patients; pill photos from the US National Library of Medicine; leaflet text from the US FDA.</p>
+  </div>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { c: 0, b: 9999 };
+  }
+
+  cases() {
+    const IMG = {
+      ram5: '/_blob/ce4a1464f3b428d24e22d36a05c9479c', ram10: '/_blob/0b446ab9eaaff8d273acd7d9eed74e85',
+      metS: '/_blob/31fddb9ecac2879ba563b2261a654bed', metT: '/_blob/5af36951a92829bbaea1aee00323f638',
+      furo: '/_blob/c336cb380e294f6b96ed5457bab179ab', ibu: '/_blob/5bea08576af19d2039f5024cd8dda2ca',
+      spiro: '/_blob/5bb4d2f1c325528897913d5fe218776f', kcl: '/_blob/5ce898a5182d83094be0cd12471c1932'
+    };
+    return [
+      {
+        tab: '1 · The knee painkiller', pid: 1042,
+        pt: { name: 'Frau Weber', possessive: 'her', age: 72, initials: 'FW' },
+        meds: {
+          ram: { name: 'Ramipril 5 mg', img: IMG.ram5, rec: true }, met: { name: 'Metoprolol 25 mg', img: IMG.metS, rec: true },
+          fur: { name: 'Furosemide 40 mg', img: IMG.furo, rec: true }, ibu: { name: 'Ibuprofen 400 mg', img: IMG.ibu, rec: false }
+        },
+        script: [
+          { who: 'D', text: 'Good morning, Frau Weber. How have the last three months been?' },
+          { who: 'P', parts: [['Not bad, thank you. I get a bit dizzy when I stand up too fast, that’s all.']] },
+          { who: 'D', text: 'Let’s go through your tablets. Is the pill box still working for you?' },
+          { who: 'P', parts: [['Oh yes, my daughter does it on Sundays. '], ['The red capsule', 'hl'], [' in the morning, and '], ['the white oval one', 'hl'], [' with breakfast.']],
+            matches: [{ heard: 'the red capsule', drug: 'ram', conf: 98, kind: 'sure' }, { heard: 'the white oval one', drug: 'met', conf: 91, kind: 'sure' }] },
+          { who: 'D', text: 'And the water tablet?' },
+          { who: 'P', parts: [['That’s '], ['the round white one', 'hl'], ['. It has me up at night, but I take it.']],
+            matches: [{ heard: 'the round white one', drug: 'fur', conf: 88, kind: 'sure' }] },
+          { who: 'D', text: 'Anything else? Even something from the pharmacy or another doctor?' },
+          { who: 'P', parts: [['Not really. Well, my knee was terrible, so my GP gave me '], ['some small round white ones', 'hl'], ['. But that’s only for the pain.']],
+            matches: [{ heard: 'some small round white ones', drug: null, conf: 41, kind: 'maybe', title: 'Not on her record' }] },
+          { who: 'D', text: 'Do you have one with you? Can you read what’s printed on it?' },
+          { who: 'P', parts: [['Let me look… it says '], ['IP 464', 'hl'], ['.']], alert: true,
+            matches: [{ heard: 'IP 464', drug: 'ibu', conf: 97, kind: 'new' }] },
+          { who: 'D', text: 'Thank you, that’s important. Let’s pause those and check your kidneys today.' }
+        ],
+        alert: { headline: 'Ibuprofen with her blood-pressure and water tablets can harm the kidneys.', source: 'ramipril leaflet §7.5, US FDA',
+          labText: 'eGFR 62 → 55 → 48', leaf: 'Ramipril §7.5 names NSAIDs', test: 'eGFR', decision: 'pause ibuprofen, test kidneys today' }
+      },
+      {
+        tab: '2 · The low-salt salt', pid: 2077,
+        pt: { name: 'Herr Schmidt', possessive: 'his', age: 68, initials: 'HS' },
+        meds: {
+          ram: { name: 'Ramipril 10 mg', img: IMG.ram10, rec: true }, spi: { name: 'Spironolactone 50 mg', img: IMG.spiro, rec: true },
+          salt: { name: 'Potassium salt substitute', img: '', rec: false }, kcl: { name: 'Potassium chloride 8 mEq', img: IMG.kcl, rec: false }
+        },
+        script: [
+          { who: 'D', text: 'Herr Schmidt, you look well. How is the diet going?' },
+          { who: 'P', parts: [['Very disciplined! No ordinary salt at all now. I bought '], ['a low-salt salt', 'hl'], [' at the supermarket.']],
+            matches: [{ heard: 'a low-salt salt', drug: 'salt', conf: 84, kind: 'new' }] },
+          { who: 'D', text: 'Good. And the tablets, any problems?' },
+          { who: 'P', parts: [['No, '], ['the blue capsule', 'hl'], [' and '], ['the white oval one', 'hl'], [' every morning. Only my legs cramp at night.']],
+            matches: [{ heard: 'the blue capsule', drug: 'ram', conf: 97, kind: 'sure' }, { heard: 'the white oval one', drug: 'spi', conf: 90, kind: 'sure' }] },
+          { who: 'D', text: 'Have you taken anything for the cramps?' },
+          { who: 'P', parts: [['The pharmacist recommended '], ['a yellow tablet', 'hl'], ['. It helps.']],
+            matches: [{ heard: 'a yellow tablet', drug: null, conf: 52, kind: 'maybe', title: 'Not on his record' }] },
+          { who: 'D', text: 'Do you have the packet with you?' },
+          { who: 'P', parts: [['Here. It says '], ['K-TAB', 'hl'], ['.']], alert: true,
+            matches: [{ heard: 'K-TAB', drug: 'kcl', conf: 96, kind: 'new' }] },
+          { who: 'D', text: 'Those two together add a lot of potassium. Let’s stop both and check your blood today.' }
+        ],
+        alert: { headline: 'Two extra sources of potassium, on top of tablets that already raise it.', source: 'ramipril leaflet §5.8, US FDA',
+          labText: 'potassium 4.7 → 5.0 → 5.4', leaf: 'Ramipril §5.8 names salt substitutes', test: 'potassium', decision: 'stop supplement and salt substitute, test today' }
+      },
+      {
+        tab: '3 · Two heart pills', pid: 3115,
+        pt: { name: 'Frau Yilmaz', possessive: 'her', age: 79, initials: 'FY' },
+        meds: {
+          met: { name: 'Metoprolol 25 mg', img: IMG.metS, rec: true }, ram: { name: 'Ramipril 5 mg', img: IMG.ram5, rec: true },
+          mt2: { name: 'Metoprolol 50 mg · same medicine', img: IMG.metT, rec: false }
+        },
+        script: [
+          { who: 'D', text: 'Frau Yilmaz, your pulse was quite slow at the front desk. How have you been feeling?' },
+          { who: 'P', parts: [['Tired, doctor. So tired lately. I thought it was the weather.']] },
+          { who: 'D', text: 'Has anything changed with your medicines?' },
+          { who: 'P', parts: [['No… well, the pharmacy gave me '], ['new heart pills', 'hl'], ['. They’re round now.']],
+            matches: [{ heard: 'new heart pills, round', drug: null, conf: 55, kind: 'maybe', title: 'Different from her record' }] },
+          { who: 'D', text: 'And the old ones?' },
+          { who: 'P', parts: [['I still had '], ['the oval ones', 'hl'], [', so I take those too.']],
+            matches: [{ heard: 'the oval ones', drug: 'met', conf: 93, kind: 'sure' }] },
+          { who: 'D', text: 'Can you read the letters on the round one?' },
+          { who: 'P', parts: [['It says '], ['GG 414', 'hl'], ['.']], alert: true,
+            matches: [{ heard: 'GG 414', drug: 'mt2', conf: 98, kind: 'new' }] },
+          { who: 'D', text: 'These are the same medicine. Please take only the new ones, and we’ll check your pulse next week.' }
+        ],
+        alert: { headline: 'She is taking the same heart medicine twice, in two pills that look different.', source: 'metoprolol leaflet §5.4, US FDA',
+          labText: 'pulse 68 → 58 → 48', leaf: 'Metoprolol §5.4: monitor heart rate', test: 'heart rate', decision: 'only the new pills, pulse check in 1 week' }
+      }
+    ];
+  }
+
+  beats(cs) {
+    const out = [];
+    cs.script.forEach((l, k) => {
+      out.push({ line: k, phase: 'listen' });
+      if (l.matches) { out.push({ line: k, phase: 'query' }); out.push({ line: k, phase: 'result' }); }
+      if (l.alert) { out.push({ line: k, phase: 'check' }); out.push({ line: k, phase: 'explain' }); }
+    });
+    out.push({ line: cs.script.length - 1, phase: 'decide' });
+    return out;
+  }
+
+  // what one beat does: edges, nodes, caption, log
+  describe(cs, beat) {
+    const l = cs.script[beat.line];
+    const ms = l.matches || [];
+    const meds = cs.meds;
+    const heardList = ms.map((m) => '“' + m.heard + '”').join(' and ');
+    const resText = (m) => {
+      const d = m.drug ? meds[m.drug] : null;
+      if (!d) return 'no match on the record, flagged as new';
+      return d.name + ' (' + m.conf + '%)';
+    };
+    const usesImprint = ms.some((m) => m.drug && meds[m.drug] && !meds[m.drug].rec && meds[m.drug].img);
+    const usesSalt = ms.some((m) => m.drug && meds[m.drug] && !meds[m.drug].img);
+    const who = l.who === 'D' ? 'Dr. Vogel' : cs.pt.name;
+
+    if (beat.phase === 'listen') {
+      const phr = (l.parts || []).filter((p) => p[1] === 'hl').map((p) => '“' + p[0] + '”').join(', ');
+      return {
+        label: 'listening', edges: ['conv_agent'], nodes: ['conv', 'agent'],
+        caption: l.who === 'D' ? 'Dr. Vogel asks a question. MedGuard keeps listening in the background.'
+          : (phr ? cs.pt.name + ' mentions ' + phr + '. MedGuard picks it up without interrupting.' : cs.pt.name + ' talks. Nothing about medicines yet, so MedGuard stays quiet.'),
+        log: [{ tag: 'listen', cls: 'lg-listen', text: phr ? 'heard ' + phr + ' (detected locally, no AI)' : who + ' speaking…' }],
+        conv: phr || 'listening…'
+      };
+    }
+    if (beat.phase === 'query') {
+      const srcEdges = usesImprint ? ['pill_exa'] : usesSalt ? ['rec_exa'] : ['rec_exa', 'pill_exa'];
+      const srcNodes = usesImprint ? ['pill'] : usesSalt ? ['rec'] : ['rec', 'pill'];
+      return {
+        label: 'retrieving', edges: ['agent_exa'].concat(srcEdges), nodes: ['agent', 'exa'].concat(srcNodes),
+        caption: usesImprint ? 'The agent asks Exasol to look up ' + heardList + ' in the pill database.'
+          : usesSalt ? 'The agent asks Exasol what ' + heardList + ' is made of.'
+          : 'The agent asks Exasol: what on ' + cs.pt.possessive + ' record looks like ' + heardList + '?',
+        log: [{ tag: 'agent → exasol', cls: 'lg-agent', text: usesImprint ? "SELECT … FROM drug_appearance WHERE imprint = '" + ms[0].heard + "'"
+          : 'SELECT … FROM patient_medication JOIN drug_appearance WHERE patient_id = ' + cs.pid }],
+        query: 1
+      };
+    }
+    if (beat.phase === 'result') {
+      const anyUnknown = ms.some((m) => !m.drug);
+      return {
+        label: 'matching', edges: ['exa_agent', 'exa_ident'], nodes: ['exa', 'ident'],
+        caption: anyUnknown ? 'Nothing on ' + cs.pt.possessive + ' record fits. MedGuard flags it as new instead of guessing, and waits for more detail.'
+          : 'Exasol answers in one query: ' + ms.map(resText).join(', ') + '. No AI needed for this step.',
+        log: [{ tag: 'exasol', cls: 'lg-exa', text: ms.map(resText).join(' · ') }],
+        ident: ms.map(resText).join(', ')
+      };
+    }
+    if (beat.phase === 'check') {
+      return {
+        label: 'analysing', edges: ['agent_exa', 'rec_exa', 'lab_exa', 'leaf_exa'], nodes: ['agent', 'exa', 'rec', 'lab', 'leaf'],
+        caption: 'A new medicine. The agent asks Exasol to check it against ' + cs.pt.possessive + ' other medicines, the official leaflets and ' + cs.pt.possessive + ' blood tests, all in one query.',
+        log: [
+          { tag: 'agent → exasol', cls: 'lg-agent', text: 'JOIN drug_label · patient_medication · lab_result (' + cs.alert.test + ')' },
+          { tag: 'exasol', cls: 'lg-exa', text: cs.alert.leaf + ' · ' + cs.alert.labText }
+        ],
+        query: 1
+      };
+    }
+    if (beat.phase === 'explain') {
+      return {
+        label: 'explaining', edges: ['exa_agent', 'agent_bed', 'bed_doc'], nodes: ['agent', 'bed', 'doc'],
+        caption: 'Exasol found the risk. Claude on Amazon Bedrock turns it into a plain-language warning, quoting the leaflet word for word, with guardrails on.',
+        log: [
+          { tag: 'agent → bedrock', cls: 'lg-bed', text: 'explain finding · guardrails: no dosing, no diagnosis' },
+          { tag: 'bedrock', cls: 'lg-bed', text: 'warning written · quote verified against source' }
+        ],
+        ai: 1
+      };
+    }
+    return {
+      label: 'deciding', edges: ['doc_exa'], nodes: ['doc', 'exa'],
+      caption: 'Dr. Vogel decides. Exasol saves the decision next to the evidence it was based on.',
+      log: [{ tag: 'exasol', cls: 'lg-exa', text: "INSERT INTO clinician_review … '" + cs.alert.decision + "'" }],
+      query: 1
+    };
+  }
+
+  renderVals() {
+    const all = this.cases();
+    const cs = all[this.state.c];
+    const beats = this.beats(cs);
+    const b = Math.max(0, Math.min(this.state.b, beats.length - 1));
+    const cur = beats[b];
+
+    const desc = beats.map((bt) => this.describe(cs, bt));
+    const now = desc[b];
+
+    // edge + node states
+    const EDGES = ['conv_agent', 'agent_exa', 'exa_agent', 'agent_bed', 'bed_doc', 'exa_ident', 'doc_exa', 'rec_exa', 'lab_exa', 'pill_exa', 'leaf_exa'];
+    const NODES = ['conv', 'agent', 'bed', 'ident', 'exa', 'doc', 'rec', 'lab', 'pill', 'leaf'];
+    const doneE = {}, doneN = {};
+    desc.slice(0, b).forEach((d) => { d.edges.forEach((x) => { doneE[x] = 1; }); d.nodes.forEach((x) => { doneN[x] = 1; }); });
+    const e = {}, n = {};
+    EDGES.forEach((x) => { e[x] = now.edges.includes(x) ? 'e-on' : doneE[x] ? 'e-done' : ''; });
+    NODES.forEach((x) => { n[x] = now.nodes.includes(x) ? 'n-on' : doneN[x] ? 'n-done' : ''; });
+
+    // counters
+    const upto = desc.slice(0, b + 1);
+    const nQueries = upto.reduce((s, d) => s + (d.query || 0), 0);
+    const nAi = upto.reduce((s, d) => s + (d.ai || 0), 0);
+    const srcSeen = ['rec', 'lab', 'pill', 'leaf'].filter((x) => doneN[x] || now.nodes.includes(x)).length;
+
+    // node sub-lines
+    const lastConv = [...upto].reverse().find((d) => d.conv && d.conv !== 'listening…');
+    const lastIdent = [...upto].reverse().find((d) => d.ident);
+    const explained = upto.some((d) => d.ai);
+    const decided = cur.phase === 'decide';
+    const agentSub = { listen: 'listening', query: 'querying Exasol', result: 'reading results', check: 'checking risks', explain: 'asking Bedrock', decide: 'saving decision' }[cur.phase];
+    const sub = {
+      conv: cur.phase === 'listen' ? now.conv : (lastConv ? lastConv.conv : 'listening…'),
+      agent: agentSub,
+      bed: nAi ? nAi + ' call · guardrails on' : 'not needed yet',
+      ident: lastIdent ? lastIdent.ident : 'nothing yet',
+      exa: nQueries + (nQueries === 1 ? ' query' : ' queries') + ' · record, labs, pills, leaflets',
+      doc: decided ? 'decision saved' : explained ? 'warning shown' : 'nothing to show yet'
+    };
+
+    // log: last 7 entries
+    const logAll = [];
+    upto.forEach((d) => d.log.forEach((g) => logAll.push(g)));
+    const tail = logAll.slice(-7);
+    const log = tail.map((g, k) => ({ tag: g.tag, cls: g.cls, text: g.text, op: k === tail.length - 1 ? '1' : String(0.45 + (k / tail.length) * 0.4) }));
+
+    // left: conversation, last 5 lines up to the current one
+    const resultAt = {}, explainAt = beats.findIndex((x) => x.phase === 'explain');
+    beats.forEach((x, k) => { if (x.phase === 'result') resultAt[x.line] = k; });
+    const kindCls = { sure: 'k-sure', maybe: 'k-maybe', new: 'k-new' };
+    const badge = { sure: 'on record', maybe: 'not sure', new: 'new' };
+    const visible = cs.script.slice(0, cur.line + 1).map((l, k) => ({
+      isDoctor: l.who === 'D', isPatient: l.who === 'P', text: l.text || '',
+      parts: (l.parts || []).map((p) => ({ t: p[0], cls: p[1] || '' })),
+      chips: (resultAt[k] !== undefined && resultAt[k] <= b ? (l.matches || []) : []).map((m) => {
+        const d = m.drug ? cs.meds[m.drug] : null;
+        return { heard: m.heard, title: d ? d.name : m.title, img: d ? d.img : '', hasImg: !!(d && d.img), alt: d ? 'Photo of ' + d.name : '',
+                 kindCls: kindCls[m.kind], badge: badge[m.kind] + ' · ' + m.conf + '%' };
+      })
+    }));
+    const lines = visible.slice(-5);
+
+    const total = beats.length;
+    const go = (to) => this.setState({ b: Math.max(0, Math.min(to, total - 1)) });
+    const next = () => go(b + 1);
+    const prev = () => go(b - 1);
+    const restart = () => go(0);
+    const onKey = (ev) => {
+      const k = ev.key;
+      const onButton = ev.target && ev.target.tagName === 'BUTTON';
+      if ((k === 'Enter' || k === ' ') && onButton) return;
+      if (k === 'ArrowRight' || k === ' ' || k === 'Enter' || k === 'PageDown' || k === 'ArrowDown') { ev.preventDefault(); next(); }
+      else if (k === 'ArrowLeft' || k === 'PageUp' || k === 'ArrowUp' || k === 'Backspace') { ev.preventDefault(); prev(); }
+      else if (k === 'r' || k === 'R' || k === 'Home') { ev.preventDefault(); restart(); }
+    };
+
+    const tabs = all.map((x, k) => ({ label: x.tab, cls: k === this.state.c ? 'tab-on' : '', pick: () => this.setState({ c: k, b: 0 }) }));
+
+    return {
+      tabs, lines, e, n, sub, log, next, prev, restart, onKey,
+      pt: cs.pt,
+      al: cs.alert,
+      caption: now.caption,
+      phaseLabel: now.label,
+      nQueries, nAi, nSources: srcSeen,
+      stepNo: b + 1, stepTotal: total,
+      showWarning: explainAt >= 0 && b >= explainAt,
+      showDecision: decided
+    };
+  }
+}
+</script>
+</body>
+</html>
