@@ -74,10 +74,56 @@ kiro-cli login                                    # GitHub sign-in
 
 Installed: v3.3.0, logged in. Model guidance is in [CLAUDE.md](CLAUDE.md).
 
-## 5. AWS CLI
+## 5. AWS + Bedrock
 
-Installed: **2.40.2** (`brew install awscli`). Not yet configured — run `aws configure sso`
-or `aws configure`. Needed for Bedrock if we call Claude from the app.
+Installed: AWS CLI **2.40.2**. Account access is via **AWS Workshop Studio**, which does **not** use
+SSO — `aws configure sso` will not work here. It issues temporary credentials instead.
+
+To get or refresh credentials:
+
+1. Event dashboard → **"Get AWS CLI credentials"**
+2. Copy the block and paste it into `~/.aws/credentials` (`open -e ~/.aws/credentials`)
+3. If you copied the `export ...` shell format, convert it to INI form:
+   ```ini
+   [default]
+   aws_access_key_id = ...
+   aws_secret_access_key = ...
+   aws_session_token = ...
+   ```
+
+Credentials **expire after a few hours** — when calls start failing with `ExpiredToken`, repeat the above.
+Region is preset to `us-west-2` in `~/.aws/config`.
+
+Verify anytime:
+
+```bash
+./scripts/check_aws.sh
+```
+
+### Bedrock status — verified working
+
+Claude models are **already enabled**; no access request was needed. Confirmed by a live `converse` call:
+
+| Model id (inference profile) | Verified |
+|---|---|
+| `us.anthropic.claude-opus-5-5` | yes |
+| `us.anthropic.claude-sonnet-5-5` | yes (default) |
+| `us.anthropic.claude-haiku-5-5` | yes |
+
+Use `src/hackathon26/bedrock.py`:
+
+```python
+from hackathon26.bedrock import ask, OPUS
+print(ask("...", model_id=OPUS))
+```
+
+**Two API gotchas that will silently bite you:**
+
+1. **Reasoning models put a `reasoningContent` block first**, so `content[0]["text"]` is often missing.
+   Always scan the content list for text blocks. `bedrock.ask()` handles this.
+2. **`temperature` is rejected** by the 5.x models (`"temperature is deprecated for this model"`). Omit it.
+
+The helper also enforces the event's **1 request/second** cap — don't bypass it or fan out parallel calls.
 
 ## Known gotchas
 
