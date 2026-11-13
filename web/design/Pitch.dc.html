@@ -98,20 +98,18 @@ a{color:#2F5BEA}a:hover{color:#1E3FB0}
           <sc-for list="{{talk}}" as="x" hint-placeholder-count="3">
             <div style="display: flex; flex-direction: column; gap: 8px; opacity: {{x.op}};">
               <div style="align-self: flex-end; max-width: 90%; display: flex; gap: 8px; align-items: flex-end;">
-                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 3px; min-width: 0;">
-                  <span style="font-size: 12px; font-weight: 700; color: #2F5BEA;">Dr. Vogel · doctor</span>
-                  <div style="background: #2F5BEA; color: #FFFFFF; padding: 9px 13px; border-radius: 14px 14px 4px 14px; font-size: 15.5px;">{{x.doc}}</div>
-                </div>
-                <span style="width: 30px; height: 30px; border-radius: 50%; background: #E4EBFF; color: #1E3FB0; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex: none;" aria-hidden="true">DV</span>
+                <div style="background: #2F5BEA; color: #FFFFFF; padding: 9px 13px; border-radius: 14px 14px 4px 14px; font-size: 15.5px; min-width: 0;">{{x.doc}}</div>
+                <span title="Dr. Vogel, doctor" role="img" aria-label="Doctor" style="width: 34px; height: 34px; border-radius: 50%; background: #E4EBFF; display: inline-flex; align-items: center; justify-content: center; flex: none;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3v5a4 4 0 0 0 8 0V3" fill="none" stroke="#1E3FB0" stroke-width="2" stroke-linecap="round"/><path d="M10 12v2.5a4.5 4.5 0 0 0 9 0V13" fill="none" stroke="#1E3FB0" stroke-width="2" stroke-linecap="round"/><circle cx="19" cy="11" r="2.2" fill="none" stroke="#1E3FB0" stroke-width="2"/><path d="M5 3h2M13 3h2" stroke="#1E3FB0" stroke-width="2" stroke-linecap="round"/></svg>
+                </span>
               </div>
               <sc-if value="{{x.hasPt}}" hint-placeholder-val="{{true}}">
                 <div style="align-self: flex-start; max-width: 92%; display: flex; gap: 8px; align-items: flex-end;">
-                  <span style="width: 30px; height: 30px; border-radius: 50%; background: #F6D4BC; color: #6B2E0C; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex: none;" aria-hidden="true">FW</span>
-                  <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0;">
-                    <span style="font-size: 12px; font-weight: 700; color: #9A5A2E;">Frau Weber · patient</span>
-                    <div style="background: #F8FAFC; border: 1px solid #E3E8EF; padding: 9px 13px; border-radius: 14px 14px 14px 4px; font-size: 15.5px;">
-                      <sc-for list="{{x.parts}}" as="p"><span class="{{p.cls}}">{{p.t}}</span></sc-for>
-                    </div>
+                  <span title="Frau Weber, patient" role="img" aria-label="Patient" style="width: 34px; height: 34px; border-radius: 50%; background: #FBE3D3; display: inline-flex; align-items: center; justify-content: center; flex: none;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="none" stroke="#8A4417" stroke-width="2"/><path d="M4 21c1.2-4 4.3-6 8-6s6.8 2 8 6" fill="none" stroke="#8A4417" stroke-width="2" stroke-linecap="round"/></svg>
+                  </span>
+                  <div style="background: #F8FAFC; border: 1px solid #E3E8EF; padding: 9px 13px; border-radius: 14px 14px 14px 4px; font-size: 15.5px; min-width: 0;">
+                    <sc-for list="{{x.parts}}" as="p"><span class="{{p.cls}}">{{p.t}}</span></sc-for>
                   </div>
                 </div>
               </sc-if>
