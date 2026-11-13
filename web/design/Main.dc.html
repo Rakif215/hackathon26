@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MedGuard · Conversation</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&amp;family=Source+Sans+3:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#2F5BEA}a:hover{color:#1E3FB0}
+@keyframes mgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes mgPulse{0%,100%{opacity:1}50%{opacity:.35}}
+.mg-in{animation:mgIn .45s cubic-bezier(.2,.7,.2,1) both}
+.mg-live{animation:mgPulse 1.4s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){.mg-in,.mg-live{animation:none}}
+.hl{background:#E4EBFF;border-bottom:2px solid #2F5BEA;border-radius:3px;padding:0 2px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;font-size:14px;line-height:1.2;border:1px solid}
+.chip-sure{background:#ECF8F1;border-color:#B9E3CB;color:#11603A}
+.chip-maybe{background:#FFF6E5;border-color:#F4D69A;color:#7A4A00}
+.chip-new{background:#FFEDE5;border-color:#F8C2A8;color:#9A3412}
+.chip-done{background:#EEF2FF;border-color:#C7D2FE;color:#2F3FA0}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.dot-idle{background:#CBD2DC}.dot-maybe{background:#E0A11B}.dot-sure{background:#1F9D5C}.dot-new{background:#E8590C}
+.btn{font:600 15px/1 'Source Sans 3',system-ui,sans-serif;padding:13px 20px;border-radius:10px;border:1px solid #D5DBE5;background:#fff;color:#101828;cursor:pointer;min-height:44px}
+.btn:hover{border-color:#2F5BEA}
+.btn:focus-visible{outline:3px solid #9DB4FF;outline-offset:2px}
+.btn-primary{background:#2F5BEA;border-color:#2F5BEA;color:#fff}
+.btn-primary:hover{background:#244AC7}
+</style>
+</helmet>
+
+<div style="min-height: 100%; background: #F5F7FB; color: #101828; font-family: 'Source Sans 3', system-ui, sans-serif; font-size: 16px; line-height: 1.5;">
+
+  <!-- top bar -->
+  <header style="background: #FFFFFF; border-bottom: 1px solid #E3E8EF;">
+    <div style="max-width: 1240px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#2F5BEA"/><path d="M10 17.5c0-3.6 2.7-6.5 6-6.5s6 2.9 6 6.5M13 17.5c0-1.9 1.3-3.5 3-3.5s3 1.6 3 3.5M16 17.5v4" stroke="#FFFFFF" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>
+        <span style="font-family: Outfit, system-ui, sans-serif; font-weight: 700; font-size: 21px; letter-spacing: -0.01em;">MedGuard</span>
+      </div>
+      <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: #475467; background: #F2F4F7; padding: 6px 12px; border-radius: 999px;">
+        <span class="dot dot-new mg-live" style="background: {{liveColor}};"></span>{{liveLabel}}
+      </span>
+      <span style="margin-left: auto; font-size: 13px; color: #7A4A00; background: #FFF6E5; padding: 5px 11px; border-radius: 6px;">Demo · made-up patient</span>
+    </div>
+  </header>
+
+  <main style="max-width: 1240px; margin: 0 auto; padding: 36px 24px 64px; display: flex; flex-direction: column; gap: 28px;">
+
+    <!-- intro -->
+    <section style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 20px;">
+      <div style="flex: 999 1 560px; min-width: 0;">
+        <h1 style="margin: 0; font-family: Outfit, system-ui, sans-serif; font-size: clamp(30px, 4vw, 44px); line-height: 1.1; letter-spacing: -0.02em; text-wrap: balance;">A second pair of ears in the doctor's room.</h1>
+        <p style="margin: 12px 0 0; font-size: 18px; color: #475467; max-width: 640px;">MedGuard follows the appointment, works out which medicines the patient means, and warns the doctor when something could be risky for this patient.</p>
+      </div>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button class="btn btn-primary" onClick="{{play}}">{{playLabel}}</button>
+        <button class="btn" onClick="{{showAll}}">Show all</button>
+      </div>
+    </section>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start;">
+
+      <!-- conversation -->
+      <section style="flex: 999 1 600px; min-width: 0; display: flex; flex-direction: column; gap: 18px;">
+        <div style="font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #667085;">Appointment · Dr. Vogel with Frau Weber, 72</div>
+
+        <sc-for list="{{lines}}" as="line" hint-placeholder-count="4">
+          <div class="mg-in" style="display: flex; flex-direction: column; gap: 10px;">
+
+            <sc-if value="{{line.isDoctor}}" hint-placeholder-val="{{false}}">
+              <div style="align-self: flex-end; max-width: min(560px, 88%); display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                <span style="font-size: 13px; color: #667085;">Dr. Vogel</span>
+                <div style="background: {{accent}}; color: #FFFFFF; padding: 12px 16px; border-radius: 16px 16px 4px 16px; font-size: 17px;">{{line.text}}</div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{line.isPatient}}" hint-placeholder-val="{{true}}">
+              <div style="align-self: flex-start; max-width: min(600px, 92%); display: flex; flex-direction: column; gap: 4px;">
+                <span style="font-size: 13px; color: #667085;">Frau Weber</span>
+                <div style="background: #FFFFFF; border: 1px solid #E3E8EF; padding: 12px 16px; border-radius: 16px 16px 16px 4px; font-size: 17px;">
+                  <sc-for list="{{line.parts}}" as="p"><span class="{{p.cls}}">{{p.t}}</span></sc-for>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{line.hasChips}}" hint-placeholder-val="{{false}}">
+              <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding-left: 4px;">
+                <span style="font-size: 13px; font-weight: 600; color: #2F5BEA;">MedGuard understood</span>
+                <sc-for list="{{line.chips}}" as="c"><span class="chip {{c.cls}}"><b style="font-weight: 600;">{{c.heard}}</b><span aria-hidden="true">→</span>{{c.meant}}</span></sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{line.alert}}" hint-placeholder-val="{{false}}">
+              <article style="background: #FFFFFF; border: 1px solid #F8C2A8; border-radius: 18px; overflow: hidden; box-shadow: 0 12px 32px -18px rgba(154, 52, 18, 0.45);">
+                <div style="background: #FFEDE5; padding: 16px 20px; display: flex; gap: 12px; align-items: flex-start;">
+                  <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="flex: none; margin-top: 2px;"><path d="M12 3 2 20h20L12 3Z" fill="#E8590C"/><path d="M12 9v5M12 16.5v.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/></svg>
+                  <div>
+                    <div style="font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #9A3412;">Worth checking before she leaves</div>
+                    <h2 style="margin: 4px 0 0; font-family: Outfit, system-ui, sans-serif; font-size: 23px; line-height: 1.25; text-wrap: balance;">Her new knee painkiller, together with her heart and water tablets, can strain the kidneys.</h2>
+                  </div>
+                </div>
+
+                <div style="padding: 20px; display: flex; flex-wrap: wrap; gap: 24px;">
+                  <div style="flex: 1 1 260px; min-width: 0; display: flex; flex-direction: column; gap: 10px;">
+                    <div style="font-size: 14px; font-weight: 600; color: #344054;">Why it matters for her</div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                      <div style="display: flex; gap: 10px; align-items: center;"><span class="dot dot-new"></span>She is 72</div>
+                      <div style="display: flex; gap: 10px; align-items: center;"><span class="dot dot-new"></span>She takes a water tablet</div>
+                      <div style="display: flex; gap: 10px; align-items: center;"><span class="dot dot-new"></span>Her kidneys are getting weaker</div>
+                    </div>
+                    <div style="font-size: 14px; color: #475467;">The official leaflet lists these three warning signs. She has all three.</div>
+                  </div>
+
+                  <div style="flex: 1 1 240px; min-width: 0;">
+                    <div style="font-size: 14px; font-weight: 600; color: #344054; margin-bottom: 8px;">Kidney function, last 3 tests</div>
+                    <svg role="img" aria-label="Kidney function falling from 62 in March to 55 in July to 48 in October" viewBox="0 0 260 120" width="100%" style="max-width: 300px; display: block;">
+                      <line x1="0" y1="100" x2="260" y2="100" stroke="#E3E8EF" stroke-width="1"/>
+                      <rect x="20" y="38" width="48" height="62" rx="6" fill="#C7D2FE"/>
+                      <rect x="106" y="45" width="48" height="55" rx="6" fill="#F8C2A8"/>
+                      <rect x="192" y="52" width="48" height="48" rx="6" fill="#E8590C"/>
+                      <text x="44" y="30" text-anchor="middle" font-size="14" font-weight="600" fill="#344054">62</text>
+                      <text x="130" y="37" text-anchor="middle" font-size="14" font-weight="600" fill="#344054">55</text>
+                      <text x="216" y="44" text-anchor="middle" font-size="14" font-weight="700" fill="#9A3412">48</text>
+                      <text x="44" y="116" text-anchor="middle" font-size="12" fill="#667085">Mar</text>
+                      <text x="130" y="116" text-anchor="middle" font-size="12" fill="#667085">Jul</text>
+                      <text x="216" y="116" text-anchor="middle" font-size="12" fill="#667085">Oct</text>
+                    </svg>
+                  </div>
+                </div>
+
+                <div style="margin: 0 20px; padding: 14px 16px; background: #F8FAFC; border-radius: 12px; font-size: 15px; color: #344054;">
+                  <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #667085; margin-bottom: 4px;">Where this comes from</div>
+                  “In patients who are elderly, volume-depleted (including those on diuretic therapy), or with compromised renal function, co-administration of NSAIDs … with ACE inhibitors, including ramipril, may result in deterioration of renal function.”
+                  <div style="font-size: 13px; color: #667085; margin-top: 6px;">Official ramipril leaflet, US FDA, section 7.5</div>
+                </div>
+
+                <div style="padding: 16px 20px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
+                  <span style="font-size: 14px; color: #7A4A00; background: #FFF6E5; padding: 6px 12px; border-radius: 8px;">Not sure yet: which painkiller it is, and how much she takes</span>
+                </div>
+              </article>
+            </sc-if>
+
+          </div>
+        </sc-for>
+
+        <sc-if value="{{isWaiting}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; align-items: center; gap: 10px; color: #667085; font-size: 15px;"><span class="dot dot-maybe mg-live"></span>Listening…</div>
+        </sc-if>
+      </section>
+
+      <!-- side summary -->
+      <aside style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 18px;">
+        <section style="background: #FFFFFF; border: 1px solid #E3E8EF; border-radius: 16px; padding: 20px;">
+          <h3 style="margin: 0 0 14px; font-family: Outfit, system-ui, sans-serif; font-size: 18px;">Her medicines</h3>
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <sc-for list="{{meds}}" as="m" hint-placeholder-count="4">
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <span style="width: 34px; height: 22px; border-radius: 11px; background: {{m.color}}; border: 1px solid rgba(16, 24, 40, 0.18); flex: none;"></span>
+                <div style="min-width: 0; flex: 1;">
+                  <div style="font-weight: 600;">{{m.name}}</div>
+                  <div style="font-size: 14px; color: #667085;">{{m.what}}</div>
+                </div>
+                <span class="dot {{m.dot}}" title="{{m.status}}"></span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid #EEF1F5; display: flex; flex-wrap: wrap; gap: 12px; font-size: 13px; color: #667085;">
+            <span style="display: inline-flex; gap: 6px; align-items: center;"><span class="dot dot-sure"></span>identified</span>
+            <span style="display: inline-flex; gap: 6px; align-items: center;"><span class="dot dot-maybe"></span>not sure</span>
+            <span style="display: inline-flex; gap: 6px; align-items: center;"><span class="dot dot-new"></span>new</span>
+          </div>
+        </section>
+
+        <section style="background: #101828; color: #F2F4F7; border-radius: 16px; padding: 20px;">
+          <h3 style="margin: 0 0 12px; font-family: Outfit, system-ui, sans-serif; font-size: 18px;">Why you can trust it</h3>
+          <div style="display: flex; flex-direction: column; gap: 10px; font-size: 15px; color: #D0D5DD;">
+            <div>Every warning shows where it comes from.</div>
+            <div>It says when it isn't sure, instead of guessing.</div>
+            <div>It never says “safe”. The doctor always decides.</div>
+          </div>
+        </section>
+
+        <sc-if value="{{decided}}" hint-placeholder-val="{{false}}">
+          <section class="mg-in" style="background: #EEF2FF; border: 1px solid #C7D2FE; border-radius: 16px; padding: 18px 20px;">
+            <div style="font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #2F3FA0;">Doctor's decision · saved</div>
+            <div style="margin-top: 6px; font-size: 16px;">Pause the painkiller, check kidney function today.</div>
+          </section>
+        </sc-if>
+      </aside>
+    </div>
+  </main>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#2F5BEA","options":["#2F5BEA","#0E7C86","#5B3FD6"]},"speed":{"editor":"range","default":1800,"min":800,"max":3500,"step":100,"unit":"ms"},"$preview":{"width":1440,"height":1640}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { i: 9, playing: false };
+  }
+
+  script() {
+    return [
+      { who: 'D', text: 'Good morning, Frau Weber. How have you been since July?' },
+      { who: 'P', parts: [['Mostly fine. I take '], ['the white one', 'hl'], [' in the morning and '], ['the small yellow one', 'hl'], [' with breakfast.']],
+        chips: [['“small yellow one”', 'Metoprolol, heart rhythm', 'chip-sure'], ['“white one”', 'Ramipril or Furosemide?', 'chip-maybe']] },
+      { who: 'D', text: 'And the water tablet?' },
+      { who: 'P', parts: [['Yes, '], ['the long white one', 'hl'], [' too. I get a bit dizzy when I stand up.']],
+        chips: [['“long white one”', 'Furosemide, water tablet', 'chip-sure'], ['so “white one”', 'Ramipril, blood pressure', 'chip-sure']] },
+      { who: 'D', text: 'Has anything else changed?' },
+      { who: 'P', parts: [['My knee has been terrible. My GP gave me '], ['something for it', 'hl'], [' two weeks ago.']],
+        chips: [['“something for it”', 'A painkiller, not on her list', 'chip-new']] },
+      { who: 'D', text: 'Do you remember what it is called?' },
+      { who: 'P', parts: [['No. It comes in '], ['a red and white box', 'hl'], [', three times a day.']],
+        chips: [['“red and white box, 3× a day”', 'Probably ibuprofen (an NSAID)', 'chip-new']], alert: true },
+      { who: 'D', text: "Let's stop the knee tablets for now and check your kidneys today." }
+    ];
+  }
+
+  componentWillUnmount() { clearInterval(this.timer); }
+
+  renderVals() {
+    const all = this.script();
+    const i = this.state.i;
+    const total = all.length;
+    const speed = this.props.speed ?? 1800;
+
+    const lines = all.slice(0, i).map((l, k) => ({
+      key: k,
+      isDoctor: l.who === 'D',
+      isPatient: l.who === 'P',
+      text: l.text || '',
+      parts: (l.parts || []).map((p) => ({ t: p[0], cls: p[1] || '' })),
+      hasChips: !!l.chips,
+      chips: (l.chips || []).map((c) => ({ heard: c[0], meant: c[1], cls: c[2] })),
+      alert: !!l.alert
+    }));
+
+    const st = (sure, maybe) => (i >= sure ? 'dot-sure' : i >= maybe ? 'dot-maybe' : 'dot-idle');
+    const meds = [
+      { name: 'Ramipril', what: 'Blood pressure · white, round', color: '#F4F5F2', dot: st(4, 2), status: '' },
+      { name: 'Metoprolol', what: 'Heart rhythm · small, yellow', color: '#EBCB55', dot: st(2, 99), status: '' },
+      { name: 'Furosemide', what: 'Water tablet · white, long', color: '#F4F5F2', dot: st(4, 2), status: '' },
+      { name: 'Knee painkiller', what: i >= 6 ? 'New · told us in passing' : 'Not mentioned yet', color: i >= 6 ? '#E9483A' : '#EEF1F5', dot: i >= 6 ? 'dot-new' : 'dot-idle', status: '' }
+    ];
+
+    const play = () => {
+      clearInterval(this.timer);
+      this.setState({ i: 0, playing: true });
+      this.timer = setInterval(() => {
+        const n = this.state.i + 1;
+        if (n >= total) { clearInterval(this.timer); this.setState({ i: total, playing: false }); }
+        else this.setState({ i: n });
+      }, speed);
+    };
+    const showAll = () => { clearInterval(this.timer); this.setState({ i: total, playing: false }); };
+
+    return {
+      lines,
+      meds,
+      play,
+      showAll,
+      accent: this.props.accent ?? '#2F5BEA',
+      playLabel: this.state.playing ? 'Restart' : 'Play the appointment',
+      liveLabel: this.state.playing ? 'Listening to the appointment' : 'Appointment finished',
+      liveColor: this.state.playing ? '#E8590C' : '#1F9D5C',
+      isWaiting: this.state.playing && i < total,
+      decided: i >= total
+    };
+  }
+}
+</script>
+</body>
+</html>
