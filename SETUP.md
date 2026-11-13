@@ -79,20 +79,21 @@ Installed: v3.3.0, logged in. Model guidance is in [CLAUDE.md](CLAUDE.md).
 Installed: AWS CLI **2.40.2**. Account access is via **AWS Workshop Studio**, which does **not** use
 SSO — `aws configure sso` will not work here. It issues temporary credentials instead.
 
-To get or refresh credentials:
+To get or refresh credentials — **two steps**:
 
-1. Event dashboard → **"Get AWS CLI credentials"**
-2. Copy the block and paste it into `~/.aws/credentials` (`open -e ~/.aws/credentials`)
-3. If you copied the `export ...` shell format, convert it to INI form:
-   ```ini
-   [default]
-   aws_access_key_id = ...
-   aws_secret_access_key = ...
-   aws_session_token = ...
+1. Event dashboard → **"Get AWS CLI credentials"** → copy (either format offered is fine)
+2. Run:
+   ```bash
+   ./scripts/aws_creds.sh
    ```
 
-Credentials **expire after a few hours** — when calls start failing with `ExpiredToken`, repeat the above.
-Region is preset to `us-west-2` in `~/.aws/config`.
+That reads your clipboard, accepts **either** the `export AWS_...` shell block or the `[default]` INI
+block, writes a correct `~/.aws/credentials`, and verifies it. Pasting the `export` form straight into the
+file is the usual mistake — it produces `Unable to parse config file` — and this script makes that
+impossible.
+
+Credentials **expire after a few hours**. When calls fail with `ExpiredToken` or `InvalidClientTokenId`,
+just copy a fresh block and run the script again. Region is preset to `us-west-2` in `~/.aws/config`.
 
 Verify anytime:
 
