@@ -1,0 +1,32 @@
+# OS / editors
+.DS_Store
+.vscode/
+.idea/
+
+# Env & secrets
+.env
+.env.*
+!.env.example
+*.pem
+.aws/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+
+# Node
+node_modules/
+dist/
+build/
+.next/
+
+# Data (keep synthetic seeds in data/seed/, ignore large/raw dumps)
+data/raw/
+*.parquet
+*.sqlite
+
+# Claude local settings
+.claude/settings.local.json
