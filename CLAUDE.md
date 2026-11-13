@@ -24,20 +24,22 @@ Use Claude Code for planning, architecture, review and tricky debugging. Hand **
 
 ```bash
 kiro-cli chat --no-interactive --trust-workspace --trust-all-tools \
-  --model claude-opus-5.5 "<precise task, files to touch, acceptance criteria>"
+  --model claude-opus-5.5 --effort high "<precise task, files to touch, acceptance criteria>"
 ```
 
 ### Model picker (credit multipliers, verified 13 Nov 2026)
 
+**Use the good models. We are optimising for a winning demo, not for credits.** 1000 credits is plenty for a
+3-day hackathon, and a weak diff costs more in review time than it saves in credits.
+
 | Model | Cost | Use for |
 |---|---|---|
-| `claude-haiku-5.5` | **0.06x** | Bulk boilerplate, seed data, repetitive edits. Default workhorse. |
-| `auto` | 1.00x | When unsure; Kiro picks per task. |
-| `claude-sonnet-5.5` | 1.30x | Normal feature work. |
-| `claude-opus-5.5` | 2.00x | Hard logic, architecture. Cheaper than `claude-opus-5` (2.20x), so prefer it. |
+| `claude-opus-5.5` | **2.00x** | **Default.** Anything real: features, logic, architecture, UI. Cheaper than `claude-opus-5` (2.20x), so always prefer it. |
+| `claude-sonnet-5.5` | 1.30x | Large mechanical diffs where Opus is overkill. |
+| `claude-haiku-5.5` | 0.06x | Throwaway only: one-line greps, file listings, trivial renames. |
 
-`kiro-cli chat --list-models` prints the full list. Haiku 5.5 at 0.06x is ~33x cheaper than Opus 5.5 — reach
-for it first and only escalate when the output isn't good enough.
+`kiro-cli chat --list-models` prints the full list. Default to `claude-opus-5.5` and add `--effort high`
+(or `xhigh`) for hard problems.
 
 ### Working with Kiro
 
@@ -53,7 +55,7 @@ for it first and only escalate when the output isn't good enough.
 
 - Bedrock can serve Claude models for the app itself (and can back Claude Code via `CLAUDE_CODE_USE_BEDROCK=1`).
 - Keep the region and model ids in `.env` (gitignored). Document required variables in `.env.example`.
-- AWS CLI is **not installed yet**. Install with `brew install awscli`, then `aws configure` / `aws configure sso`.
+- AWS CLI **2.40.2 is installed** (`/opt/homebrew/bin/aws`). Sign in with `aws configure sso` or `aws configure`.
 
 ## Repo conventions
 
