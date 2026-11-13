@@ -122,8 +122,43 @@ a{color:#2F5BEA}a:hover{color:#1E3FB0}
         </sc-if>
       </section>
 
+      <!-- ================= MIDDLE: prescription + patient history ================= -->
+      <div style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 16px;">
+        <section style="background: #FFFFFF; border: 1px solid #E3E8EF; border-radius: 18px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
+          <div style="display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;">
+            <h3 style="margin: 0; font-family: Outfit, system-ui, sans-serif; font-size: 18px;">Prescription</h3>
+            <span style="font-size: 12.5px; color: #667085;">{{pt.name}} · on record</span>
+          </div>
+          <sc-for list="{{rx}}" as="r" hint-placeholder-count="3">
+            <div class="pv-in" style="display: flex; align-items: center; gap: 10px;">
+              <sc-if value="{{r.hasImg}}" hint-placeholder-val="{{true}}">
+                <img src="{{r.img}}" alt="{{r.alt}}" style="width: 58px; height: 42px; object-fit: cover; border-radius: 8px; background: #6B6B6B; flex: none;">
+              </sc-if>
+              <sc-if value="{{r.noImg}}" hint-placeholder-val="{{false}}">
+                <span style="width: 58px; height: 42px; border-radius: 8px; background: #FFF6E5; color: #7A4A00; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex: none;">no pill</span>
+              </sc-if>
+              <div style="min-width: 0; flex: 1;">
+                <div style="font-weight: 700; font-size: 15px;">{{r.name}}</div>
+                <div style="font-size: 13px; color: #667085;">{{r.what}} · <span class="mono">{{r.when}}</span></div>
+              </div>
+              <span style="flex: none; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: {{r.bg}}; color: {{r.fg}};">{{r.status}}</span>
+            </div>
+          </sc-for>
+        </section>
+        <section style="background: #FFFFFF; border: 1px solid #E3E8EF; border-radius: 18px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;">
+            <h3 style="margin: 0; font-family: Outfit, system-ui, sans-serif; font-size: 18px;">Patient history</h3>
+            <span style="font-size: 11px; font-weight: 700; color: #5B3FD6; background: #F1ECFF; padding: 2px 8px; border-radius: 5px;">AI summary</span>
+          </div>
+          <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 14.5px; color: #344054;">
+            <sc-for list="{{history}}" as="h" hint-placeholder-count="5"><li>{{h}}</li></sc-for>
+          </ul>
+          <div style="font-size: 12px; color: #98A2B3;">Summarised from {{pt.possessive}} record, past visits and lab results.</div>
+        </section>
+      </div>
+
       <!-- ================= RIGHT: behind the scenes ================= -->
-      <section style="flex: 999 1 680px; min-width: 0; background: #0A1120; color: #E6EDFF; border-radius: 18px; padding: 20px 22px; display: flex; flex-direction: column; gap: 16px;">
+      <section style="flex: 999 1 620px; min-width: 0; background: #0A1120; color: #E6EDFF; border-radius: 18px; padding: 20px 22px; display: flex; flex-direction: column; gap: 16px;">
         <div>
           <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #3DDC97;">Behind the scenes · {{phaseLabel}}</div>
           <p class="pv-in" style="margin: 6px 0 0; font-family: Outfit, system-ui, sans-serif; font-size: clamp(20px, 2vw, 27px); line-height: 1.3; font-weight: 500; text-wrap: balance; min-height: 2.6em;">{{caption}}</p>
@@ -131,7 +166,7 @@ a{color:#2F5BEA}a:hover{color:#1E3FB0}
 
         <!-- diagram -->
         <div style="overflow-x: auto;">
-          <div style="position: relative; min-width: 880px; aspect-ratio: 1000 / 600; background-color: #0C1426; background-image: radial-gradient(rgba(61, 220, 151, 0.10) 1px, transparent 1.4px); background-size: 16px 16px; border-radius: 14px; border: 1px solid #18233B;">
+          <div style="position: relative; min-width: 680px; aspect-ratio: 1000 / 600; background-color: #0C1426; background-image: radial-gradient(rgba(61, 220, 151, 0.10) 1px, transparent 1.4px); background-size: 16px 16px; border-radius: 14px; border: 1px solid #18233B;">
             <svg viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%;">
               <defs><marker id="pvArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3A4C6E"/></marker></defs>
               <path class="edge {{e.conv_agent}}" d="M250,80 L400,80" marker-end="url(#pvArrow)"/>
@@ -236,6 +271,9 @@ class Component extends DCLogic {
       {
         tab: '1 · The knee painkiller', pid: 1042,
         pt: { name: 'Frau Weber', possessive: 'her', age: 72, initials: 'FW' },
+        rxInfo: { ram: ['blood pressure', '1-0-0'], met: ['heart rhythm', '1-0-0'], fur: ['water tablet', '1-0-0'], ibu: ['painkiller', 'self-bought'] },
+        history: ['Heart failure since 2021, on 3 medicines', 'Last visit in July: stable, no complaints', 'Kidney function falling: eGFR 62 → 55 → 48',
+          'Potassium 5.1, at the upper limit', 'No painkiller on record'],
         meds: {
           ram: { name: 'Ramipril 5 mg', img: IMG.ram5, rec: true }, met: { name: 'Metoprolol 25 mg', img: IMG.metS, rec: true },
           fur: { name: 'Furosemide 40 mg', img: IMG.furo, rec: true }, ibu: { name: 'Ibuprofen 400 mg', img: IMG.ibu, rec: false }
@@ -263,6 +301,9 @@ class Component extends DCLogic {
       {
         tab: '2 · The low-salt salt', pid: 2077,
         pt: { name: 'Herr Schmidt', possessive: 'his', age: 68, initials: 'HS' },
+        rxInfo: { ram: ['blood pressure, heart', '1-0-0'], spi: ['water tablet', '1-0-0'], salt: ['salt substitute', 'daily'], kcl: ['potassium supplement', 'daily'] },
+        history: ['Heart failure since 2020, on 2 medicines', 'Told to cut down on salt in July', 'Leg cramps at night since summer',
+          'Potassium rising: 4.7 → 5.0 → 5.4', 'Kidney function last checked in April'],
         meds: {
           ram: { name: 'Ramipril 10 mg', img: IMG.ram10, rec: true }, spi: { name: 'Spironolactone 50 mg', img: IMG.spiro, rec: true },
           salt: { name: 'Potassium salt substitute', img: '', rec: false }, kcl: { name: 'Potassium chloride 8 mEq', img: IMG.kcl, rec: false }
@@ -288,6 +329,9 @@ class Component extends DCLogic {
       {
         tab: '3 · Two heart pills', pid: 3115,
         pt: { name: 'Frau Yilmaz', possessive: 'her', age: 79, initials: 'FY' },
+        rxInfo: { met: ['heart rhythm', '1-0-0'], ram: ['blood pressure', '1-0-0'], mt2: ['heart rhythm', '1-0-0'] },
+        history: ['Heart failure, on 2 medicines', 'Pharmacy changed her heart-pill maker in October', 'Pulse falling: 68 → 58 → 48',
+          'Feels tired since the autumn', 'Lives alone, manages her own pills'],
         meds: {
           met: { name: 'Metoprolol 25 mg', img: IMG.metS, rec: true }, ram: { name: 'Ramipril 5 mg', img: IMG.ram5, rec: true },
           mt2: { name: 'Metoprolol 50 mg · same medicine', img: IMG.metT, rec: false }
@@ -463,6 +507,22 @@ class Component extends DCLogic {
     }));
     const lines = visible.slice(-5);
 
+    // right: prescription list, updated live from what has been matched so far
+    const seen = {};
+    cs.script.forEach((l, k) => {
+      if (resultAt[k] === undefined || resultAt[k] > b) return;
+      (l.matches || []).forEach((m) => { if (m.drug) seen[m.drug] = m.kind; });
+    });
+    const info = cs.rxInfo || {};
+    const rx = Object.keys(cs.meds)
+      .filter((key) => cs.meds[key].rec || seen[key])
+      .map((key) => {
+        const d = cs.meds[key];
+        const st = !d.rec ? ['not prescribed', '#3A2414', '#FFB48A'] : seen[key] ? ['confirmed', '#123A2A', '#7EE2AE'] : ['prescribed', '#1C2740', '#9FB0D6'];
+        const i = info[key] || ['', ''];
+        return { name: d.name, img: d.img, hasImg: !!d.img, noImg: !d.img, alt: 'Photo of ' + d.name, what: i[0], when: i[1], status: st[0], bg: st[1], fg: st[2] };
+      });
+
     const total = beats.length;
     const go = (to) => this.setState({ b: Math.max(0, Math.min(to, total - 1)) });
     const next = () => go(b + 1);
@@ -480,7 +540,8 @@ class Component extends DCLogic {
     const tabs = all.map((x, k) => ({ label: x.tab, cls: k === this.state.c ? 'tab-on' : '', pick: () => this.setState({ c: k, b: 0 }) }));
 
     return {
-      tabs, lines, e, n, sub, log, next, prev, restart, onKey,
+      tabs, lines, e, n, sub, log, next, prev, restart, onKey, rx,
+      history: cs.history || [],
       pt: cs.pt,
       al: cs.alert,
       caption: now.caption,
