@@ -1,0 +1,753 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MedGuard · Consultation</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#2F5BEA}a:hover{color:#1E3FB0}
+@keyframes mgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes mgPulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes mgGrow{from{width:0}}
+@keyframes mgGlow{0%,100%{box-shadow:0 0 0 0 rgba(92,200,255,0)}50%{box-shadow:0 0 0 5px rgba(92,200,255,.22)}}
+.mg-in{animation:mgIn .45s cubic-bezier(.2,.7,.2,1) both}
+.mg-live{animation:mgPulse 1.3s ease-in-out infinite}
+.mg-grow{animation:mgGrow .9s cubic-bezier(.2,.7,.2,1) both}
+.node-on{animation:mgGlow 1.8s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){.mg-in,.mg-live,.mg-grow,.node-on{animation:none}}
+.hl{background:#E4EBFF;border-bottom:2px solid #2F5BEA;border-radius:3px;padding:0 2px}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+.tab{font:600 15px/1.2 'Source Sans 3',system-ui,sans-serif;padding:10px 16px;border-radius:10px;border:1px solid #D5DBE5;background:#FFFFFF;color:#344054;cursor:pointer;min-height:44px;text-align:left}
+.tab:hover{border-color:#2F5BEA}
+.tab-on{background:#101828;border-color:#101828;color:#FFFFFF}
+.btn{font:600 15px/1 'Source Sans 3',system-ui,sans-serif;padding:13px 20px;border-radius:10px;border:1px solid #D5DBE5;background:#FFFFFF;color:#101828;cursor:pointer;min-height:44px}
+.btn:hover{border-color:#2F5BEA}
+.btn-primary{background:#2F5BEA;border-color:#2F5BEA;color:#FFFFFF}
+.btn-primary:hover{background:#244AC7}
+.btn-sel{background:#101828;border-color:#101828;color:#FFFFFF}
+.btn-dark{background:#0B1220;border-color:#0B1220;color:#E6EDFF}
+.tab:focus-visible,.btn:focus-visible{outline:3px solid #9DB4FF;outline-offset:2px}
+.k-sure{background:#ECF8F1;color:#11603A;border:1px solid #B9E3CB}
+.k-maybe{background:#FFF6E5;color:#7A4A00;border:1px solid #F4D69A}
+.k-new{background:#FFEDE5;color:#9A3412;border:1px solid #F8C2A8}
+.k-idle{background:#F2F4F7;color:#667085;border:1px solid #E3E8EF}
+.bar-sure{background:#1F9D5C}.bar-maybe{background:#E0A11B}.bar-new{background:#E8590C}
+.f-ok{background:#ECF8F1;color:#11603A}.f-no{background:#F2F4F7;color:#667085}
+.node{flex:1 1 0;min-width:0;padding:9px 8px;border-radius:10px;border:1px solid #23304D;background:#111A2E;color:#7D8BAA;text-align:center;font-size:12.5px;line-height:1.25}
+.node b{display:block;font-size:13.5px;color:#AAB6D3}
+.node-on{border-color:#5CC8FF;background:#0F2740;color:#BFE8FF}
+.node-on b{color:#FFFFFF}
+.node-done b{color:#D6DEF2}
+.t-exa{background:#123A2A;color:#7EE2AE}.t-bed{background:#2C2147;color:#C9B5FF}.t-db{background:#123A2A;color:#7EE2AE}
+.row-hot{background:#13324A;color:#FFFFFF}
+.cell{padding:5px 8px;border-bottom:1px solid #1C2740;white-space:nowrap}
+</style>
+</helmet>
+
+<div style="min-height: 100%; background: #F5F7FB; color: #101828; font-family: 'Source Sans 3', system-ui, sans-serif; font-size: 16px; line-height: 1.5;">
+
+  <!-- top bar -->
+  <header style="background: #FFFFFF; border-bottom: 1px solid #E3E8EF;">
+    <div style="max-width: 1360px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#2F5BEA"/><path d="M10 17.5c0-3.6 2.7-6.5 6-6.5s6 2.9 6 6.5M13 17.5c0-1.9 1.3-3.5 3-3.5s3 1.6 3 3.5M16 17.5v4" stroke="#FFFFFF" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>
+        <span style="font-family: Outfit, system-ui, sans-serif; font-weight: 700; font-size: 21px; letter-spacing: -0.01em;">MedGuard</span>
+      </div>
+      <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: #475467; background: #F2F4F7; padding: 6px 12px; border-radius: 999px;">
+        <span class="mg-live" style="width: 9px; height: 9px; border-radius: 50%; background: {{liveColor}};"></span>{{liveLabel}}
+      </span>
+      <span style="margin-left: auto; font-size: 13px; color: #7A4A00; background: #FFF6E5; padding: 5px 11px; border-radius: 6px;">Demo · invented patients, real drug data</span>
+    </div>
+  </header>
+
+  <main style="max-width: 1360px; margin: 0 auto; padding: 30px 24px 64px; display: flex; flex-direction: column; gap: 24px;">
+
+    <!-- controls -->
+    <section style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+      <nav aria-label="Patient stories" style="display: flex; flex-wrap: wrap; gap: 10px; flex: 999 1 560px; min-width: 0;">
+        <sc-for list="{{tabs}}" as="t" hint-placeholder-count="3">
+          <button class="tab {{t.cls}}" onClick="{{t.pick}}">
+            <span style="display: block; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.7;">{{t.num}}</span>
+            {{t.label}}
+          </button>
+        </sc-for>
+      </nav>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button class="btn btn-primary" onClick="{{play}}">{{playLabel}}</button>
+        <button class="btn" onClick="{{showAll}}">Show all</button>
+        <button class="btn {{engineBtnCls}}" onClick="{{toggleEngine}}">{{engineLabel}}</button>
+      </div>
+    </section>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 26px; align-items: flex-start;">
+
+      <!-- ================= story + conversation ================= -->
+      <section style="flex: 999 1 600px; min-width: 0; display: flex; flex-direction: column; gap: 18px;">
+
+        <!-- the story -->
+        <article style="background: #FFFFFF; border: 1px solid #E3E8EF; border-radius: 18px; padding: 22px 24px; display: flex; flex-wrap: wrap; gap: 20px;">
+          <div style="flex: 999 1 360px; min-width: 0;">
+            <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #2F5BEA;">{{caseNum}} · The story</div>
+            <h1 style="margin: 6px 0 8px; font-family: Outfit, system-ui, sans-serif; font-size: clamp(26px, 3vw, 34px); line-height: 1.15; letter-spacing: -0.015em; text-wrap: balance;">{{st.title}}</h1>
+            <p style="margin: 0; font-size: 17px; color: #344054;">{{st.setup}}</p>
+          </div>
+          <div style="flex: 1 1 260px; min-width: 0; background: #FFF6E5; border-radius: 14px; padding: 16px 18px; align-self: stretch;">
+            <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #7A4A00;">What nobody in the room knows yet</div>
+            <p style="margin: 6px 0 0; font-size: 16px; color: #4A3200;">{{st.hidden}}</p>
+          </div>
+        </article>
+
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 4px 2px 0;">
+          <span style="width: 40px; height: 40px; border-radius: 50%; background: #F6D4BC; color: #6B2E0C; display: inline-flex; align-items: center; justify-content: center; font-family: Outfit, system-ui, sans-serif; font-weight: 700;">{{pt.initials}}</span>
+          <div>
+            <div style="font-weight: 700; font-size: 17px;">{{pt.name}}, {{pt.age}}</div>
+            <div style="font-size: 14px; color: #667085;">{{pt.visit}}</div>
+          </div>
+          <span class="mono" style="margin-left: auto; font-size: 13px; color: #667085;">line {{lineNo}} / {{total}}</span>
+        </div>
+
+        <sc-for list="{{lines}}" as="line" hint-placeholder-count="4">
+          <div class="mg-in" style="display: flex; flex-direction: column; gap: 10px;">
+
+            <sc-if value="{{line.isDoctor}}" hint-placeholder-val="{{false}}">
+              <div style="align-self: flex-end; max-width: min(560px, 88%); display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                <span style="font-size: 13px; color: #667085;">Dr. Vogel</span>
+                <div style="background: #2F5BEA; color: #FFFFFF; padding: 12px 16px; border-radius: 16px 16px 4px 16px; font-size: 17px;">{{line.text}}</div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{line.isPatient}}" hint-placeholder-val="{{true}}">
+              <div style="align-self: flex-start; max-width: min(620px, 92%); display: flex; flex-direction: column; gap: 4px;">
+                <span style="font-size: 13px; color: #667085;">{{pt.name}}</span>
+                <div style="background: #FFFFFF; border: 1px solid #E3E8EF; padding: 12px 16px; border-radius: 16px 16px 16px 4px; font-size: 17px;">
+                  <sc-for list="{{line.parts}}" as="p"><span class="{{p.cls}}">{{p.t}}</span></sc-for>
+                </div>
+              </div>
+            </sc-if>
+
+            <!-- what MedGuard understood -->
+            <sc-for list="{{line.matches}}" as="m">
+              <article style="margin-left: 18px; background: #FFFFFF; border: 1px solid #E3E8EF; border-radius: 14px; overflow: hidden; display: flex; flex-wrap: wrap;">
+                <sc-if value="{{m.hasImg}}" hint-placeholder-val="{{true}}">
+                  <figure style="margin: 0; flex: 0 1 190px; min-width: 150px; background: #6B6B6B; display: flex; flex-direction: column;">
+                    <img src="{{m.img}}" alt="{{m.imgAlt}}" style="display: block; width: 100%; height: 140px; object-fit: cover;">
+                    <figcaption class="mono" style="font-size: 11px; color: #E9EBEF; padding: 6px 9px; background: #4A4F57;">{{m.look}}</figcaption>
+                  </figure>
+                </sc-if>
+                <div style="flex: 999 1 280px; min-width: 0; padding: 14px 16px; display: flex; flex-direction: column; gap: 9px;">
+                  <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    <span style="font-size: 12px; font-weight: 700; color: #2F5BEA;">MedGuard heard</span>
+                    <span style="font-size: 15px; font-style: italic; color: #344054;">“{{m.heard}}”</span>
+                    <span style="margin-left: auto; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px;" class="{{m.kindCls}}">{{m.kindLabel}}</span>
+                  </div>
+                  <div style="font-family: Outfit, system-ui, sans-serif; font-size: 20px; font-weight: 600; line-height: 1.2;">{{m.title}} <span style="font-family: 'Source Sans 3', system-ui, sans-serif; font-size: 15px; font-weight: 400; color: #667085;">{{m.purpose}}</span></div>
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="flex: 1; max-width: 220px; height: 8px; border-radius: 4px; background: #EEF1F5; overflow: hidden;"><span class="mg-grow {{m.barCls}}" style="display: block; height: 100%; width: {{m.confPct}}; border-radius: 4px;"></span></span>
+                    <span class="mono" style="font-size: 13px; color: #344054;">{{m.confPct}} match</span>
+                  </div>
+                  <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                    <sc-for list="{{m.feats}}" as="f"><span class="{{f.cls}}" style="font-size: 13px; padding: 3px 9px; border-radius: 6px;">{{f.t}}</span></sc-for>
+                  </div>
+                  <div style="font-size: 14px; color: #667085;">{{m.alt}}</div>
+                </div>
+              </article>
+            </sc-for>
+
+            <!-- the warning -->
+            <sc-if value="{{line.alert}}" hint-placeholder-val="{{false}}">
+              <article style="background: #FFFFFF; border: 1px solid #F8C2A8; border-radius: 18px; overflow: hidden; box-shadow: 0 16px 36px -22px rgba(154, 52, 18, 0.5);">
+                <div style="background: #FFEDE5; padding: 18px 22px; display: flex; gap: 14px; align-items: flex-start;">
+                  <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true" style="flex: none; margin-top: 2px;"><path d="M12 3 2 20h20L12 3Z" fill="#E8590C"/><path d="M12 9v5M12 16.5v.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/></svg>
+                  <div>
+                    <div style="font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #9A3412;">Worth checking before the patient leaves</div>
+                    <h2 style="margin: 4px 0 0; font-family: Outfit, system-ui, sans-serif; font-size: 24px; line-height: 1.25; text-wrap: balance;">{{al.headline}}</h2>
+                  </div>
+                </div>
+
+                <div style="padding: 22px; display: flex; flex-wrap: wrap; gap: 26px;">
+                  <div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; align-items: baseline; gap: 10px;">
+                      <span style="font-family: Outfit, system-ui, sans-serif; font-size: 44px; font-weight: 700; color: #E8590C; line-height: 1;">{{al.hit}}<span style="font-size: 22px; color: #F0A27F;"> / {{al.of}}</span></span>
+                      <span style="font-size: 15px; color: #475467;">warning signs from the official leaflet apply to {{pt.short}}</span>
+                    </div>
+                    <sc-for list="{{al.factors}}" as="x">
+                      <div style="display: flex; gap: 12px; align-items: flex-start; padding: 10px 12px; background: #FFF7F2; border-radius: 10px;">
+                        <span style="flex: none; width: 22px; height: 22px; border-radius: 50%; background: #E8590C; color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700;">✓</span>
+                        <div style="min-width: 0;">
+                          <div style="font-weight: 600;">{{x.label}}</div>
+                          <div class="mono" style="font-size: 13px; color: #667085;">{{x.value}}</div>
+                        </div>
+                      </div>
+                    </sc-for>
+                  </div>
+
+                  <figure style="flex: 1 1 320px; min-width: 0; margin: 0;">
+                    <figcaption style="display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 8px;">
+                      <span style="font-weight: 600;">{{lab.name}}</span>
+                      <span class="mono" style="font-size: 13px; color: #667085;">{{lab.unit}} · normal {{lab.refText}}</span>
+                    </figcaption>
+                    <svg role="img" aria-label="{{lab.aria}}" viewBox="0 0 340 170" width="100%" style="display: block; max-width: 420px;">
+                      <rect x="40" y="{{lab.bandY}}" width="290" height="{{lab.bandH}}" fill="#ECF8F1"/>
+                      <text x="326" y="{{lab.bandLabelY}}" text-anchor="end" font-size="11" fill="#11603A">normal range</text>
+                      <line x1="40" y1="140" x2="330" y2="140" stroke="#D0D5DD" stroke-width="1"/>
+                      <polyline points="{{lab.poly}}" fill="none" stroke="#E8590C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                      <sc-for list="{{lab.pts}}" as="q">
+                        <circle cx="{{q.x}}" cy="{{q.y}}" r="{{q.r}}" fill="{{q.fill}}" stroke="#FFFFFF" stroke-width="2"/>
+                        <text x="{{q.x}}" y="{{q.ly}}" text-anchor="middle" font-size="14" font-weight="700" fill="#344054">{{q.v}}</text>
+                        <text x="{{q.x}}" y="160" text-anchor="middle" font-size="12" fill="#667085">{{q.m}}</text>
+                      </sc-for>
+                    </svg>
+                    <div style="font-size: 14px; color: #475467; margin-top: 4px;">{{lab.note}}</div>
+                  </figure>
+                </div>
+
+                <div style="margin: 0 22px; padding: 16px 18px; background: #F8FAFC; border: 1px solid #EEF1F5; border-radius: 12px;">
+                  <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #667085; margin-bottom: 6px;">Where this comes from · quoted word for word</div>
+                  <blockquote style="margin: 0; font-size: 15.5px; color: #344054; line-height: 1.55;">“{{al.quote}}”</blockquote>
+                  <div class="mono" style="font-size: 12px; color: #667085; margin-top: 8px;">{{al.source}}</div>
+                </div>
+
+                <div style="padding: 16px 22px 0;">
+                  <div style="font-size: 14px; color: #7A4A00; background: #FFF6E5; padding: 10px 14px; border-radius: 10px;"><b>Not sure yet:</b> {{al.unknown}}</div>
+                </div>
+
+                <div style="padding: 18px 22px 22px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
+                  <span style="font-weight: 700; margin-right: 4px;">Dr. Vogel decides:</span>
+                  <button class="btn {{dA}}" onClick="{{pickA}}">{{al.actA}}</button>
+                  <button class="btn {{dB}}" onClick="{{pickB}}">{{al.actB}}</button>
+                  <sc-if value="{{hasDecision}}" hint-placeholder-val="{{false}}">
+                    <span style="font-size: 14px; color: #11603A; font-weight: 700;">✓ Saved to the record with the evidence</span>
+                  </sc-if>
+                </div>
+              </article>
+            </sc-if>
+          </div>
+        </sc-for>
+
+        <sc-if value="{{isWaiting}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; align-items: center; gap: 10px; color: #667085; font-size: 15px;"><span class="mg-live" style="width: 9px; height: 9px; border-radius: 50%; background: #E0A11B;"></span>Listening…</div>
+        </sc-if>
+
+        <!-- outcome -->
+        <sc-if value="{{finished}}" hint-placeholder-val="{{true}}">
+          <article class="mg-in" style="display: flex; flex-wrap: wrap; gap: 14px;">
+            <div style="flex: 1 1 260px; min-width: 0; background: #FFFFFF; border: 1px solid #E3E8EF; border-radius: 16px; padding: 18px 20px;">
+              <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #667085;">Without MedGuard</div>
+              <p style="margin: 6px 0 0; font-size: 16px; color: #344054;">{{st.without}}</p>
+            </div>
+            <div style="flex: 1 1 260px; min-width: 0; background: #101828; color: #F2F4F7; border-radius: 16px; padding: 18px 20px;">
+              <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #8FB0FF;">With MedGuard</div>
+              <p style="margin: 6px 0 0; font-size: 16px;">{{st.with}}</p>
+            </div>
+          </article>
+        </sc-if>
+      </section>
+
+      <!-- ================= side ================= -->
+      <aside style="flex: 1 1 {{asideBasis}}; min-width: 0; display: flex; flex-direction: column; gap: 18px;">
+
+        <!-- behind the scenes -->
+        <sc-if value="{{engineOn}}" hint-placeholder-val="{{true}}">
+          <section style="background: #0B1220; color: #E6EDFF; border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+              <h3 style="margin: 0; font-family: Outfit, system-ui, sans-serif; font-size: 19px;">Behind the scenes</h3>
+              <span style="font-size: 13px; color: #7D8BAA;">what MedGuard is doing right now</span>
+            </div>
+
+            <div style="display: flex; gap: 6px; align-items: stretch;">
+              <sc-for list="{{flow}}" as="n" hint-placeholder-count="4">
+                <div class="node {{n.cls}}"><b>{{n.title}}</b>{{n.sub}}</div>
+              </sc-for>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;">
+              <div style="background: #111A2E; border-radius: 10px; padding: 10px 12px;">
+                <div class="mono" style="font-size: 22px; color: #7EE2AE;">{{nQueries}}</div>
+                <div style="font-size: 12.5px; color: #7D8BAA;">Exasol queries</div>
+              </div>
+              <div style="background: #111A2E; border-radius: 10px; padding: 10px 12px;">
+                <div class="mono" style="font-size: 22px; color: #7EE2AE;">{{nTables}}</div>
+                <div style="font-size: 12.5px; color: #7D8BAA;">tables joined</div>
+              </div>
+              <div style="background: #111A2E; border-radius: 10px; padding: 10px 12px;">
+                <div class="mono" style="font-size: 22px; color: #C9B5FF;">{{nAi}}</div>
+                <div style="font-size: 12.5px; color: #7D8BAA;">AI calls</div>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <sc-for list="{{steps}}" as="s" hint-placeholder-count="3">
+                <div class="mg-in" style="border: 1px solid {{s.border}}; border-radius: 12px; background: #0E1729; overflow: hidden;">
+                  <div style="display: flex; align-items: center; gap: 8px; padding: 9px 12px;">
+                    <span class="{{s.tagCls}} mono" style="font-size: 11px; padding: 2px 7px; border-radius: 5px; flex: none;">{{s.tag}}</span>
+                    <span style="font-size: 14px; color: {{s.titleColor}}; min-width: 0;">{{s.title}}</span>
+                  </div>
+                  <sc-if value="{{s.open}}" hint-placeholder-val="{{false}}">
+                    <div style="padding: 0 12px 12px; display: flex; flex-direction: column; gap: 10px;">
+                      <sc-if value="{{s.hasSql}}" hint-placeholder-val="{{true}}">
+                        <pre class="mono" style="margin: 0; font-size: 12px; line-height: 1.55; color: #B9C7EE; background: #070C17; border-radius: 8px; padding: 10px 12px; white-space: pre-wrap; overflow-x: auto;">{{s.sql}}</pre>
+                      </sc-if>
+                      <sc-if value="{{s.hasRows}}" hint-placeholder-val="{{true}}">
+                        <div style="overflow-x: auto; border-radius: 8px; background: #0A1222;">
+                          <table class="mono" style="border-collapse: collapse; font-size: 12px; width: 100%; color: #9FB0D6;">
+                            <thead><tr><sc-for list="{{s.cols}}" as="h"><th class="cell" style="text-align: left; color: #6F7FA3; font-weight: 500;">{{h}}</th></sc-for></tr></thead>
+                            <tbody>
+                              <sc-for list="{{s.rows}}" as="r"><tr class="{{r.cls}}"><sc-for list="{{r.cells}}" as="v"><td class="cell">{{v}}</td></sc-for></tr></sc-for>
+                            </tbody>
+                          </table>
+                        </div>
+                      </sc-if>
+                      <sc-for list="{{s.checks}}" as="ck"><div style="font-size: 13px; color: #C9B5FF;">✓ {{ck}}</div></sc-for>
+                      <div style="font-size: 13px; color: #7D8BAA;">{{s.note}}</div>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+        </sc-if>
+
+        <section style="background: #FFFFFF; border: 1px solid #E3E8EF; border-radius: 16px; padding: 18px;">
+          <h3 style="margin: 0 0 14px; font-family: Outfit, system-ui, sans-serif; font-size: 18px;">This appointment, so far</h3>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;">
+            <sc-for list="{{stats}}" as="s" hint-placeholder-count="4">
+              <div style="background: #F8FAFC; border-radius: 12px; padding: 12px 14px;">
+                <div style="font-family: Outfit, system-ui, sans-serif; font-size: 30px; font-weight: 700; line-height: 1; color: {{s.color}};">{{s.v}}</div>
+                <div style="font-size: 14px; color: #475467; margin-top: 4px;">{{s.label}}</div>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <section style="background: #FFFFFF; border: 1px solid #E3E8EF; border-radius: 16px; padding: 18px;">
+          <h3 style="margin: 0 0 4px; font-family: Outfit, system-ui, sans-serif; font-size: 18px;">{{pt.possessive}} medicines</h3>
+          <div style="font-size: 14px; color: #667085; margin-bottom: 14px;">From the record, plus anything new that comes up</div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <sc-for list="{{record}}" as="r" hint-placeholder-count="3">
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <sc-if value="{{r.hasImg}}" hint-placeholder-val="{{true}}">
+                  <img src="{{r.img}}" alt="{{r.imgAlt}}" style="width: 64px; height: 48px; object-fit: cover; border-radius: 8px; background: #6B6B6B; flex: none;">
+                </sc-if>
+                <sc-if value="{{r.noImg}}" hint-placeholder-val="{{false}}">
+                  <span style="width: 64px; height: 48px; border-radius: 8px; background: #FFF6E5; color: #7A4A00; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex: none;">no pill</span>
+                </sc-if>
+                <div style="min-width: 0; flex: 1;">
+                  <div style="font-weight: 600;">{{r.name}}</div>
+                  <div style="font-size: 13px; color: #667085;">{{r.purpose}}</div>
+                </div>
+                <span style="font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; white-space: nowrap;" class="{{r.cls}}">{{r.status}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <p style="margin: 0; font-size: 12px; color: #98A2B3;">Pill photos: U.S. National Library of Medicine, C3PI. Leaflet text: U.S. FDA via openFDA. Patients and conversations are invented for this demo.</p>
+      </aside>
+    </div>
+  </main>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"speed":{"editor":"range","default":2600,"min":800,"max":5000,"step":100,"unit":"ms"},"$preview":{"width":1440,"height":2600}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { c: 0, i: 99, playing: false, decision: null, engine: true };
+  }
+
+  cases() {
+    const IMG = {
+      ram5: '/_blob/ce4a1464f3b428d24e22d36a05c9479c',
+      ram10: '/_blob/0b446ab9eaaff8d273acd7d9eed74e85',
+      metS: '/_blob/31fddb9ecac2879ba563b2261a654bed',
+      metT: '/_blob/5af36951a92829bbaea1aee00323f638',
+      furo: '/_blob/c336cb380e294f6b96ed5457bab179ab',
+      ibu: '/_blob/5bea08576af19d2039f5024cd8dda2ca',
+      spiro: '/_blob/5bb4d2f1c325528897913d5fe218776f',
+      kcl: '/_blob/5ce898a5182d83094be0cd12471c1932'
+    };
+    return [
+      {
+        tab: 'The knee painkiller',
+        story: {
+          title: 'The painkiller that doesn’t count',
+          setup: 'Frau Weber, 72, has heart failure and sees Dr. Vogel every three months. Her daughter fills her pill box on Sundays. Today is a routine check-up.',
+          hidden: 'Two weeks ago her GP gave her tablets for knee pain. They are not in this clinic’s record, and she doesn’t think of them as medicine.',
+          without: 'The painkiller is never mentioned as a medicine. Her kidneys, already weakening, take the strain for weeks before anyone notices.',
+          with: 'Caught from one sentence she said in passing. Painkiller paused and a kidney test done the same day.'
+        },
+        pid: 1042,
+        pt: { name: 'Frau Weber', short: 'her', possessive: 'Her', age: 72, initials: 'FW', visit: 'Heart failure check-up · 3 medicines on record' },
+        meds: {
+          ram: { name: 'Ramipril 5 mg', purpose: 'Blood pressure', img: IMG.ram5, look: 'red capsule · 15 mm · “54 145”', rec: true },
+          met: { name: 'Metoprolol 25 mg', purpose: 'Heart rhythm', img: IMG.metS, look: 'white oval · 11 mm · “A | B”', rec: true },
+          fur: { name: 'Furosemide 40 mg', purpose: 'Water tablet', img: IMG.furo, look: 'white round · 9 mm · “TEVA 2907”', rec: true },
+          ibu: { name: 'Ibuprofen 400 mg', purpose: 'Painkiller (NSAID)', img: IMG.ibu, look: 'white round · 13 mm · “IP 464”', rec: false }
+        },
+        script: [
+          { who: 'D', text: 'Good morning, Frau Weber. How have the last three months been?' },
+          { who: 'P', parts: [['Not bad, thank you. I get a bit dizzy when I stand up too fast, that’s all.']] },
+          { who: 'D', text: 'Let’s go through your tablets. Is the pill box still working for you?' },
+          { who: 'P', parts: [['Oh yes, my daughter does it on Sundays. '], ['The red capsule', 'hl'], [' in the morning, and '], ['the white oval one', 'hl'], [' with breakfast.']],
+            matches: [
+              { heard: 'the red capsule', drug: 'ram', conf: 98, kind: 'sure', feats: [['red', 1], ['capsule', 1], ['mornings', 1]], alt: 'No other red item on her record.' },
+              { heard: 'the white oval one', drug: 'met', conf: 91, kind: 'sure', feats: [['white', 1], ['oval', 1], ['with breakfast', 1]], alt: 'Next best: Furosemide, 9%. It is round, not oval.' }
+            ] },
+          { who: 'D', text: 'And the water tablet?' },
+          { who: 'P', parts: [['That’s '], ['the round white one', 'hl'], ['. It has me up at night, but I take it.']],
+            matches: [
+              { heard: 'the round white one', drug: 'fur', conf: 88, kind: 'sure', feats: [['white', 1], ['round', 1], ['“water tablet”', 1]], alt: 'Next best: Metoprolol, 12%. It is oval.' }
+            ] },
+          { who: 'D', text: 'Anything else? Even something from the pharmacy or another doctor?' },
+          { who: 'P', parts: [['Not really. Well, my knee was terrible, so my GP gave me '], ['some small round white ones', 'hl'], ['. But that’s only for the pain.']],
+            matches: [
+              { heard: 'some small round white ones', drug: null, title: 'Not on her record', purpose: 'New, from her GP, for pain', conf: 41, kind: 'maybe', feats: [['white', 1], ['round', 1], ['for pain', 1], ['no name given', 0]], alt: 'Could be ibuprofen (41%), paracetamol (33%) or diclofenac (26%). The letters on the tablet would settle it.' }
+            ] },
+          { who: 'D', text: 'Do you have one with you? Can you read what’s printed on it?' },
+          { who: 'P', parts: [['Let me look… it says '], ['IP 464', 'hl'], ['.']], alert: true,
+            matches: [
+              { heard: 'IP 464', drug: 'ibu', conf: 97, kind: 'new', feats: [['imprint “IP 464” matches', 1], ['white', 1], ['round', 1]], alt: 'Exact imprint match in the US National Library of Medicine pill database.' }
+            ] },
+          { who: 'D', text: 'Thank you, that’s important. Let’s pause those for now and check your kidneys today.' }
+        ],
+        alert: {
+          headline: 'Ibuprofen together with her blood-pressure and water tablets can harm the kidneys.',
+          factors: [['Older age', 'age 72'], ['Takes a water tablet', 'Furosemide 40 mg, daily'], ['Kidney function already low', 'eGFR 48, falling since March']],
+          quote: 'In patients who are elderly, volume-depleted (including those on diuretic therapy), or with compromised renal function, co-administration of NSAIDs, including selective COX-2 inhibitors, with ACE inhibitors, including ramipril, may result in deterioration of renal function, including possible acute renal failure.',
+          source: 'Ramipril label · US FDA · section 7.5 · set id 01da05d8',
+          unknown: 'how long she has taken it, and whether her potassium has changed since October.',
+          actA: 'Pause ibuprofen, test kidneys today', actB: 'Keep and monitor',
+          sql: "SELECT s.section, l.test, l.value, l.taken_on\nFROM   drug_label_section s\nJOIN   patient_medication pm ON pm.drug_id = s.drug_id\nJOIN   lab_result l ON l.patient_id = pm.patient_id\nWHERE  pm.patient_id = 1042\n  AND  s.section_text LIKE '%NSAIDs%'\n  AND  l.test = 'eGFR'\nORDER  BY l.taken_on;",
+          cols: ['leaflet section', 'test', 'value', 'date'],
+          rows: [['Ramipril 7.5', 'eGFR', '62', 'Mar'], ['Ramipril 7.5', 'eGFR', '55', 'Jul'], ['Ramipril 7.5', 'eGFR', '48', 'Oct']],
+          note: 'One query joins the leaflet, her medicines and her blood tests.'
+        },
+        lab: { name: 'Kidney function (eGFR)', unit: 'mL/min', lo: 60, hi: 120, refText: 'above 60', pts: [['Mar', 62], ['Jul', 55], ['Oct', 48]], min: 30, max: 75, note: 'Down 14 points in 7 months, now below the normal range.' }
+      },
+      {
+        tab: 'The low-salt salt',
+        story: {
+          title: 'The healthy choice that wasn’t',
+          setup: 'Herr Schmidt, 68, was told to cut down on salt after his heart failure diagnosis. He follows every instruction to the letter.',
+          hidden: 'His “healthy” supermarket salt is mostly potassium. A supplement from the pharmacy adds more. His heart tablets already raise it.',
+          without: 'No prescription was involved, so no system would ever see it. His potassium keeps climbing.',
+          with: 'Two everyday products linked to his blood results in one conversation. Both stopped, blood test the same day.'
+        },
+        pid: 2077,
+        pt: { name: 'Herr Schmidt', short: 'him', possessive: 'His', age: 68, initials: 'HS', visit: 'Heart failure follow-up · 2 medicines on record' },
+        meds: {
+          ram: { name: 'Ramipril 10 mg', purpose: 'Blood pressure, heart', img: IMG.ram10, look: 'blue capsule · 14 mm · “54 602”', rec: true },
+          spi: { name: 'Spironolactone 50 mg', purpose: 'Water tablet that keeps potassium', img: IMG.spiro, look: 'white oval · 12 mm · “58 81”', rec: true },
+          salt: { name: 'Low-salt salt substitute', purpose: 'Contains potassium · not a medicine', img: '', look: '', rec: false },
+          kcl: { name: 'Potassium chloride 8 mEq', purpose: 'Potassium supplement', img: IMG.kcl, look: 'yellow round · 11 mm · “K-TAB”', rec: false }
+        },
+        script: [
+          { who: 'D', text: 'Herr Schmidt, you look well. How is the diet going?' },
+          { who: 'P', parts: [['Very disciplined! No ordinary salt at all now. I bought '], ['a low-salt salt', 'hl'], [' at the supermarket. You can’t taste the difference.']],
+            matches: [
+              { heard: 'a low-salt salt', drug: 'salt', conf: 84, kind: 'new', feats: [['“low-salt salt”', 1], ['used daily', 1]], alt: 'Most low-sodium salts replace sodium with potassium.' }
+            ] },
+          { who: 'D', text: 'Good. And the tablets, any problems?' },
+          { who: 'P', parts: [['No, '], ['the blue capsule', 'hl'], [' and '], ['the white oval one', 'hl'], [' every morning. Only my legs cramp at night.']],
+            matches: [
+              { heard: 'the blue capsule', drug: 'ram', conf: 97, kind: 'sure', feats: [['blue', 1], ['capsule', 1], ['mornings', 1]], alt: 'No other blue item on his record.' },
+              { heard: 'the white oval one', drug: 'spi', conf: 90, kind: 'sure', feats: [['white', 1], ['oval', 1], ['mornings', 1]], alt: 'The only white tablet on his record.' }
+            ] },
+          { who: 'D', text: 'Have you taken anything for the cramps?' },
+          { who: 'P', parts: [['The pharmacist recommended '], ['a yellow tablet', 'hl'], ['. It helps.']],
+            matches: [
+              { heard: 'a yellow tablet', drug: null, title: 'Not on his record', purpose: 'Bought at the pharmacy, for cramps', conf: 52, kind: 'maybe', feats: [['yellow', 1], ['for cramps', 1], ['no name given', 0]], alt: 'For cramps, often magnesium or potassium. The packet would settle it.' }
+            ] },
+          { who: 'D', text: 'Do you have the packet with you?' },
+          { who: 'P', parts: [['Here. It says '], ['K-TAB', 'hl'], ['.']], alert: true,
+            matches: [
+              { heard: 'K-TAB', drug: 'kcl', conf: 96, kind: 'new', feats: [['imprint “K-TAB” matches', 1], ['yellow', 1], ['round', 1]], alt: 'Exact imprint match in the US National Library of Medicine pill database.' }
+            ] },
+          { who: 'D', text: 'Those two together add a lot of potassium. Let’s stop both and check your blood today.' }
+        ],
+        alert: {
+          headline: 'Two extra sources of potassium, on top of tablets that already raise it.',
+          factors: [['Takes a potassium-keeping water tablet', 'Spironolactone 50 mg'], ['Takes a potassium supplement', 'K-TAB, from the pharmacy'], ['Uses a potassium salt substitute', 'low-salt salt, daily']],
+          quote: 'Risk factors for the development of hyperkalemia include renal insufficiency, diabetes mellitus, and the concomitant use of potassium-sparing diuretics, potassium supplements, and/or potassium-containing salt substitutes, which should be used cautiously, if at all, with ramipril.',
+          source: 'Ramipril label · US FDA · section 5.8 Hyperkalemia · set id 01da05d8',
+          unknown: 'his kidney function, because the last test was in April, and how much salt substitute he uses.',
+          actA: 'Stop supplement and salt substitute, test potassium', actB: 'Keep and monitor',
+          sql: "SELECT s.section, l.test, l.value, l.taken_on\nFROM   drug_label_section s\nJOIN   patient_medication pm ON pm.drug_id = s.drug_id\nJOIN   lab_result l ON l.patient_id = pm.patient_id\nWHERE  pm.patient_id = 2077\n  AND  s.section_text LIKE '%salt substitutes%'\n  AND  l.test = 'potassium'\nORDER  BY l.taken_on;",
+          cols: ['leaflet section', 'test', 'value', 'date'],
+          rows: [['Ramipril 5.8', 'potassium', '4.7', 'Apr'], ['Ramipril 5.8', 'potassium', '5.0', 'Jul'], ['Ramipril 5.8', 'potassium', '5.4', 'Oct']],
+          note: 'The leaflet names salt substitutes. His blood tests show potassium rising.'
+        },
+        lab: { name: 'Potassium', unit: 'mmol/L', lo: 3.5, hi: 5.0, refText: '3.5 to 5.0', pts: [['Apr', 4.7], ['Jul', 5.0], ['Oct', 5.4]], min: 3.2, max: 5.8, note: 'Now above the normal range, and still rising.' }
+      },
+      {
+        tab: 'Two heart pills that look different',
+        story: {
+          title: 'Same medicine, new look, double dose',
+          setup: 'Frau Yilmaz, 79, collected her usual heart pills. The pharmacy had switched to a cheaper version that looks completely different.',
+          hidden: 'She still had the old pills at home. Believing they are two different medicines, she has been taking both.',
+          without: 'A double dose of the same medicine goes unnoticed while her pulse keeps falling.',
+          with: 'One imprint read aloud, one database match, and the duplicate is obvious. She takes one kind, pulse rechecked next week.'
+        },
+        pid: 3115,
+        pt: { name: 'Frau Yilmaz', short: 'her', possessive: 'Her', age: 79, initials: 'FY', visit: 'Check-up · pulse 48 at the front desk' },
+        meds: {
+          met: { name: 'Metoprolol 25 mg', purpose: 'Heart rhythm', img: IMG.metS, look: 'white oval · 11 mm · “A | B”', rec: true },
+          ram: { name: 'Ramipril 5 mg', purpose: 'Blood pressure', img: IMG.ram5, look: 'red capsule · 15 mm · “54 145”', rec: true },
+          mt2: { name: 'Metoprolol 50 mg (new pack)', purpose: 'Heart rhythm · same medicine', img: IMG.metT, look: 'white round · 9 mm · “GG 414”', rec: false }
+        },
+        script: [
+          { who: 'D', text: 'Frau Yilmaz, your pulse was quite slow at the front desk. How have you been feeling?' },
+          { who: 'P', parts: [['Tired, doctor. So tired lately. I thought it was the weather.']] },
+          { who: 'D', text: 'Has anything changed with your medicines?' },
+          { who: 'P', parts: [['No… well, the pharmacy gave me '], ['new heart pills', 'hl'], ['. They’re round now.']],
+            matches: [
+              { heard: 'new heart pills, round', drug: null, title: 'Different from her record', purpose: 'Her heart pill on file is oval', conf: 55, kind: 'maybe', feats: [['for the heart', 1], ['round', 1], ['looks different', 1], ['no name given', 0]], alt: 'Pharmacies often switch to a cheaper version that looks different.' }
+            ] },
+          { who: 'D', text: 'And the old ones?' },
+          { who: 'P', parts: [['I still had '], ['the oval ones', 'hl'], [', so I take those too. I didn’t want to waste them.']],
+            matches: [
+              { heard: 'the oval ones', drug: 'met', conf: 93, kind: 'sure', feats: [['white', 1], ['oval', 1], ['for the heart', 1]], alt: 'Her heart pill on record.' }
+            ] },
+          { who: 'D', text: 'Can you read the letters on the round one?' },
+          { who: 'P', parts: [['It says '], ['GG 414', 'hl'], ['.']], alert: true,
+            matches: [
+              { heard: 'GG 414', drug: 'mt2', conf: 98, kind: 'new', feats: [['imprint “GG 414” matches', 1], ['white', 1], ['round', 1]], alt: 'Same active ingredient as her oval pill: metoprolol.' }
+            ] },
+          { who: 'D', text: 'These are the same medicine. Please take only the new ones, and we’ll check your pulse next week.' }
+        ],
+        alert: {
+          headline: 'She is taking the same heart medicine twice, in two pills that look different.',
+          factors: [['Same medicine taken twice', 'metoprolol · oval 25 mg + round 50 mg'], ['Heart rate already low', '48 beats a minute today'], ['Feels tired', 'said so at the start']],
+          quote: 'Bradycardia, including sinus pause, heart block, and cardiac arrest have occurred with the use of metoprolol succinate extended-release tablets. … Monitor heart rate in patients receiving metoprolol succinate extended-release tablets.',
+          source: 'Metoprolol succinate label · US FDA · section 5.4 Bradycardia · set id 01908d20',
+          unknown: 'whether the pharmacy meant the new pills to replace the old ones, and how long she has taken both.',
+          actA: 'Take only the new pills, recheck pulse in 1 week', actB: 'Keep and monitor',
+          sql: "SELECT d.ingredient,\n       COUNT(DISTINCT pm.drug_id) AS products,\n       MIN(l.value)               AS pulse_today\nFROM   patient_medication pm\nJOIN   drug d ON d.drug_id = pm.drug_id\nJOIN   lab_result l ON l.patient_id = pm.patient_id\n                   AND l.test = 'heart rate'\nWHERE  pm.patient_id = 3115\nGROUP  BY d.ingredient\nHAVING COUNT(DISTINCT pm.drug_id) > 1;",
+          cols: ['ingredient', 'products', 'pulse today'],
+          rows: [['metoprolol', '2', '48']],
+          note: 'Two different-looking products, one active ingredient.'
+        },
+        lab: { name: 'Resting heart rate', unit: 'beats/min', lo: 60, hi: 100, refText: '60 to 100', pts: [['Jun', 68], ['Sep', 58], ['Today', 48]], min: 40, max: 80, note: 'Dropped 20 beats since June, now below the normal range.' }
+      }
+    ];
+  }
+
+  componentWillUnmount() { clearInterval(this.timer); }
+
+  chart(lab) {
+    const x0 = 70, x1 = 300, top = 18, bottom = 140;
+    const y = (v) => bottom - ((v - lab.min) / (lab.max - lab.min)) * (bottom - top);
+    const n = lab.pts.length;
+    const pts = lab.pts.map((p, k) => {
+      const x = Math.round(x0 + (k * (x1 - x0)) / (n - 1));
+      const yy = Math.round(y(p[1]));
+      const last = k === n - 1;
+      return { x, y: yy, ly: yy - 12, v: String(p[1]), m: p[0], r: last ? 7 : 5, fill: last ? '#E8590C' : '#F0A27F' };
+    });
+    const bandTop = Math.max(top, y(Math.min(lab.hi, lab.max)));
+    const bandBot = Math.min(bottom, y(Math.max(lab.lo, lab.min)));
+    return {
+      name: lab.name, unit: lab.unit, refText: lab.refText, note: lab.note,
+      pts, poly: pts.map((p) => p.x + ',' + p.y).join(' '),
+      bandY: Math.round(bandTop), bandH: Math.max(0, Math.round(bandBot - bandTop)), bandLabelY: Math.round(bandTop) + 14,
+      aria: lab.name + ': ' + lab.pts.map((p) => p[0] + ' ' + p[1]).join(', ') + ' ' + lab.unit
+    };
+  }
+
+  engineSteps(cs, i, decision) {
+    const pid = cs.pid;
+    const recKeys = Object.keys(cs.meds).filter((k) => cs.meds[k].rec);
+    const recordSql = "SELECT d.name, a.colour, a.shape, a.imprint\nFROM   patient_medication pm\nJOIN   drug d            ON d.drug_id = pm.drug_id\nJOIN   drug_appearance a ON a.drug_id = pm.drug_id\nWHERE  pm.patient_id = " + pid + "\n  AND  pm.stopped_on IS NULL;";
+    const steps = [];
+
+    cs.script.slice(0, i).forEach((l, k) => {
+      (l.matches || []).forEach((m) => {
+        const d = m.drug ? cs.meds[m.drug] : null;
+        if (d && d.rec) {
+          steps.push({ line: k, type: 'exa', title: 'Match “' + m.heard + '” to the record', sql: recordSql,
+            cols: ['medicine', 'looks like', 'match'],
+            rows: recKeys.map((key) => ({ cells: [cs.meds[key].name, cs.meds[key].look.split(' · ')[0], key === m.drug ? m.conf + '%' : '–'], cls: key === m.drug ? 'row-hot' : '' })),
+            note: m.alt });
+        } else if (d && d.img) {
+          steps.push({ line: k, type: 'exa', title: 'Look up imprint “' + m.heard + '”',
+            sql: "SELECT d.name, a.colour, a.shape, a.size_mm\nFROM   drug_appearance a\nJOIN   drug d ON d.drug_id = a.drug_id\nWHERE  a.imprint = '" + m.heard + "';",
+            cols: ['medicine', 'looks like'], rows: [{ cells: [d.name, d.look.split(' · ').slice(0, 2).join(', ')], cls: 'row-hot' }],
+            note: 'Not on the record, so flagged as a new medicine.' });
+        } else if (d) {
+          steps.push({ line: k, type: 'exa', title: 'Classify “' + m.heard + '”',
+            sql: "SELECT category, contains\nFROM   product_reference\nWHERE  synonym = '" + m.heard.replace(/^a /, '') + "';",
+            cols: ['category', 'contains'], rows: [{ cells: ['salt substitute', 'potassium chloride'], cls: 'row-hot' }],
+            note: 'Not a medicine, but it matters for his heart tablets.' });
+        } else {
+          steps.push({ line: k, type: 'exa', title: 'Match “' + m.heard + '” to the record', sql: recordSql,
+            cols: ['medicine', 'looks like', 'match'],
+            rows: recKeys.map((key) => ({ cells: [cs.meds[key].name, cs.meds[key].look.split(' · ')[0], '–'], cls: '' })),
+            note: 'Nothing on the record fits, so it is flagged as new. Waiting for a name or imprint.' });
+        }
+      });
+      if (l.alert) {
+        const a = cs.alert;
+        steps.push({ line: k, type: 'exa', title: 'Check against the leaflet and test results', sql: a.sql, cols: a.cols,
+          rows: a.rows.map((r, n) => ({ cells: r, cls: n === a.rows.length - 1 ? 'row-hot' : '' })), note: a.note });
+        steps.push({ line: k, type: 'bed', title: 'Claude on Amazon Bedrock writes the warning', sql: '', cols: [], rows: [],
+          checks: ['Leaflet quote matches the source word for word', 'Guardrails: no dosing or diagnosis advice', 'Uncertainty stated, not hidden'],
+          note: 'The only AI call in this appointment. Everything else ran as database queries.' });
+      }
+    });
+
+    if (decision && i >= cs.script.length) {
+      steps.push({ line: 999, type: 'db', title: 'Save the doctor’s decision with its evidence',
+        sql: "INSERT INTO clinician_review\n       (patient_id, decision, reviewer, evidence)\nVALUES (" + pid + ", '" + (decision === 'A' ? 'actioned' : 'monitor') + "', 'Dr. Vogel', 'label + labs');",
+        cols: [], rows: [], note: 'Every decision is stored next to the evidence it was based on.' });
+    }
+
+    const lastLine = steps.length ? steps[steps.length - 1].line : -1;
+    const tagOf = { exa: ['Exasol', 't-exa'], bed: ['Bedrock', 't-bed'], db: ['Exasol', 't-db'] };
+    return steps.map((s) => {
+      const open = s.line === lastLine;
+      return {
+        tag: tagOf[s.type][0], tagCls: tagOf[s.type][1], title: s.title, type: s.type,
+        open, sql: s.sql || '', hasSql: !!s.sql, cols: s.cols || [], rows: s.rows || [], hasRows: !!(s.rows && s.rows.length),
+        checks: s.checks || [], note: s.note || '',
+        border: open ? '#2B4A78' : '#1A2540', titleColor: open ? '#FFFFFF' : '#8E9BBB'
+      };
+    });
+  }
+
+  renderVals() {
+    const all = this.cases();
+    const cs = all[this.state.c];
+    const total = cs.script.length;
+    const i = Math.min(this.state.i, total);
+    const speed = this.props.speed ?? 2600;
+    const decision = this.state.decision;
+
+    const kindLabel = { sure: 'Matched to record', maybe: 'Not sure yet', new: 'New · not on record' };
+    const kindCls = { sure: 'k-sure', maybe: 'k-maybe', new: 'k-new' };
+    const barCls = { sure: 'bar-sure', maybe: 'bar-maybe', new: 'bar-new' };
+
+    const seen = {};
+    let mentions = 0, matched = 0, fresh = 0, unsure = 0, warnings = 0;
+
+    const lines = cs.script.slice(0, i).map((l, k) => {
+      const matches = (l.matches || []).map((m) => {
+        const d = m.drug ? cs.meds[m.drug] : null;
+        mentions++;
+        if (m.kind === 'sure') matched++;
+        if (m.kind === 'new') fresh++;
+        if (m.kind === 'maybe') unsure++;
+        if (m.drug) seen[m.drug] = m.kind;
+        return {
+          heard: m.heard,
+          title: d ? d.name : m.title,
+          purpose: d ? d.purpose : m.purpose,
+          hasImg: !!(d && d.img),
+          img: d ? d.img : '',
+          imgAlt: d ? 'Photo of ' + d.name + ': ' + d.look : '',
+          look: d ? d.look : '',
+          confPct: m.conf + '%',
+          kindLabel: kindLabel[m.kind],
+          kindCls: kindCls[m.kind],
+          barCls: barCls[m.kind],
+          feats: m.feats.map((f) => ({ t: (f[1] ? '✓ ' : '? ') + f[0], cls: f[1] ? 'f-ok' : 'f-no' })),
+          alt: m.alt
+        };
+      });
+      if (l.alert) warnings++;
+      return {
+        key: k,
+        isDoctor: l.who === 'D',
+        isPatient: l.who === 'P',
+        text: l.text || '',
+        parts: (l.parts || []).map((p) => ({ t: p[0], cls: p[1] || '' })),
+        matches,
+        alert: !!l.alert
+      };
+    });
+
+    const statusFor = { sure: ['Identified', 'k-sure'], maybe: ['Not sure', 'k-maybe'], new: ['New', 'k-new'] };
+    const record = Object.keys(cs.meds)
+      .filter((key) => cs.meds[key].rec || seen[key])
+      .map((key) => {
+        const d = cs.meds[key];
+        const st = seen[key] ? statusFor[seen[key]] : ['Not mentioned', 'k-idle'];
+        return { name: d.name, purpose: d.purpose, img: d.img, hasImg: !!d.img, noImg: !d.img, imgAlt: 'Photo of ' + d.name, status: st[0], cls: st[1] };
+      });
+
+    const stats = [
+      { v: mentions, label: 'medicines talked about', color: '#101828' },
+      { v: matched, label: 'matched to the record', color: '#1F9D5C' },
+      { v: fresh + unsure, label: 'new or unclear', color: '#E0A11B' },
+      { v: warnings, label: warnings === 1 ? 'warning for the doctor' : 'warnings for the doctor', color: '#E8590C' }
+    ];
+
+    const steps = this.engineSteps(cs, i, decision);
+    const nQueries = steps.filter((s) => s.tag === 'Exasol').length;
+    const nAi = steps.filter((s) => s.tag === 'Bedrock').length;
+    const last = steps.length ? steps[steps.length - 1].type : null;
+    const playingNow = this.state.playing;
+    const active = playingNow && i < total && (!lines.length || !lines[lines.length - 1].matches.length) ? 0
+      : last === 'bed' ? 2 : last === 'db' ? 3 : last === 'exa' ? 1 : 0;
+    const flowDef = [['1 Listen', 'the conversation'], ['2 Exasol', 'match and check'], ['3 Bedrock', 'explain'], ['4 Doctor', 'decides']];
+    const flow = flowDef.map((f, k) => ({ title: f[0], sub: f[1], cls: k === active ? 'node-on' : k < active ? 'node-done' : '' }));
+
+    const tabs = all.map((x, k) => ({
+      num: 'Story ' + (k + 1),
+      label: x.tab,
+      cls: k === this.state.c ? 'tab-on' : '',
+      pick: () => { clearInterval(this.timer); this.setState({ c: k, i: 99, playing: false, decision: null }); }
+    }));
+
+    const play = () => {
+      clearInterval(this.timer);
+      this.setState({ i: 1, playing: true, decision: null });
+      this.timer = setInterval(() => {
+        const n = this.state.i + 1;
+        if (n >= total) { clearInterval(this.timer); this.setState({ i: total, playing: false }); }
+        else this.setState({ i: n });
+      }, speed);
+    };
+    const showAll = () => { clearInterval(this.timer); this.setState({ i: total, playing: false }); };
+
+    const al = cs.alert;
+    const engineOn = this.state.engine;
+
+    return {
+      tabs, lines, record, stats, play, showAll, steps, flow, nQueries, nAi,
+      nTables: steps.length ? (warnings ? 5 : 3) : 0,
+      st: cs.story,
+      caseNum: 'Story ' + (this.state.c + 1),
+      pt: cs.pt,
+      lab: this.chart(cs.lab),
+      al: { headline: al.headline, quote: al.quote, source: al.source, unknown: al.unknown, actA: al.actA, actB: al.actB,
+            hit: al.factors.length, of: al.factors.length,
+            factors: al.factors.map((f) => ({ label: f[0], value: f[1] })) },
+      total,
+      lineNo: Math.max(1, i),
+      finished: i >= total,
+      playLabel: playingNow ? 'Restart' : 'Play the appointment',
+      liveLabel: playingNow ? 'Listening to the appointment' : 'Appointment finished',
+      liveColor: playingNow ? '#E8590C' : '#1F9D5C',
+      isWaiting: playingNow && i < total,
+      engineOn,
+      asideBasis: engineOn ? '460px' : '340px',
+      engineLabel: engineOn ? 'Hide behind the scenes' : 'Show behind the scenes',
+      engineBtnCls: engineOn ? 'btn-dark' : '',
+      toggleEngine: () => this.setState({ engine: !this.state.engine }),
+      pickA: () => this.setState({ decision: 'A' }),
+      pickB: () => this.setState({ decision: 'B' }),
+      dA: decision === 'A' ? 'btn-sel' : '',
+      dB: decision === 'B' ? 'btn-sel' : '',
+      hasDecision: !!decision
+    };
+  }
+}
+</script>
+</body>
+</html>

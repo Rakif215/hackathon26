@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MedGuard · Stage</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0;background:#0A0F1E}
+a{color:#5CC8FF}a:hover{color:#9BDDFF}
+@keyframes sgIn{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+@keyframes sgGlow{0%,100%{box-shadow:0 0 0 0 rgba(255,107,87,.0)}50%{box-shadow:0 0 0 6px rgba(255,107,87,.18)}}
+@keyframes sgBlink{0%,100%{opacity:1}50%{opacity:.3}}
+.sg-in{animation:sgIn .5s cubic-bezier(.2,.7,.2,1) both}
+.sg-in2{animation:sgIn .5s .25s cubic-bezier(.2,.7,.2,1) both}
+.sg-in3{animation:sgIn .5s .5s cubic-bezier(.2,.7,.2,1) both}
+.sg-risk{animation:sgGlow 2.2s ease-in-out infinite}
+.sg-blink{animation:sgBlink 1.2s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){.sg-in,.sg-in2,.sg-in3,.sg-risk,.sg-blink{animation:none}}
+.cell{flex:1 1 260px;min-width:0;background:#121A2E;border:1px solid #222C45;border-radius:14px;padding:16px 18px}
+.lab{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.k-sure{color:#5CC8FF}.k-maybe{color:#FFB547}.k-risk{color:#FF8A73}.k-info{color:#8B96B5}
+.b-risk{background:#2A1416;border-color:#6B2A26}
+.b-maybe{border-color:#5A4417}
+.seg{flex:1;height:6px;border-radius:3px}
+.seg-on{background:#5CC8FF}.seg-off{background:#222C45}
+.sbtn{font:600 15px/1 Inter,system-ui,sans-serif;padding:13px 22px;border-radius:999px;border:1px solid #33405F;background:transparent;color:#EEF2FF;cursor:pointer;min-height:44px}
+.sbtn:hover{border-color:#5CC8FF}
+.sbtn:focus-visible{outline:3px solid #5CC8FF;outline-offset:2px}
+.sbtn-main{background:#5CC8FF;border-color:#5CC8FF;color:#06121F}
+.sbtn-main:hover{background:#86D8FF}
+</style>
+</helmet>
+
+<div style="min-height: 100%; background: #0A0F1E; color: #EEF2FF; font-family: Inter, system-ui, sans-serif; font-size: 16px; line-height: 1.5;">
+  <div style="max-width: 1320px; margin: 0 auto; padding: 28px 28px 64px; display: flex; flex-direction: column; gap: 28px;">
+
+    <!-- header -->
+    <header style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+      <span style="font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 700; font-size: 24px; letter-spacing: -0.02em;">Med<span style="color: #5CC8FF;">Guard</span></span>
+      <span style="display: inline-flex; align-items: center; gap: 8px;" class="lab k-info">
+        <span class="sg-blink" style="width: 8px; height: 8px; border-radius: 50%; background: {{liveColor}};"></span>{{liveLabel}}
+      </span>
+      <div style="margin-left: auto; display: flex; gap: 10px; flex-wrap: wrap;">
+        <button class="sbtn sbtn-main" onClick="{{play}}">{{playLabel}}</button>
+        <button class="sbtn" onClick="{{showAll}}">Skip to end</button>
+      </div>
+    </header>
+
+    <!-- now speaking -->
+    <section style="display: flex; flex-direction: column; gap: 16px;">
+      <div style="display: flex; gap: 6px;">
+        <sc-for list="{{segs}}" as="s" hint-placeholder-count="9"><span class="seg {{s.cls}}"></span></sc-for>
+      </div>
+      <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap;">
+        <div class="lab k-info" style="flex: none; width: 120px; padding-top: 14px;">{{speaker}}</div>
+        <p style="margin: 0; flex: 999 1 520px; min-width: 0; font-family: 'Space Grotesk', system-ui, sans-serif; font-size: clamp(26px, 3.4vw, 42px); line-height: 1.2; letter-spacing: -0.015em; font-weight: 500; text-wrap: balance;">“{{nowLine}}”</p>
+      </div>
+    </section>
+
+    <!-- lanes header -->
+    <div style="display: flex; gap: 14px; flex-wrap: wrap; padding-top: 8px; border-top: 1px solid #1B2440;">
+      <div style="flex: 1 1 260px; min-width: 0; padding-top: 14px;">
+        <div class="lab k-info">01 · What was said</div>
+        <div style="color: #8B96B5; font-size: 14px; margin-top: 4px;">The patient's own words</div>
+      </div>
+      <div style="flex: 1 1 260px; min-width: 0; padding-top: 14px;">
+        <div class="lab k-info">02 · What MedGuard understood</div>
+        <div style="color: #8B96B5; font-size: 14px; margin-top: 4px;">Matched to her medicine list</div>
+      </div>
+      <div style="flex: 1 1 260px; min-width: 0; padding-top: 14px;">
+        <div class="lab k-info">03 · Why it matters</div>
+        <div style="color: #8B96B5; font-size: 14px; margin-top: 4px;">Checked against official sources and her tests</div>
+      </div>
+    </div>
+
+    <!-- rows -->
+    <div style="display: flex; flex-direction: column; gap: 14px;">
+      <sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+        <div style="display: flex; gap: 14px; flex-wrap: wrap; align-items: stretch;">
+          <div class="cell sg-in">
+            <div class="lab k-info">Frau Weber said</div>
+            <div style="margin-top: 6px; font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 22px; line-height: 1.25;">“{{r.heard}}”</div>
+          </div>
+          <div class="cell sg-in2 {{r.midBox}}">
+            <div class="lab {{r.midKind}}">{{r.midTag}}</div>
+            <div style="margin-top: 6px; font-size: 19px; font-weight: 600;">{{r.meant}}</div>
+            <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
+              <span style="flex: 1; max-width: 140px; height: 6px; border-radius: 3px; background: #222C45; overflow: hidden;"><span style="display: block; height: 100%; width: {{r.confPct}}; background: {{r.confColor}};"></span></span>
+              <span class="lab k-info">{{r.confText}}</span>
+            </div>
+          </div>
+          <div class="cell sg-in3 {{r.endBox}}">
+            <div class="lab {{r.endKind}}">{{r.endTag}}</div>
+            <div style="margin-top: 6px; font-size: 17px; line-height: 1.4; color: #D7DDF0;">{{r.why}}</div>
+            <sc-if value="{{r.isRisk}}" hint-placeholder-val="{{false}}">
+              <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; gap: 10px; align-items: center; font-size: 15px;"><span style="color: #FF8A73; font-weight: 700;">✓</span>Age 72</div>
+                <div style="display: flex; gap: 10px; align-items: center; font-size: 15px;"><span style="color: #FF8A73; font-weight: 700;">✓</span>On a water tablet</div>
+                <div style="display: flex; gap: 10px; align-items: center; font-size: 15px;"><span style="color: #FF8A73; font-weight: 700;">✓</span>Kidney function 62 → 55 → 48</div>
+                <div style="margin-top: 6px; font-size: 13px; color: #8B96B5;">Source: official ramipril leaflet, US FDA §7.5 · Not yet known: exact painkiller and dose</div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{decided}}" hint-placeholder-val="{{false}}">
+      <section class="sg-in" style="border: 1px solid #2B3A63; background: linear-gradient(180deg, #121A2E, #0E1528); border-radius: 16px; padding: 20px 22px; display: flex; gap: 18px; align-items: center; flex-wrap: wrap;">
+        <span style="width: 40px; height: 40px; border-radius: 50%; background: #5CC8FF; color: #06121F; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; flex: none;">✓</span>
+        <div style="flex: 1 1 360px; min-width: 0;">
+          <div class="lab k-sure">The doctor decided · saved to the record</div>
+          <div style="font-size: 20px; font-weight: 600; margin-top: 4px;">Stop the knee tablets for now. Check her kidneys today.</div>
+        </div>
+        <div style="font-size: 14px; color: #8B96B5; max-width: 340px;">MedGuard pointed it out. Dr. Vogel made the call.</div>
+      </section>
+    </sc-if>
+
+  </div>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"speed":{"editor":"range","default":2000,"min":800,"max":3500,"step":100,"unit":"ms"},"$preview":{"width":1440,"height":1100}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { i: 9, playing: false };
+  }
+
+  script() {
+    return [
+      ['Dr. Vogel', 'Good morning, Frau Weber. How have you been since July?'],
+      ['Frau Weber', 'Mostly fine. I take the white one in the morning and the small yellow one with breakfast.'],
+      ['Dr. Vogel', 'And the water tablet?'],
+      ['Frau Weber', 'Yes, the long white one too. I get a bit dizzy when I stand up.'],
+      ['Dr. Vogel', 'Has anything else changed?'],
+      ['Frau Weber', 'My knee has been terrible. My GP gave me something for it two weeks ago.'],
+      ['Dr. Vogel', 'Do you remember what it is called?'],
+      ['Frau Weber', 'No. It comes in a red and white box, three times a day.'],
+      ['Dr. Vogel', "Let's stop the knee tablets for now and check your kidneys today."]
+    ];
+  }
+
+  events() {
+    // at = number of lines spoken before this row appears
+    return [
+      { at: 2, heard: 'the small yellow one', meant: 'Metoprolol, for heart rhythm', kind: 'sure', conf: 96,
+        end: 'info', why: 'Already on her list. Nothing new here.' },
+      { at: 2, heard: 'the white one', meant: 'Ramipril or Furosemide?', kind: 'maybe', conf: 50,
+        end: 'maybe', why: 'Two of her tablets are white. MedGuard will not guess. It waits for more detail.' },
+      { at: 4, heard: 'the long white one', meant: 'Furosemide, her water tablet', kind: 'sure', conf: 93,
+        end: 'info', why: 'That settles it: “the white one” was Ramipril, for blood pressure.' },
+      { at: 6, heard: 'something for my knee', meant: 'A painkiller, not on her records', kind: 'risk', conf: 70,
+        end: 'maybe', why: 'A new medicine she would not have listed. Checking it against her others…' },
+      { at: 8, heard: 'red and white box, three times a day', meant: 'Probably ibuprofen, an NSAID', kind: 'risk', conf: 62,
+        end: 'risk', why: 'With her heart and water tablets, this painkiller can strain the kidneys. She has all three warning signs.' }
+    ];
+  }
+
+  componentWillUnmount() { clearInterval(this.timer); }
+
+  renderVals() {
+    const lines = this.script();
+    const total = lines.length;
+    const i = this.state.i;
+    const speed = this.props.speed ?? 2000;
+
+    const tagFor = { sure: 'Identified', maybe: 'Not sure yet', risk: 'New medicine', info: 'Nothing to flag' };
+    const kindCls = { sure: 'k-sure', maybe: 'k-maybe', risk: 'k-risk', info: 'k-info' };
+    const boxCls = { sure: '', maybe: 'b-maybe', risk: 'b-risk', info: '' };
+    const confColor = { sure: '#5CC8FF', maybe: '#FFB547', risk: '#FF8A73', info: '#8B96B5' };
+    const endTag = { info: 'Nothing to flag', maybe: 'Waiting for more', risk: 'Worth checking now' };
+
+    const rows = this.events().filter((e) => i >= e.at).map((e, k) => ({
+      key: k,
+      heard: e.heard,
+      meant: e.meant,
+      midTag: tagFor[e.kind],
+      midKind: kindCls[e.kind],
+      midBox: boxCls[e.kind] === 'b-risk' ? '' : boxCls[e.kind],
+      confPct: e.conf + '%',
+      confColor: confColor[e.kind],
+      confText: e.conf + '% sure',
+      endTag: endTag[e.end],
+      endKind: kindCls[e.end],
+      endBox: e.end === 'risk' ? 'b-risk sg-risk' : boxCls[e.end],
+      why: e.why,
+      isRisk: e.end === 'risk'
+    }));
+
+    const cur = lines[Math.max(0, Math.min(i, total) - 1)];
+    const segs = lines.map((_, k) => ({ cls: k < i ? 'seg-on' : 'seg-off' }));
+
+    const play = () => {
+      clearInterval(this.timer);
+      this.setState({ i: 1, playing: true });
+      this.timer = setInterval(() => {
+        const n = this.state.i + 1;
+        if (n >= total) { clearInterval(this.timer); this.setState({ i: total, playing: false }); }
+        else this.setState({ i: n });
+      }, speed);
+    };
+    const showAll = () => { clearInterval(this.timer); this.setState({ i: total, playing: false }); };
+
+    return {
+      rows,
+      segs,
+      play,
+      showAll,
+      speaker: cur[0],
+      nowLine: cur[1],
+      playLabel: this.state.playing ? 'Restart' : 'Play the appointment',
+      liveLabel: this.state.playing ? 'Listening' : 'Appointment finished',
+      liveColor: this.state.playing ? '#FF6B57' : '#5CC8FF',
+      decided: i >= total
+    };
+  }
+}
+</script>
+</body>
+</html>

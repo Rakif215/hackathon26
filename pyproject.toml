@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Trustworthy healthcare AI on Exasol — Healthcare Hackathon Bayern 2026"
 requires-python = ">=3.11"
 dependencies = [
+    "boto3>=1.44.2",
     "pyexasol>=1.0",
     "python-dotenv>=1.0",
 ]

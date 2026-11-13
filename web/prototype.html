@@ -1,0 +1,572 @@
+<title>MedGuard Consultation</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap">
+
+<style>
+/* Layout: clinical console — patient strip on top, transcript left, findings right.
+   Typographic rule that carries meaning: SERIF is always verbatim source text,
+   SANS is always the app speaking. The reader can tell evidence from inference
+   by typeface alone. */
+:root {
+  --bg:        #EFF2F3;
+  --surface:   #FFFFFF;
+  --surface-2: #F7F9FA;
+  --ink:       #14222A;
+  --ink-soft:  #5B6C76;
+  --ink-faint: #8A9AA3;
+  --line:      #DCE3E6;
+  --line-soft: #E9EEF0;
+  --accent:    #0C6F79;
+  --accent-sf: #E2F0F1;
+  --on-accent: #FFFFFF;
+  --red:       #9E2F28;
+  --red-bg:    #FBEDEB;
+  --amber:     #8A5B0C;
+  --amber-bg:  #FBF2E2;
+  --grey:      #62737C;
+  --grey-bg:   #EFF2F3;
+
+  --f-ui:   "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --f-src:  "IBM Plex Serif", Georgia, "Times New Roman", serif;
+  --f-num:  "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:        #0D1518;
+    --surface:   #152229;
+    --surface-2: #1A2930;
+    --ink:       #E4EBEE;
+    --ink-soft:  #97A9B2;
+    --ink-faint: #6E828C;
+    --line:      #26363E;
+    --line-soft: #1F2E35;
+    --accent:    #3EB3BC;
+    --accent-sf: #123134;
+    --on-accent: #06191B;
+    --red:       #E68078;
+    --red-bg:    #341C1A;
+    --amber:     #D9A451;
+    --amber-bg:  #332816;
+    --grey:      #8EA0A9;
+    --grey-bg:   #1C2A31;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:        #0D1518;
+  --surface:   #152229;
+  --surface-2: #1A2930;
+  --ink:       #E4EBEE;
+  --ink-soft:  #97A9B2;
+  --ink-faint: #6E828C;
+  --line:      #26363E;
+  --line-soft: #1F2E35;
+  --accent:    #3EB3BC;
+  --accent-sf: #123134;
+  --on-accent: #06191B;
+  --red:       #E68078;
+  --red-bg:    #341C1A;
+  --amber:     #D9A451;
+  --amber-bg:  #332816;
+  --grey:      #8EA0A9;
+  --grey-bg:   #1C2A31;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--f-ui);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 56px;
+}
+
+/* ---------- header ---------- */
+.top { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.brand { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+.brand span { color: var(--accent); }
+.tagline { color: var(--ink-soft); font-size: 13px; }
+.synthetic {
+  margin-left: auto; font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--amber);
+  background: var(--amber-bg); border: 1px solid color-mix(in srgb, var(--amber) 28%, transparent);
+  padding: 4px 9px; border-radius: 3px;
+}
+
+/* ---------- patient strip ---------- */
+.patient {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 6px;
+  padding: 14px 16px; margin-bottom: 14px;
+  display: grid; grid-template-columns: minmax(200px, 1.1fr) 2fr; gap: 20px;
+}
+.pt-name { font-weight: 600; font-size: 16px; }
+.pt-meta { color: var(--ink-soft); font-size: 13px; margin-top: 2px; }
+.pt-meds { margin-top: 10px; display: flex; flex-direction: column; gap: 5px; }
+.med { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.pill {
+  width: 15px; height: 11px; border-radius: 6px; flex: none;
+  border: 1px solid rgba(0,0,0,.22);
+}
+.pill.round { width: 12px; height: 12px; border-radius: 50%; }
+.med-name { font-weight: 500; }
+.med-desc { color: var(--ink-faint); font-size: 12px; }
+
+.labs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.lab {
+  background: var(--surface-2); border: 1px solid var(--line-soft);
+  border-radius: 5px; padding: 10px 11px; min-width: 0;
+}
+.lab-name { font-size: 10.5px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-soft); }
+.lab-val { font-family: var(--f-num); font-size: 21px; font-weight: 500; margin-top: 3px; font-variant-numeric: tabular-nums; }
+.lab-val.flag { color: var(--amber); }
+.lab-unit { font-size: 11px; color: var(--ink-faint); font-family: var(--f-ui); font-weight: 400; margin-left: 3px; }
+.lab-trend { font-size: 11.5px; color: var(--ink-soft); margin-top: 1px; font-family: var(--f-num); }
+.spark { display: block; margin-top: 6px; }
+
+/* ---------- two columns ---------- */
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; min-width: 0; }
+.panel-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 15px; border-bottom: 1px solid var(--line-soft);
+}
+.panel-title { font-size: 11.5px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-soft); }
+.count {
+  font-family: var(--f-num); font-size: 11px; color: var(--ink-faint);
+  margin-left: auto; font-variant-numeric: tabular-nums;
+}
+
+/* ---------- transcript ---------- */
+.transcript { padding: 6px 15px 15px; max-height: 560px; overflow-y: auto; }
+.utt { padding: 9px 0; border-bottom: 1px solid var(--line-soft); opacity: 1; }
+.utt:last-child { border-bottom: 0; }
+.utt.pending { display: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .utt.enter { animation: rise .32s ease both; }
+}
+@keyframes rise { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+.spk {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink-faint); margin-bottom: 2px;
+}
+.spk.doctor { color: var(--accent); }
+.utt-text { font-size: 14.5px; }
+.utt.patient .utt-text { font-family: var(--f-src); font-size: 15.5px; }
+mark {
+  background: var(--accent-sf); color: inherit;
+  border-bottom: 2px solid var(--accent); padding: 0 1px; border-radius: 2px;
+}
+mark.weak { border-bottom-style: dotted; }
+
+.controls { display: flex; gap: 8px; padding: 11px 15px; border-top: 1px solid var(--line-soft); flex-wrap: wrap; }
+button {
+  font-family: var(--f-ui); font-size: 13px; font-weight: 500;
+  padding: 7px 14px; border-radius: 4px; cursor: pointer;
+  border: 1px solid var(--line); background: var(--surface-2); color: var(--ink);
+  transition: background .15s, border-color .15s;
+}
+button:hover:not(:disabled) { border-color: var(--accent); }
+button:disabled { opacity: .45; cursor: default; }
+button.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- findings ---------- */
+.findings { padding: 13px 15px 15px; display: flex; flex-direction: column; gap: 12px; }
+.empty { color: var(--ink-faint); font-size: 13.5px; padding: 18px 2px; }
+.f {
+  border: 1px solid var(--line); border-radius: 5px; overflow: hidden;
+  border-left: 3px solid var(--grey); background: var(--surface);
+}
+@media (prefers-reduced-motion: no-preference) { .f { animation: rise .35s ease both; } }
+.f.red   { border-left-color: var(--red); }
+.f.amber { border-left-color: var(--amber); }
+.f-head { padding: 11px 13px 9px; }
+.sev-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
+.sev {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+  padding: 3px 7px; border-radius: 3px;
+}
+.sev.red   { color: var(--red);   background: var(--red-bg); }
+.sev.amber { color: var(--amber); background: var(--amber-bg); }
+.sev.grey  { color: var(--grey);  background: var(--grey-bg); }
+.pair { font-family: var(--f-num); font-size: 11.5px; color: var(--ink-soft); }
+.f-headline { font-size: 14.5px; font-weight: 600; line-height: 1.35; text-wrap: balance; }
+
+/* verbatim source text — serif, always */
+.quote {
+  margin: 0; padding: 11px 13px;
+  background: var(--surface-2); border-top: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft);
+  font-family: var(--f-src); font-size: 14px; line-height: 1.55;
+}
+.quote p { margin: 0; }
+.cite {
+  display: block; margin-top: 7px; font-family: var(--f-ui);
+  font-size: 11.5px; color: var(--ink-faint); line-height: 1.45;
+}
+.cite b { color: var(--ink-soft); font-weight: 600; }
+
+.f-body { padding: 10px 13px 12px; display: flex; flex-direction: column; gap: 9px; }
+.row { display: flex; gap: 9px; font-size: 13px; align-items: baseline; }
+.row-k {
+  flex: none; width: 92px; font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--ink-faint); padding-top: 2px;
+}
+.row-v { min-width: 0; }
+.lab-hit { font-family: var(--f-num); font-size: 12.5px; }
+.lab-hit b { color: var(--amber); font-weight: 500; }
+
+.conf { display: flex; align-items: center; gap: 7px; }
+.bar { width: 68px; height: 5px; border-radius: 3px; background: var(--line); overflow: hidden; flex: none; }
+.bar i { display: block; height: 100%; background: var(--accent); }
+.conf-t { font-family: var(--f-num); font-size: 12px; color: var(--ink-soft); }
+
+.unverified {
+  background: var(--amber-bg); border-radius: 4px; padding: 8px 10px;
+  font-size: 12.5px; line-height: 1.45; color: var(--ink);
+}
+.unverified b {
+  display: block; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--amber); margin-bottom: 3px; font-weight: 700;
+}
+.unverified ul { margin: 0; padding-left: 16px; }
+
+.actions { display: flex; gap: 7px; padding: 10px 13px; border-top: 1px solid var(--line-soft); background: var(--surface-2); flex-wrap: wrap; align-items: center; }
+.decided { font-size: 12.5px; color: var(--ink-soft); font-family: var(--f-num); }
+
+/* candidates (ambiguous resolution) */
+.cands { display: flex; flex-direction: column; gap: 5px; }
+.cand { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.cand .bar { width: 44px; }
+.cand-name { font-weight: 500; }
+.cand-why { color: var(--ink-faint); font-size: 12px; }
+.cand.lost .cand-name { font-weight: 400; color: var(--ink-soft); }
+
+.footnote { margin-top: 16px; font-size: 12px; color: var(--ink-faint); line-height: 1.5; }
+
+@media (max-width: 860px) {
+  .cols { grid-template-columns: 1fr; }
+  .patient { grid-template-columns: 1fr; }
+  .transcript { max-height: none; }
+}
+@media (max-width: 520px) {
+  .labs { grid-template-columns: 1fr; }
+  .row { flex-direction: column; gap: 2px; }
+  .row-k { width: auto; }
+}
+</style>
+
+<div class="wrap">
+
+  <div class="top">
+    <div class="brand">Med<span>Guard</span></div>
+    <div class="tagline">Consultation support &middot; heart failure follow-up</div>
+    <div class="synthetic">Synthetic data</div>
+  </div>
+
+  <!-- patient context -->
+  <section class="patient">
+    <div>
+      <div class="pt-name">Patient A &middot; 72 F</div>
+      <div class="pt-meta">Chronic heart failure (HFrEF) &middot; follow-up, 13 Nov 2026</div>
+      <div class="pt-meds">
+        <div class="med"><span class="pill round" style="background:#F3F4F2"></span>
+          <span class="med-name">Ramipril 5&nbsp;mg</span><span class="med-desc">white, round &middot; mornings</span></div>
+        <div class="med"><span class="pill" style="background:#E8CE5E"></span>
+          <span class="med-name">Metoprolol succ. 47.5&nbsp;mg</span><span class="med-desc">yellow, oval &middot; with breakfast</span></div>
+        <div class="med"><span class="pill" style="background:#F3F4F2"></span>
+          <span class="med-name">Furosemide 40&nbsp;mg</span><span class="med-desc">white, oblong &middot; mornings</span></div>
+      </div>
+    </div>
+    <div class="labs">
+      <div class="lab">
+        <div class="lab-name">Potassium</div>
+        <div class="lab-val flag">5.1<span class="lab-unit">mmol/L</span></div>
+        <div class="lab-trend">ref 3.5&ndash;5.0</div>
+        <svg class="spark" width="100%" height="26" viewBox="0 0 120 26" preserveAspectRatio="none" aria-label="Potassium rising from 4.6 to 5.1">
+          <polyline points="4,19 60,13 116,6" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="116" cy="6" r="3" fill="var(--amber)"/>
+        </svg>
+        <div class="lab-trend">4.6 &rarr; 4.9 &rarr; 5.1</div>
+      </div>
+      <div class="lab">
+        <div class="lab-name">eGFR</div>
+        <div class="lab-val flag">48<span class="lab-unit">mL/min</span></div>
+        <div class="lab-trend">ref &gt; 60</div>
+        <svg class="spark" width="100%" height="26" viewBox="0 0 120 26" preserveAspectRatio="none" aria-label="eGFR falling from 62 to 48">
+          <polyline points="4,5 60,12 116,21" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="116" cy="21" r="3" fill="var(--amber)"/>
+        </svg>
+        <div class="lab-trend">62 &rarr; 55 &rarr; 48</div>
+      </div>
+      <div class="lab">
+        <div class="lab-name">Creatinine</div>
+        <div class="lab-val">1.24<span class="lab-unit">mg/dL</span></div>
+        <div class="lab-trend">ref 0.5&ndash;1.1</div>
+        <svg class="spark" width="100%" height="26" viewBox="0 0 120 26" preserveAspectRatio="none" aria-label="Creatinine rising from 0.90 to 1.24">
+          <polyline points="4,20 60,15 116,7" fill="none" stroke="var(--ink-faint)" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="116" cy="7" r="3" fill="var(--ink-faint)"/>
+        </svg>
+        <div class="lab-trend">0.90 &rarr; 1.10 &rarr; 1.24</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cols">
+
+    <!-- transcript -->
+    <section class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Consultation</div>
+        <div class="count" id="progress">0 / 10</div>
+      </div>
+      <div class="transcript" id="transcript"></div>
+      <div class="controls">
+        <button class="primary" id="play">Play consultation</button>
+        <button id="step">Step</button>
+        <button id="reset" disabled>Reset</button>
+      </div>
+    </section>
+
+    <!-- findings -->
+    <section class="panel">
+      <div class="panel-head">
+        <div class="panel-title">What MedGuard found</div>
+        <div class="count" id="fcount">0 open</div>
+      </div>
+      <div class="findings" id="findings">
+        <div class="empty" id="empty">Nothing yet. Findings appear as medications come up in conversation.</div>
+      </div>
+    </section>
+
+  </div>
+
+  <p class="footnote">
+    Quoted text is reproduced verbatim from the FDA package insert named beneath it and is set in a serif face;
+    everything in the sans face is MedGuard&rsquo;s own wording. MedGuard supports a decision and never makes one.
+    It does not give dosing or diagnostic advice.
+  </p>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // Transcript. `marks` highlight spans; `fire` names findings raised after this line.
+  var SCRIPT = [
+    { spk: "DOCTOR",  text: "Good morning. How have things been since July?" },
+    { spk: "PATIENT", text: "Mostly alright. I take the white one in the morning and the small yellow one with breakfast, like you said.",
+      marks: [["the white one", "weak"], ["the small yellow one", ""]], fire: ["resolve"] },
+    { spk: "DOCTOR",  text: "Good. And the water tablet?" },
+    { spk: "PATIENT", text: "Yes, the long white one as well. Though I get dizzy standing up sometimes." },
+    { spk: "DOCTOR",  text: "We'll come back to the dizziness. Has anything else changed?" },
+    { spk: "PATIENT", text: "My knee has been terrible. My GP gave me something for it, about two weeks ago.",
+      marks: [["something for it", ""]], fire: ["nsaid"] },
+    { spk: "DOCTOR",  text: "Do you remember what it's called?" },
+    { spk: "PATIENT", text: "No. It's in a red and white box, three times a day." },
+    { spk: "DOCTOR",  text: "Could you bring the box to the next appointment?" },
+    { spk: "PATIENT", text: "Of course." }
+  ];
+
+  var FINDINGS = {
+    resolve: {
+      sev: "grey", sevLabel: "Needs confirming", pair: "appearance match",
+      headline: "“The white one” matches two of her medications",
+      candidates: [
+        { name: "Ramipril 5 mg",   score: 0.52, why: "white, round · taken mornings", lost: false },
+        { name: "Furosemide 40 mg", score: 0.41, why: "white, oblong · taken mornings", lost: true }
+      ],
+      basis: "Colour and timing match both. Shape would separate them, but she did not mention it.",
+      unverified: ["Which of the two white tablets she meant", "Whether she is taking both as prescribed"],
+      action: "Ask her to describe the shape"
+    },
+    nsaid: {
+      sev: "red", sevLabel: "Review before she leaves", pair: "NSAID + ramipril + furosemide",
+      headline: "An unnamed painkiller may be an NSAID, which can worsen kidney function in this combination",
+      quote: "In patients who are elderly, volume-depleted (including those on diuretic therapy), or with compromised renal function, co-administration of NSAIDs, including selective COX-2 inhibitors, with ACE inhibitors, including ramipril, may result in deterioration of renal function, including possible acute renal failure.",
+      citeDrug: "Ramipril",
+      citeSection: "Drug Interactions 7.5 — Non-Steroidal Anti-Inflammatory Agents",
+      citeMeta: "openFDA label 01da05d8-e72e-4208-bf92-a5cd929f15ab · effective 2022-07-01",
+      matchBasis: "class",
+      confidence: 0.62,
+      labHit: "The insert names three risk factors. She has all three: <b>age 72</b>, <b>on furosemide</b>, and <b>eGFR 48 and falling</b> (62 &rarr; 55 &rarr; 48).",
+      unverified: [
+        "The actual product — she described a box, not a name",
+        "The dose and whether it is prescription or over-the-counter",
+        "Whether her potassium has risen further since 12 Oct"
+      ],
+      action: "Check the product name, consider renal function review"
+    }
+  };
+
+  var tEl = document.getElementById("transcript");
+  var fEl = document.getElementById("findings");
+  var emptyEl = document.getElementById("empty");
+  var progEl = document.getElementById("progress");
+  var fcountEl = document.getElementById("fcount");
+  var playBtn = document.getElementById("play");
+  var stepBtn = document.getElementById("step");
+  var resetBtn = document.getElementById("reset");
+
+  var idx = 0, timer = null, open = 0;
+
+  function esc(s) {
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function withMarks(text, marks) {
+    var out = esc(text);
+    (marks || []).forEach(function (m) {
+      var phrase = esc(m[0]);
+      out = out.replace(phrase, '<mark class="' + m[1] + '">' + phrase + "</mark>");
+    });
+    return out;
+  }
+
+  function addUtterance(i) {
+    var u = SCRIPT[i];
+    var div = document.createElement("div");
+    div.className = "utt enter " + (u.spk === "PATIENT" ? "patient" : "doctor");
+    div.innerHTML =
+      '<div class="spk ' + (u.spk === "DOCTOR" ? "doctor" : "") + '">' + u.spk + "</div>" +
+      '<div class="utt-text">' + withMarks(u.text, u.marks) + "</div>";
+    tEl.appendChild(div);
+    tEl.scrollTop = tEl.scrollHeight;
+    (u.fire || []).forEach(addFinding);
+  }
+
+  function bar(score) {
+    return '<span class="bar"><i style="width:' + Math.round(score * 100) + '%"></i></span>';
+  }
+
+  function addFinding(key) {
+    var f = FINDINGS[key];
+    if (!f) return;
+    emptyEl.hidden = true;
+
+    var html = '<div class="f-head">' +
+      '<div class="sev-row">' +
+        '<span class="sev ' + f.sev + '">' + f.sevLabel + "</span>" +
+        '<span class="pair">' + f.pair + "</span>" +
+      "</div>" +
+      '<div class="f-headline">' + f.headline + "</div></div>";
+
+    if (f.quote) {
+      html += '<blockquote class="quote"><p>&ldquo;' + f.quote + '&rdquo;</p>' +
+        '<span class="cite"><b>' + f.citeDrug + "</b> · " + f.citeSection +
+        "<br>" + f.citeMeta + "</span></blockquote>";
+    }
+
+    html += '<div class="f-body">';
+
+    if (f.candidates) {
+      html += '<div class="row"><div class="row-k">Candidates</div><div class="row-v"><div class="cands">';
+      f.candidates.forEach(function (c) {
+        html += '<div class="cand' + (c.lost ? " lost" : "") + '">' + bar(c.score) +
+          '<span class="cand-name">' + c.name + "</span>" +
+          '<span class="cand-why">' + c.why + "</span></div>";
+      });
+      html += "</div></div></div>";
+      html += '<div class="row"><div class="row-k">Why</div><div class="row-v">' + f.basis + "</div></div>";
+    }
+
+    if (f.labHit) {
+      html += '<div class="row"><div class="row-k">Her results</div>' +
+        '<div class="row-v lab-hit">' + f.labHit + "</div></div>";
+    }
+
+    if (f.matchBasis) {
+      html += '<div class="row"><div class="row-k">Confidence</div><div class="row-v"><div class="conf">' +
+        bar(f.confidence) +
+        '<span class="conf-t">' + Math.round(f.confidence * 100) + "% · matched by drug class, not by name</span>" +
+        "</div></div></div>";
+    }
+
+    html += '<div class="unverified"><b>Could not verify</b><ul>' +
+      f.unverified.map(function (x) { return "<li>" + x + "</li>"; }).join("") +
+      "</ul></div>";
+
+    html += "</div>";
+
+    html += '<div class="actions">' +
+      '<button class="primary" data-act="accept">' + f.action + "</button>" +
+      '<button data-act="dismiss">Not relevant</button>' +
+      "</div>";
+
+    var card = document.createElement("div");
+    card.className = "f " + f.sev;
+    card.innerHTML = html;
+
+    card.addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-act]");
+      if (!b) return;
+      var accepted = b.dataset.act === "accept";
+      var bar2 = card.querySelector(".actions");
+      bar2.innerHTML = '<span class="decided">' +
+        (accepted ? "✓ Actioned" : "✕ Dismissed") +
+        " by Dr. Vogel · recorded in audit log</span>";
+      open = Math.max(0, open - 1);
+      updateCount();
+    });
+
+    fEl.appendChild(card);
+    open++;
+    updateCount();
+  }
+
+  function updateCount() {
+    fcountEl.textContent = open + (open === 1 ? " open" : " open");
+  }
+
+  function step() {
+    if (idx >= SCRIPT.length) { stop(); return; }
+    addUtterance(idx++);
+    progEl.textContent = idx + " / " + SCRIPT.length;
+    resetBtn.disabled = false;
+    if (idx >= SCRIPT.length) { stop(); stepBtn.disabled = true; }
+  }
+
+  function stop() {
+    if (timer) { clearInterval(timer); timer = null; }
+    playBtn.textContent = idx >= SCRIPT.length ? "Finished" : "Play consultation";
+    playBtn.disabled = idx >= SCRIPT.length;
+  }
+
+  playBtn.addEventListener("click", function () {
+    if (timer) { stop(); return; }
+    playBtn.textContent = "Pause";
+    timer = setInterval(step, 2000);
+    step();
+  });
+  stepBtn.addEventListener("click", function () { stop(); step(); });
+  resetBtn.addEventListener("click", function () {
+    stop();
+    idx = 0; open = 0;
+    tEl.innerHTML = "";
+    fEl.innerHTML = "";
+    fEl.appendChild(emptyEl);
+    emptyEl.hidden = false;
+    progEl.textContent = "0 / " + SCRIPT.length;
+    updateCount();
+    stepBtn.disabled = false;
+    resetBtn.disabled = true;
+    playBtn.disabled = false;
+    playBtn.textContent = "Play consultation";
+  });
+
+  // Open in a realistic working state: show the opening exchange, not an empty shell.
+  progEl.textContent = "0 / " + SCRIPT.length;
+  step(); step();
+})();
+</script>

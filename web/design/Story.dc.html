@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MedGuard · Patient story</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&amp;family=Nunito+Sans:wght@400;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0F766E}a:hover{color:#0B5550}
+@keyframes stPop{0%{opacity:0;transform:scale(.94)}100%{opacity:1;transform:none}}
+@keyframes stTick{0%{opacity:0;transform:translateY(6px)}100%{opacity:1;transform:none}}
+.st-pop{animation:stPop .45s cubic-bezier(.2,.8,.2,1) both}
+.st-t1{animation:stTick .4s .2s both}.st-t2{animation:stTick .4s .55s both}.st-t3{animation:stTick .4s .9s both}
+@media (prefers-reduced-motion: reduce){.st-pop,.st-t1,.st-t2,.st-t3{animation:none}}
+.tile{flex:1 1 220px;min-width:0;background:#FFFFFF;border:2px solid #E2EAE8;border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:12px;transition:border-color .3s,box-shadow .3s}
+.tile-sure{border-color:#99D5CD}
+.tile-maybe{border-color:#F3CF8B;border-style:dashed}
+.tile-new{border-color:#F6A57A;box-shadow:0 14px 30px -18px rgba(234,88,12,.6)}
+.tag{align-self:flex-start;font-size:13px;font-weight:700;padding:5px 11px;border-radius:999px}
+.tag-idle{background:#EEF3F2;color:#5E716D}.tag-sure{background:#DDF3EF;color:#0B5550}.tag-maybe{background:#FDF1DA;color:#8A4B03}.tag-new{background:#FFE6D8;color:#9A3412}
+.pbtn{font:700 16px/1.2 'Nunito Sans',system-ui,sans-serif;padding:14px 22px;border-radius:14px;border:2px solid #CFDCD9;background:#FFFFFF;color:#0F1F1C;cursor:pointer;min-height:48px}
+.pbtn:hover{border-color:#0F766E}
+.pbtn:focus-visible{outline:3px solid #5EB8AE;outline-offset:2px}
+.pbtn-main{background:#0F766E;border-color:#0F766E;color:#FFFFFF}
+.pbtn-main:hover{background:#0B5F58}
+.pbtn-sel{background:#0F1F1C;border-color:#0F1F1C;color:#FFFFFF}
+</style>
+</helmet>
+
+<div style="min-height: 100%; background: #F2F6F5; color: #0F1F1C; font-family: 'Nunito Sans', system-ui, sans-serif; font-size: 17px; line-height: 1.5;">
+  <div style="max-width: 1280px; margin: 0 auto; padding: 28px 24px 64px; display: flex; flex-direction: column; gap: 30px;">
+
+    <!-- header -->
+    <header style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+      <span style="width: 36px; height: 36px; border-radius: 12px; background: #0F766E; display: inline-flex; align-items: center; justify-content: center;" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 4.4 3.4 8.3 8 9 4.6-.7 8-4.6 8-9V6l-8-3Z" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <span style="font-family: Sora, system-ui, sans-serif; font-weight: 700; font-size: 22px;">MedGuard</span>
+      <span style="font-size: 14px; color: #5E716D;">Helping doctors catch medicine problems in conversation</span>
+      <div style="margin-left: auto; display: flex; gap: 10px; flex-wrap: wrap;">
+        <button class="pbtn pbtn-main" onClick="{{play}}">{{playLabel}}</button>
+        <button class="pbtn" onClick="{{showAll}}">Show all</button>
+      </div>
+    </header>
+
+    <!-- hero: patient + what she just said -->
+    <section style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch;">
+      <div style="flex: 1 1 280px; min-width: 0; background: #0F1F1C; color: #F2F6F5; border-radius: 26px; padding: 26px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; gap: 14px; align-items: center;">
+          <span style="width: 58px; height: 58px; border-radius: 50%; background: #F6C9A9; color: #5A2A0C; display: inline-flex; align-items: center; justify-content: center; font-family: Sora, system-ui, sans-serif; font-weight: 700; font-size: 20px; flex: none;">FW</span>
+          <div>
+            <div style="font-family: Sora, system-ui, sans-serif; font-size: 22px; font-weight: 600;">Frau Weber, 72</div>
+            <div style="font-size: 15px; color: #A9BDB8;">Heart check-up with Dr. Vogel</div>
+          </div>
+        </div>
+        <div style="font-size: 15px; color: #CFDCD9;">Takes 3 medicines every day. Can't remember their names, so she describes them by colour and shape.</div>
+        <div style="margin-top: auto; font-size: 13px; color: #F3CF8B;">Made-up patient for this demo</div>
+      </div>
+
+      <div style="flex: 999 1 520px; min-width: 0; background: #FFFFFF; border-radius: 26px; padding: 26px 28px; display: flex; flex-direction: column; gap: 12px; border: 1px solid #E2EAE8;">
+        <div style="display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 700; color: #5E716D; text-transform: uppercase; letter-spacing: 0.06em;">
+          <span style="width: 9px; height: 9px; border-radius: 50%; background: {{liveColor}};"></span>{{speaker}} · line {{lineNo}} of 9
+        </div>
+        <p style="margin: 0; font-family: Sora, system-ui, sans-serif; font-size: clamp(24px, 2.8vw, 34px); line-height: 1.3; font-weight: 500; text-wrap: balance;">“{{nowLine}}”</p>
+      </div>
+    </section>
+
+    <!-- pill box -->
+    <section style="display: flex; flex-direction: column; gap: 16px;">
+      <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;">
+        <h2 style="margin: 0; font-family: Sora, system-ui, sans-serif; font-size: 26px;">Her pill box</h2>
+        <span style="color: #5E716D; font-size: 16px;">MedGuard matches her words to the medicines on her record</span>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 16px;">
+        <sc-for list="{{pills}}" as="p" hint-placeholder-count="4">
+          <div class="tile {{p.tile}}">
+            <span class="tag {{p.tag}}">{{p.status}}</span>
+            <div style="height: 64px; display: flex; align-items: center;">
+              <span style="display: block; width: {{p.w}}; height: {{p.h}}; border-radius: 999px; background: {{p.fill}}; border: 2px solid rgba(15, 31, 28, 0.14); box-shadow: inset 0 -6px 0 rgba(15, 31, 28, 0.06);"></span>
+            </div>
+            <div style="font-family: Sora, system-ui, sans-serif; font-size: 21px; font-weight: 600;">{{p.name}}</div>
+            <div style="font-size: 15px; color: #5E716D;">{{p.what}}</div>
+            <div style="margin-top: auto; font-size: 15px; font-style: italic; color: #33504B; background: #F2F6F5; border-radius: 12px; padding: 9px 12px;">{{p.said}}</div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- risk check -->
+    <sc-if value="{{showRisk}}" hint-placeholder-val="{{true}}">
+      <section class="st-pop" style="background: #FFFFFF; border-radius: 28px; border: 2px solid #F6A57A; overflow: hidden;">
+        <div style="padding: 28px; display: flex; flex-wrap: wrap; gap: 28px; align-items: center;">
+          <div style="flex: 999 1 420px; min-width: 0;">
+            <div style="font-size: 14px; font-weight: 700; color: #9A3412; text-transform: uppercase; letter-spacing: 0.06em;">Worth checking before she leaves</div>
+            <h2 style="margin: 8px 0 0; font-family: Sora, system-ui, sans-serif; font-size: clamp(26px, 3vw, 36px); line-height: 1.2; text-wrap: balance;">The knee painkiller plus her heart and water tablets can strain her kidneys.</h2>
+            <p style="margin: 12px 0 0; color: #33504B; max-width: 620px;">The official leaflet for her blood-pressure tablet names three warning signs for this combination. MedGuard checked her record for each one.</p>
+          </div>
+          <div style="flex: 1 1 200px; text-align: center;">
+            <div style="font-family: Sora, system-ui, sans-serif; font-size: 84px; font-weight: 700; line-height: 1; color: #EA580C;">3<span style="font-size: 40px; color: #F6A57A;"> / 3</span></div>
+            <div style="font-size: 15px; color: #5E716D; margin-top: 6px;">warning signs she has</div>
+          </div>
+        </div>
+
+        <div style="padding: 0 28px 24px; display: flex; flex-wrap: wrap; gap: 14px;">
+          <div class="st-t1" style="flex: 1 1 220px; min-width: 0; background: #FFF4EC; border-radius: 18px; padding: 16px 18px;">
+            <div style="font-weight: 700; color: #9A3412;">✓ Older age</div>
+            <div style="font-size: 15px; color: #33504B;">She is 72</div>
+          </div>
+          <div class="st-t2" style="flex: 1 1 220px; min-width: 0; background: #FFF4EC; border-radius: 18px; padding: 16px 18px;">
+            <div style="font-weight: 700; color: #9A3412;">✓ Takes a water tablet</div>
+            <div style="font-size: 15px; color: #33504B;">Furosemide, every morning</div>
+          </div>
+          <div class="st-t3" style="flex: 1 1 220px; min-width: 0; background: #FFF4EC; border-radius: 18px; padding: 16px 18px;">
+            <div style="font-weight: 700; color: #9A3412;">✓ Kidneys getting weaker</div>
+            <div style="font-size: 15px; color: #33504B;">Kidney score 62 → 55 → 48 this year</div>
+          </div>
+        </div>
+
+        <div style="padding: 18px 28px; background: #F2F6F5; display: flex; flex-wrap: wrap; gap: 18px 28px; font-size: 15px; color: #33504B;">
+          <div style="flex: 1 1 320px; min-width: 0;"><b>Source:</b> official ramipril leaflet, US FDA, section 7.5. Quoted word for word.</div>
+          <div style="flex: 1 1 320px; min-width: 0;"><b>Not sure yet:</b> which painkiller exactly, and how much she takes. MedGuard says so instead of guessing.</div>
+        </div>
+
+        <div style="padding: 22px 28px 26px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+          <span style="font-weight: 700; margin-right: 6px;">Dr. Vogel decides:</span>
+          <button class="pbtn {{pauseCls}}" onClick="{{pickPause}}">Pause painkiller, test kidneys today</button>
+          <button class="pbtn {{keepCls}}" onClick="{{pickKeep}}">Keep as is</button>
+          <sc-if value="{{hasDecision}}" hint-placeholder-val="{{false}}">
+            <span style="font-size: 15px; color: #0B5550; font-weight: 700;">✓ Saved to her record</span>
+          </sc-if>
+        </div>
+      </section>
+    </sc-if>
+
+  </div>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"speed":{"editor":"range","default":1900,"min":800,"max":3500,"step":100,"unit":"ms"},"$preview":{"width":1440,"height":1240}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { i: 9, playing: false, decision: 'pause' };
+  }
+
+  script() {
+    return [
+      ['Dr. Vogel', 'Good morning, Frau Weber. How have you been since July?'],
+      ['Frau Weber', 'Mostly fine. I take the white one in the morning and the small yellow one with breakfast.'],
+      ['Dr. Vogel', 'And the water tablet?'],
+      ['Frau Weber', 'Yes, the long white one too. I get a bit dizzy when I stand up.'],
+      ['Dr. Vogel', 'Has anything else changed?'],
+      ['Frau Weber', 'My knee has been terrible. My GP gave me something for it two weeks ago.'],
+      ['Dr. Vogel', 'Do you remember what it is called?'],
+      ['Frau Weber', 'No. It comes in a red and white box, three times a day.'],
+      ['Dr. Vogel', "Let's look at that painkiller before you go."]
+    ];
+  }
+
+  componentWillUnmount() { clearInterval(this.timer); }
+
+  renderVals() {
+    const lines = this.script();
+    const total = lines.length;
+    const i = this.state.i;
+    const speed = this.props.speed ?? 1900;
+
+    const stage = (sureAt, maybeAt) => (i >= sureAt ? 'sure' : i >= maybeAt ? 'maybe' : 'idle');
+    const look = {
+      idle: { tile: '', tag: 'tag-idle', status: 'Not mentioned yet' },
+      maybe: { tile: 'tile-maybe', tag: 'tag-maybe', status: 'Not sure which' },
+      sure: { tile: 'tile-sure', tag: 'tag-sure', status: 'Identified' },
+      fresh: { tile: 'tile-new', tag: 'tag-new', status: 'New · not on her record' }
+    };
+
+    const ram = stage(4, 2), met = stage(2, 99), fur = stage(4, 2);
+    const knee = i >= 6 ? 'fresh' : 'idle';
+
+    const pills = [
+      { ...look[ram], name: ram === 'sure' ? 'Ramipril' : 'Which white one?', what: 'Blood pressure', w: '58px', h: '58px', fill: '#F7F8F5',
+        said: i >= 2 ? '“the white one”' : 'Waiting for her to mention it' },
+      { ...look[met], name: 'Metoprolol', what: 'Heart rhythm', w: '78px', h: '44px', fill: '#EBCB55',
+        said: i >= 2 ? '“the small yellow one”' : 'Waiting for her to mention it' },
+      { ...look[fur], name: fur === 'sure' ? 'Furosemide' : 'Which white one?', what: 'Water tablet', w: '120px', h: '40px', fill: '#F7F8F5',
+        said: i >= 4 ? '“the long white one”' : i >= 2 ? '“the white one”?' : 'Waiting for her to mention it' },
+      { ...look[knee], name: i >= 8 ? 'Probably ibuprofen' : i >= 6 ? 'Unknown painkiller' : 'Anything new?', what: i >= 6 ? 'Knee pain · from her GP' : 'Things she might forget to say', w: '108px', h: '42px',
+        fill: i >= 6 ? 'linear-gradient(90deg, #E9483A 50%, #FFFFFF 50%)' : '#EEF3F2',
+        said: i >= 8 ? '“red and white box, three times a day”' : i >= 6 ? '“something for it”' : 'MedGuard listens for these' }
+    ];
+
+    const play = () => {
+      clearInterval(this.timer);
+      this.setState({ i: 1, playing: true, decision: null });
+      this.timer = setInterval(() => {
+        const n = this.state.i + 1;
+        if (n >= total) { clearInterval(this.timer); this.setState({ i: total, playing: false }); }
+        else this.setState({ i: n });
+      }, speed);
+    };
+    const showAll = () => { clearInterval(this.timer); this.setState({ i: total, playing: false }); };
+
+    const cur = lines[Math.max(0, Math.min(i, total) - 1)];
+    const d = this.state.decision;
+
+    return {
+      pills,
+      play,
+      showAll,
+      speaker: cur[0],
+      nowLine: cur[1],
+      lineNo: Math.max(1, Math.min(i, total)),
+      liveColor: this.state.playing ? '#EA580C' : '#0F766E',
+      playLabel: this.state.playing ? 'Restart' : 'Play the appointment',
+      showRisk: i >= 8,
+      pickPause: () => this.setState({ decision: 'pause' }),
+      pickKeep: () => this.setState({ decision: 'keep' }),
+      pauseCls: d === 'pause' ? 'pbtn-sel' : '',
+      keepCls: d === 'keep' ? 'pbtn-sel' : '',
+      hasDecision: !!d
+    };
+  }
+}
+</script>
+</body>
+</html>
