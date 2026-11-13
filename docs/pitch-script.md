@@ -14,17 +14,21 @@ About 400 spoken words at a calm pace. Times are targets, not limits. Text in [b
 
 ## 0:00–0:30 · The problem
 
-> "*I take the red capsule… and the white one.*"
+> **Would you trust an AI with your health?** *(pause)* Not if it's just confident.
 >
-> That is how patients describe their medicines. Not by name. By colour.
+> Frau Weber, 72, heart patient. Her medicines live in four places: her prescription, her pharmacy, her blood tests, and a box in her handbag her doctor has never seen.
 >
-> An older heart patient takes five to ten tablets. The pharmacy switches the maker, and the pill looks different. A painkiller from another doctor never makes it onto the list, because "it's only for the pain".
+> When she says "*I take the white one*", a confident AI would guess. A wrong guess can harm her kidneys.
 >
-> And the doctor has about ten minutes to catch all of it.
+> Healthcare doesn't lack data. It lacks **connected intelligence you can trust**.
 >
-> We built **MedGuard**: a second pair of ears in the consultation room.
+> **MedGuard** connects all four, and when it isn't sure, it doesn't guess. **It asks.**
 
 *(Step 1 is on screen: the intro card.)*
+
+**Alternative openings** if the team prefers:
+- *Question to the room:* "Hands up if you'd let an AI decide your grandmother's medication. *(pause)* Nobody. Good. Now: would you let it help her doctor ask the right question? That's MedGuard."
+- *Exasol's own contrast:* "'Everything looks normal.' That's what a confident AI says. 'Here's the evidence. One thing is unclear. Please ask her.' That's what a trustworthy AI says. MedGuard is the second one."
 
 ---
 
@@ -82,7 +86,7 @@ About 400 spoken words at a calm pace. Times are targets, not limits. Text in [b
 
 > We're looking for **[pilot practices / clinical partners / mentors in regulation]**.
 >
-> Patients will keep saying "the white one". MedGuard makes sure the doctor knows which one.
+> So: would you trust an AI with your health? You can trust this one, because it shows its evidence, says when it isn't sure, and leaves the decision to your doctor.
 >
 > Thank you.
 
