@@ -30,3 +30,6 @@ data/raw/
 
 # Claude local settings
 .claude/settings.local.json
+
+# Local AWS hackathon context
+.kiro/steering/aws-context.md
