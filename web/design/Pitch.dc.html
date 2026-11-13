@@ -377,6 +377,14 @@ class Component extends DCLogic {
             R.listen('“small round one” · “sometimes skip it”'),
             R.look(['rec', 'pill'], 'Matches her water tablet on the prescription.', "SELECT drug FROM prescription JOIN pill_db WHERE patient = 1042 AND shape = 'round'"),
             R.suggest()] },
+        // 5b · only if the doctor chose to ask
+        { onlyIf: [4, 0],
+          ex: ['How often do you skip it?', [['Maybe '], ['twice a week', 'hl'], [', when I go out. I don’t want to look for a toilet.']]],
+          rx: { fur: 'confirmed · skipped ~2×/week' },
+          card: { say: 'Noted: furosemide skipped about twice a week, on days out. Added to her record so it can be looked at together with her symptoms.', askLabel: 'Next', ask: 'Ask about anything else she takes?' },
+          flow: [R.listen('“twice a week, when I go out”'),
+            R.look(['rec'], 'The skipped doses are written to her record.', "INSERT adherence_note (patient 1042, furosemide, '~2× per week, days out')"),
+            R.suggest('Claude summarises it and suggests moving on to anything else she takes.')] },
         // 6
         { ex: ['Anything else? Even from another doctor?', [['My GP gave me '], ['small round white ones', 'hl'], [' for my knee. Only for the pain.']]],
           addRx: 'ibu?',
@@ -525,9 +533,18 @@ class Component extends DCLogic {
     }
 
     // ---------- navigation ----------
+    // a step with onlyIf [k, choice] is played only when the doctor made that choice at step k
+    const allowed = (k) => {
+      const c2 = list[k].onlyIf;
+      if (!c2) return true;
+      const p = pick[c2[0]] !== undefined ? pick[c2[0]] : 0;
+      return p === c2[1];
+    };
     const go = (to, sub0) => {
       clearInterval(this.timer);
-      const tb = Math.max(0, Math.min(to, total - 1));
+      let tb = Math.max(0, Math.min(to, total - 1));
+      const dir = to >= b ? 1 : -1;
+      while (!allowed(tb) && tb + dir >= 0 && tb + dir < total) tb += dir;
       this.setState({ b: tb, s: sub0 });
       if (sub0 === 0) {
         this.timer = setInterval(() => {
