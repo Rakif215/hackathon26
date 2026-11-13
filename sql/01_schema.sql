@@ -3,6 +3,9 @@
 -- Design principle: every claim the app makes must be traceable to a row here.
 -- Nothing is asserted that cannot be joined back to a source.
 --
+-- 17 tables: 12 seed-owned (drug knowledge, synthetic patient data, rules and the scripted
+-- consultation) and 5 app-written (mentions, candidates, findings, clinician reviews, audit log).
+--
 -- SYNTHETIC DATA ONLY. No real patient data (also required by the AWS event terms).
 
 CREATE SCHEMA IF NOT EXISTS MEDGUARD;
@@ -45,12 +48,15 @@ CREATE OR REPLACE TABLE CLASS_SYNONYM (
 CREATE OR REPLACE TABLE DRUG_LABEL_SECTION (
     SECTION_ID         DECIMAL(10,0),
     DRUG_ID            DECIMAL(10,0) NOT NULL,
-    SECTION_TYPE       VARCHAR(50)  NOT NULL, -- boxed_warning | contraindications | warnings | drug_interactions
+    SECTION_TYPE       VARCHAR(50)  NOT NULL, -- boxed_warning | contraindications | warnings | warnings_and_cautions | drug_interactions
     SECTION_TEXT       VARCHAR(2000000),
     LABEL_SET_ID       VARCHAR(100),          -- openFDA set id, so a quote can be traced to one document
     LABEL_EFFECTIVE_AT DATE,
     SOURCE_URL         VARCHAR(500),
     SOURCE_FETCHED_AT  TIMESTAMP,
+    -- Added for demo-data-foundation: lowercase hex SHA-256 of the UTF-8 bytes of SECTION_TEXT.
+    -- Lets every quote be checked against exactly the text that was imported.
+    CONTENT_SHA256     CHAR(64)     NOT NULL,
     PRIMARY KEY (SECTION_ID)
 );
 
@@ -114,7 +120,20 @@ CREATE OR REPLACE TABLE RISK_LAB_RULE (
     CONCERN_AT     DECIMAL(10,3),             -- threshold where this becomes notable
     RATIONALE      VARCHAR(1000),
     SRC_NAME       VARCHAR(500),
+    -- Added: the DRUG_LABEL_SECTION row that backs this rule. No FOREIGN KEY: the seed checks the
+    -- link and the quote in code before it writes any row.
+    EVIDENCE_SECTION_ID DECIMAL(10,0) NOT NULL,
+    -- Added: verbatim insert text. Must be a contiguous, case-sensitive substring of that section's SECTION_TEXT.
+    EVIDENCE_QUOTE      VARCHAR(4000) NOT NULL,
     PRIMARY KEY (RULE_ID)
+);
+
+-- Added for demo-data-foundation: the drug classes a rule requires. One rule can need several
+-- classes (the triple whammy needs three), and the primary key stops a class being listed twice.
+CREATE OR REPLACE TABLE RISK_RULE_CLASS (
+    RULE_ID      DECIMAL(10,0) NOT NULL,      -- a RISK_LAB_RULE.RULE_ID
+    CLASS_NAME   VARCHAR(200)  NOT NULL,      -- a DRUG_CLASS.CLASS_NAME, compared exactly (case-sensitive)
+    PRIMARY KEY (RULE_ID, CLASS_NAME)
 );
 
 -- ---------------------------------------------------------------------------
@@ -148,7 +167,13 @@ CREATE OR REPLACE TABLE DRUG_MENTION (
     RAW_TEXT       VARCHAR(500) NOT NULL,     -- 'the small yellow one'
     MENTION_TYPE   VARCHAR(30),               -- NAME | APPEARANCE | INDICATION | CLASS
     RESOLVED_DRUG_ID DECIMAL(10,0),           -- null when unresolved
-    CONFIDENCE     DECIMAL(4,3),              -- 0..1
+    -- Added: class inferred from an indication ("something for my knee" -> NSAID) when no single drug
+    -- is resolved. Holds a DRUG_CLASS.CLASS_NAME value, null otherwise.
+    RESOLVED_CLASS_NAME VARCHAR(200),
+    -- Added: named confidence. Replaces the numeric CONFIDENCE column, which implied a calibration we
+    -- do not have. Codes, strongest to weakest:
+    -- NAME_MATCH > COLOUR_SHAPE_MATCH > COLOUR_MATCH > CLASS_INFERRED > UNRESOLVED
+    MATCH_LEVEL    VARCHAR(30) NOT NULL,
     RESOLUTION_BASIS VARCHAR(500),            -- why: 'colour+shape match on patient med list'
     NEEDS_REVIEW   BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (MENTION_ID)
@@ -159,7 +184,9 @@ CREATE OR REPLACE TABLE DRUG_MENTION (
 CREATE OR REPLACE TABLE MENTION_CANDIDATE (
     MENTION_ID   DECIMAL(10,0) NOT NULL,
     DRUG_ID      DECIMAL(10,0) NOT NULL,
-    SCORE        DECIMAL(4,3),
+    -- Added: named confidence for this candidate. Replaces the numeric SCORE column. Codes, strongest
+    -- to weakest: NAME_MATCH > COLOUR_SHAPE_MATCH > COLOUR_MATCH > CLASS_INFERRED > UNRESOLVED
+    MATCH_LEVEL  VARCHAR(30) NOT NULL,
     BASIS        VARCHAR(500)
 );
 
@@ -179,7 +206,10 @@ CREATE OR REPLACE TABLE FINDING (
     EVIDENCE_QUOTE    VARCHAR(4000),          -- verbatim from the insert
     EVIDENCE_SECTION_ID DECIMAL(10,0),        -- which section it came from
     MATCH_BASIS       VARCHAR(30),            -- NAME | CLASS | ENZYME (name = higher confidence)
-    CONFIDENCE        DECIMAL(4,3),
+    -- Added: replaces the numeric CONFIDENCE column. Records the Match_Level of the mention that
+    -- identified TRIGGER_DRUG_ID. MATCH_BASIS separately records how the label evidence was matched.
+    -- Codes, strongest to weakest: NAME_MATCH > COLOUR_SHAPE_MATCH > COLOUR_MATCH > CLASS_INFERRED > UNRESOLVED
+    MATCH_LEVEL       VARCHAR(30) NOT NULL,
     LAB_CONTEXT       VARCHAR(1000),          -- 'eGFR 48 and falling (was 62 in May)'
     LAB_RULE_ID       DECIMAL(10,0),
     UNVERIFIED_NOTE   VARCHAR(1000),          -- what the system could NOT check

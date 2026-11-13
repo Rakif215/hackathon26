@@ -1,0 +1,375 @@
+{
+  "as_of": "2026-11-13",
+  "patient": {
+    "patient_id": 1,
+    "display_name": "Patient A (72F)",
+    "birth_year": 1954,
+    "sex": "F",
+    "primary_dx": "Chronic heart failure (HFrEF)",
+    "is_synthetic": true
+  },
+  "drugs": [
+    {
+      "drug_id": 101,
+      "generic_name": "ramipril",
+      "rxcui": "35296",
+      "is_otc": false,
+      "classes": [
+        {
+          "class_name": "ACE inhibitor",
+          "class_type": "EPC"
+        }
+      ]
+    },
+    {
+      "drug_id": 102,
+      "generic_name": "metoprolol succinate",
+      "rxcui": "6918",
+      "is_otc": false,
+      "classes": [
+        {
+          "class_name": "beta blocker",
+          "class_type": "EPC"
+        }
+      ]
+    },
+    {
+      "drug_id": 103,
+      "generic_name": "furosemide",
+      "rxcui": "4603",
+      "is_otc": false,
+      "classes": [
+        {
+          "class_name": "loop diuretic",
+          "class_type": "EPC"
+        }
+      ]
+    },
+    {
+      "drug_id": 104,
+      "generic_name": "ibuprofen",
+      "rxcui": "5640",
+      "is_otc": true,
+      "classes": [
+        {
+          "class_name": "NSAID",
+          "class_type": "EPC"
+        }
+      ]
+    },
+    {
+      "drug_id": 105,
+      "generic_name": "spironolactone",
+      "rxcui": "9997",
+      "is_otc": false,
+      "classes": [
+        {
+          "class_name": "potassium-sparing diuretic",
+          "class_type": "EPC"
+        }
+      ]
+    },
+    {
+      "drug_id": 106,
+      "generic_name": "potassium chloride",
+      "rxcui": "8591",
+      "is_otc": false,
+      "classes": [
+        {
+          "class_name": "potassium supplement",
+          "class_type": "EPC"
+        }
+      ]
+    }
+  ],
+  "medications": [
+    {
+      "patient_med_id": 201,
+      "drug": "ramipril",
+      "strength": "5 mg",
+      "schedule_text": "once in the morning",
+      "started_on": "2024-03-04",
+      "stopped_on": null
+    },
+    {
+      "patient_med_id": 202,
+      "drug": "metoprolol succinate",
+      "strength": "47.5 mg",
+      "schedule_text": "with breakfast",
+      "started_on": "2024-03-04",
+      "stopped_on": null
+    },
+    {
+      "patient_med_id": 203,
+      "drug": "furosemide",
+      "strength": "40 mg",
+      "schedule_text": "once in the morning",
+      "started_on": "2025-01-20",
+      "stopped_on": null
+    }
+  ],
+  "appearances": [
+    {
+      "drug": "ramipril",
+      "color": "white",
+      "shape": "round",
+      "imprint": null,
+      "strength": "5 mg",
+      "manufacturer": "Nordpharm (fictional)",
+      "src_name": "synthetic demo fixture: invented appearance, not a real product"
+    },
+    {
+      "drug": "metoprolol succinate",
+      "color": "yellow",
+      "shape": "oval",
+      "imprint": null,
+      "strength": "47.5 mg",
+      "manufacturer": "Alpenmed (fictional)",
+      "src_name": "synthetic demo fixture: invented appearance, not a real product"
+    },
+    {
+      "drug": "furosemide",
+      "color": "white",
+      "shape": "oblong",
+      "imprint": null,
+      "strength": "40 mg",
+      "manufacturer": "Isarpharma (fictional)",
+      "src_name": "synthetic demo fixture: invented appearance, not a real product"
+    }
+  ],
+  "labs": [
+    {
+      "lab_id": 301,
+      "analyte": "EGFR",
+      "value_num": "62",
+      "unit": "mL/min/1.73m2",
+      "ref_low": "60",
+      "ref_high": null,
+      "measured_at": "2026-05-14"
+    },
+    {
+      "lab_id": 302,
+      "analyte": "EGFR",
+      "value_num": "55",
+      "unit": "mL/min/1.73m2",
+      "ref_low": "60",
+      "ref_high": null,
+      "measured_at": "2026-07-16"
+    },
+    {
+      "lab_id": 303,
+      "analyte": "EGFR",
+      "value_num": "48",
+      "unit": "mL/min/1.73m2",
+      "ref_low": "60",
+      "ref_high": null,
+      "measured_at": "2026-10-12"
+    },
+    {
+      "lab_id": 304,
+      "analyte": "CREATININE",
+      "value_num": "0.97",
+      "unit": "mg/dL",
+      "ref_low": "0.50",
+      "ref_high": "1.10",
+      "measured_at": "2026-05-14"
+    },
+    {
+      "lab_id": 305,
+      "analyte": "CREATININE",
+      "value_num": "1.07",
+      "unit": "mg/dL",
+      "ref_low": "0.50",
+      "ref_high": "1.10",
+      "measured_at": "2026-07-16"
+    },
+    {
+      "lab_id": 306,
+      "analyte": "CREATININE",
+      "value_num": "1.20",
+      "unit": "mg/dL",
+      "ref_low": "0.50",
+      "ref_high": "1.10",
+      "measured_at": "2026-10-12"
+    },
+    {
+      "lab_id": 307,
+      "analyte": "POTASSIUM",
+      "value_num": "4.6",
+      "unit": "mmol/L",
+      "ref_low": "3.5",
+      "ref_high": "5.0",
+      "measured_at": "2026-05-14"
+    },
+    {
+      "lab_id": 308,
+      "analyte": "POTASSIUM",
+      "value_num": "4.9",
+      "unit": "mmol/L",
+      "ref_low": "3.5",
+      "ref_high": "5.0",
+      "measured_at": "2026-07-16"
+    },
+    {
+      "lab_id": 309,
+      "analyte": "POTASSIUM",
+      "value_num": "5.1",
+      "unit": "mmol/L",
+      "ref_low": "3.5",
+      "ref_high": "5.0",
+      "measured_at": "2026-10-12"
+    }
+  ],
+  "consultation": {
+    "consult_id": 1,
+    "clinician": "Dr. Vogel",
+    "started_at": "2026-11-13T09:00:00",
+    "scenario": "hf-follow-up-v1"
+  },
+  "utterances": [
+    {
+      "utterance_id": 501,
+      "seq": 1,
+      "speaker": "DOCTOR",
+      "offset_ms": 0,
+      "text": "Good morning. How have things been since July?"
+    },
+    {
+      "utterance_id": 502,
+      "seq": 2,
+      "speaker": "PATIENT",
+      "offset_ms": 5000,
+      "text": "Mostly alright. I take the white one in the morning and the small yellow one with breakfast, like you said."
+    },
+    {
+      "utterance_id": 503,
+      "seq": 3,
+      "speaker": "DOCTOR",
+      "offset_ms": 15000,
+      "text": "Good. And the water tablet?"
+    },
+    {
+      "utterance_id": 504,
+      "seq": 4,
+      "speaker": "PATIENT",
+      "offset_ms": 20000,
+      "text": "Yes, I take the long white one as well. Though I get dizzy standing up sometimes."
+    },
+    {
+      "utterance_id": 505,
+      "seq": 5,
+      "speaker": "DOCTOR",
+      "offset_ms": 30000,
+      "text": "We'll come back to the dizziness. Has anything else changed?"
+    },
+    {
+      "utterance_id": 506,
+      "seq": 6,
+      "speaker": "PATIENT",
+      "offset_ms": 36000,
+      "text": "My knee has been terrible. My GP gave me something for my knee a couple of weeks ago."
+    },
+    {
+      "utterance_id": 507,
+      "seq": 7,
+      "speaker": "DOCTOR",
+      "offset_ms": 48000,
+      "text": "Do you remember what it's called?"
+    },
+    {
+      "utterance_id": 508,
+      "seq": 8,
+      "speaker": "PATIENT",
+      "offset_ms": 53000,
+      "text": "I think the box says ibuprofen, but I'm not sure. It's a red and white box."
+    },
+    {
+      "utterance_id": 509,
+      "seq": 9,
+      "speaker": "DOCTOR",
+      "offset_ms": 65000,
+      "text": "Could you bring the box to the next appointment?"
+    },
+    {
+      "utterance_id": 510,
+      "seq": 10,
+      "speaker": "PATIENT",
+      "offset_ms": 72000,
+      "text": "Of course."
+    }
+  ],
+  "class_synonyms": [
+    {
+      "class_name": "NSAID",
+      "synonym": "NSAIDs",
+      "curated_by": "MedGuard team, demo-data-foundation"
+    },
+    {
+      "class_name": "ACE inhibitor",
+      "synonym": "ACE inhibitors",
+      "curated_by": "MedGuard team, demo-data-foundation"
+    },
+    {
+      "class_name": "loop diuretic",
+      "synonym": "diuretic therapy",
+      "curated_by": "MedGuard team, demo-data-foundation"
+    }
+  ],
+  "risk_rules": [
+    {
+      "rule_id": 401,
+      "rule_name": "NSAID + ACE inhibitor + loop diuretic: acute kidney injury risk",
+      "analyte": "EGFR",
+      "direction": "LOW",
+      "concern_at": null,
+      "required_classes": [
+        "NSAID",
+        "ACE inhibitor",
+        "loop diuretic"
+      ],
+      "evidence": {
+        "drug": "ramipril",
+        "field": "drug_interactions",
+        "element": 0
+      },
+      "evidence_quote": "In patients who are elderly, volume-depleted (including those on diuretic therapy), or with compromised renal function, co-administration of NSAIDs, including selective COX-2 inhibitors, with ACE inhibitors, including ramipril, may result in deterioration of renal function, including possible acute renal failure.",
+      "rationale": "Links the NSAID + ACE inhibitor + loop diuretic combination to the patient's dated eGFR results. The ramipril label states that NSAIDs given with ACE inhibitors to patients who are elderly, volume-depleted (including those on diuretic therapy) or have compromised renal function may cause deterioration of renal function. The eGFR trend is shown beside the quoted text for clinician review."
+    },
+    {
+      "rule_id": 402,
+      "rule_name": "NSAID + ACE inhibitor + loop diuretic: acute kidney injury risk",
+      "analyte": "CREATININE",
+      "direction": "HIGH",
+      "concern_at": null,
+      "required_classes": [
+        "NSAID",
+        "ACE inhibitor",
+        "loop diuretic"
+      ],
+      "evidence": {
+        "drug": "ramipril",
+        "field": "drug_interactions",
+        "element": 0
+      },
+      "evidence_quote": "In patients who are elderly, volume-depleted (including those on diuretic therapy), or with compromised renal function, co-administration of NSAIDs, including selective COX-2 inhibitors, with ACE inhibitors, including ramipril, may result in deterioration of renal function, including possible acute renal failure.",
+      "rationale": "Links the NSAID + ACE inhibitor + loop diuretic combination to the patient's dated creatinine results. The ramipril label states that NSAIDs given with ACE inhibitors to patients who are elderly, volume-depleted (including those on diuretic therapy) or have compromised renal function may cause deterioration of renal function. The creatinine trend is shown beside the quoted text for clinician review."
+    },
+    {
+      "rule_id": 403,
+      "rule_name": "ACE inhibitor: hyperkalemia risk",
+      "analyte": "POTASSIUM",
+      "direction": "HIGH",
+      "concern_at": null,
+      "required_classes": [
+        "ACE inhibitor"
+      ],
+      "evidence": {
+        "drug": "ramipril",
+        "field": "warnings_and_cautions",
+        "element": 0
+      },
+      "evidence_quote": "Risk factors for the development of hyperkalemia include renal insufficiency, diabetes mellitus, and the concomitant use of potassium-sparing diuretics, potassium supplements, and/or potassium-containing salt substitutes",
+      "rationale": "Links an ACE inhibitor to the patient's dated potassium results. The ramipril label lists renal insufficiency and the concomitant use of potassium-sparing diuretics, potassium supplements or potassium-containing salt substitutes as risk factors for hyperkalemia. The potassium values are shown against their stored reference range for clinician review."
+    }
+  ]
+}

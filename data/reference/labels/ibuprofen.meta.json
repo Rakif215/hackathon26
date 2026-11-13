@@ -1,0 +1,5 @@
+{
+  "fetched_at": "2026-11-13T21:26:59Z",
+  "request_url": "https://api.fda.gov/drug/label.json?search=set_id%3A%221a665e64-9f30-be37-4a83-38789f1f1e89%22",
+  "sha256": "885913e89325df9c77b5c149099034dd85e385cd0fe0cca8dc18a0ad6ec333e0"
+}

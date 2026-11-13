@@ -1,0 +1,449 @@
+{
+  "pbtResults": {
+    "1.4 Add `hypothesis` and write the Quote_Verifier property tests": {
+      "status": "passed",
+      "lastRunTimestamp": 1794596461033
+    }
+  },
+  "executionHistory": {
+    "1.1 Implement `src/hackathon26/schema_file.py` test-first": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595880184
+      },
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595898765
+      },
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794596096574
+      }
+    ],
+    "1.3 Implement `src/hackathon26/match_level.py` test-first": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595880456
+      },
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595898912
+      },
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794596097255
+      }
+    ],
+    "1.4 Add `hypothesis` and write the Quote_Verifier property tests": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595880533
+      },
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794596105849
+      },
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794596492030
+      }
+    ],
+    "2.1 Implement the manifest and metadata part of `src/hackathon26/labels.py` test-first": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595880621
+      },
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794596498100
+      },
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794596716426
+      }
+    ],
+    "2.3 Implement `scripts/fetch_labels.py` (Label_Fetcher) test-first": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595880672
+      },
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794596721276
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794604807278
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794605056824
+      }
+    ],
+    "2.4 Pin the remaining set ids and commit the Label_Snapshots": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595880723
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794605061071
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794605491413
+      }
+    ],
+    "3.1 Implement `load_label` and `import_sections` in `src/hackathon26/labels.py` test-first": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595880777
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794605496539
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794605721322
+      }
+    ],
+    "3.2 Test the committed snapshots end to end": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595880826
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794605722121
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794606037586
+      }
+    ],
+    "4. Checkpoint: ensure the whole suite passes": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595880877
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794607055465
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794607104397
+      }
+    ],
+    "5.1 Create `data/demo/demo_fixture.json` and the loader in `src/hackathon26/demo_fixture.py` test-first": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595880954
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794605729859
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794606038480
+      }
+    ],
+    "5.2 Implement `fixture_problems` test-first": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595881010
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794606048110
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794606467124
+      }
+    ],
+    "5.3 Implement the trust-text checks test-first": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595881059
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794606476507
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794606651156
+      }
+    ],
+    "5.4 Implement `build_rows` and `to_wire` test-first": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595881108
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794606656420
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794607034805
+      }
+    ],
+    "6.1 Implement `src/hackathon26/join_verification.py` test-first": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595881155
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794606049202
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794606466784
+      }
+    ],
+    "7. Checkpoint: ensure the whole suite passes": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595881205
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794607105150
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794607142648
+      }
+    ],
+    "8.1 Rewrite argument handling and offline validation test-first": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595881254
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794607143463
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794607515171
+      }
+    ],
+    "8.2 Implement the Default_Seed_Run test-first": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595881303
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794607520080
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794608049767
+      }
+    ],
+    "8.3 Implement Schema_Apply (`--apply-schema`) test-first": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595881353
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794608054983
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794608416906
+      }
+    ],
+    "8.4 Implement Verify_Mode (`--verify`) test-first": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595881401
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794608421521
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794608626149
+      }
+    ],
+    "9. Checkpoint: ensure the whole suite passes before touching the database": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595881452
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794608626955
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794608704094
+      }
+    ],
+    "10.1 Show the target, get confirmation, then run `--apply-schema` once": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595881529
+      },
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794608704187
+      }
+    ],
+    "10.2 Re-seed and verify": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595881580
+      }
+    ],
+    "11.1 Write the Seed_Command module docstring test-first": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595881628
+      }
+    ],
+    "11.2 Update the PROJECT.md status list": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595881677
+      }
+    ],
+    "12. Final checkpoint: ensure the whole suite passes": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794595881738
+      }
+    ],
+    "1.2 Apply the five adjustments to `sql/01_schema.sql` test-first": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794596104882
+      },
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794596492140
+      }
+    ],
+    "1. Schema DDL deltas, Match_Level vocabulary and test tooling": [
+      {
+        "executionId": "29f80f53-28e4-44b6-bbb8-2edd79e826d7",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794596492210
+      }
+    ],
+    "2. Label manifest, Label_Fetcher and committed snapshots": [
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794605491579
+      }
+    ],
+    "3. Label_Importer with provenance": [
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794606037724
+      }
+    ],
+    "6. Join_Status adapter": [
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794606466961
+      }
+    ],
+    "5. Demo_Fixture, validator, trust-text checks and row building": [
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794607034980
+      }
+    ],
+    "8. Seed_Command CLI (`src/hackathon26/seed.py` rewrite)": [
+      {
+        "executionId": "66f1f16e-b451-4296-a15a-684308755141",
+        "chatSessionId": "sess_ed373126-54b7-4c7d-bf02-52e9bac14a85",
+        "timestamp": 1794608626309
+      }
+    ]
+  }
+}

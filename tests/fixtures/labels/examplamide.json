@@ -1,0 +1,46 @@
+{
+  "meta": {
+    "disclaimer": "Synthetic test fixture. Examplamide is a fictional drug; this is not an openFDA document.",
+    "results": {
+      "skip": 0,
+      "limit": 1,
+      "total": 1
+    }
+  },
+  "results": [
+    {
+      "set_id": "e0e0e0e0-1111-4222-8333-444444444444",
+      "id": "f1f1f1f1-2222-4333-8444-555555555555",
+      "effective_time": "20240229",
+      "version": "3",
+      "indications_and_usage": [
+        "1 INDICATIONS AND USAGE Examplamide is a fictional compound used only in MedGuard unit tests."
+      ],
+      "contraindications": [
+        "  4 CONTRAINDICATIONS\nExamplamide is contraindicated in patients with a history of hypersensitivity to examplamide or to any excipient.  "
+      ],
+      "warnings_and_cautions": [
+        "5 WARNINGS AND PRECAUTIONS\n5.1 Renal function: monitor serum creatinine in patients with heart failure — Nierenfunktion überwachen (µmol/L).\n",
+        "",
+        "\t5.2 Hyperkalemia: concomitant use with potassium-sparing diuretics may increase serum potassium ≥ 5,5 mmol/L.\r\nFrançais : hyperkaliémie possible."
+      ],
+      "drug_interactions": [
+        "7 DRUG INTERACTIONS\n7.1 Nonsteroidal anti-inflammatory agents (NSAIDs): co-administration with examplamide may result in deterioration of renal function — „Triple Whammy“."
+      ],
+      "openfda": {
+        "generic_name": [
+          "EXAMPLAMIDE"
+        ],
+        "brand_name": [
+          "Examplor"
+        ],
+        "manufacturer_name": [
+          "Fictional Test Pharma GmbH"
+        ],
+        "pharm_class_epc": [
+          "Fictional Example Class [EPC]"
+        ]
+      }
+    }
+  ]
+}
