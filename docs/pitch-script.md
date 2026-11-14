@@ -8,7 +8,7 @@ Text in [brackets] is for the team to fill in or check before the pitch.
 | 0:00–0:35 | **1. The problem** (Challenge 1 + Challenge 3) | Demo, step 1 |
 | 0:35–1:55 | **2. Our solution, live** (12 key presses) | Demo, steps 1–12 |
 | 1:55–2:10 | **3. Why you can trust it** | Demo, last step (workflow on the right) |
-| 2:10–2:45 | **4. Business** | 1–2 slides |
+| 2:10–2:45 | **4. Business** | Go-to-market slide |
 | 2:45–3:00 | **5. Closing** | Closing slide |
 
 Tip: two people. One speaks, one presses the keys, so the speaker never looks down.
@@ -68,14 +68,8 @@ If you're running late, skip steps 6 and 7 with two quick presses and no talking
 
 ## 4. Business · 2:10–2:45
 
-*(Slide: who pays · why now · three steps.)*
+*(Slide: go-to-market, three steps.)*
 
-> **Who pays:** GP practices and cardiology outpatient clinics, as a monthly subscription per doctor:
-> [price, e.g. €X per doctor per month].
->
-> **Why now:** Germany's electronic patient record and e-prescriptions are making medication data available
-> to practices. [Check the current rollout status before the pitch.]
->
 > **How we get there:**
 > 1. **Pilot** with [2–3] heart-failure practices here in the Medical Valley region.
 > 2. **Integrate** into the practice software doctors already use, so there's no extra screen.
@@ -102,7 +96,7 @@ If you're running late, skip steps 6 and 7 with two quick presses and no talking
 - **Rehearse with a timer, twice.** The demo part must fit in 80 seconds.
 - **Open the demo full screen** and click it once, so the keys and the clicker respond. Press **R** to start
   from step 1.
-- **Fill in every [bracket].** Don't present a number nobody has checked.
+- **Fill in every [bracket]** (pilot count, the ask). No prices in the pitch yet.
 - **If the demo breaks:** say "let me show you the key moment", press → to step 3, and talk over the two
   candidates.
 
