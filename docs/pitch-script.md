@@ -1,112 +1,101 @@
 # MedGuard: 3-minute pitch script
 
-Demo file: `web/medguard-pitch.html` (12 steps, keys only). About 420 spoken words.
-Text in [brackets] is for the team to fill in or check before the pitch.
+Deck: `MedGuard_slides.html` (7 slides). The demo is the link on slide 5. Simple words, short sentences, and pauses
+where marked. About 400 spoken words in all.
 
-| Time | Part | Screen |
+| Time | Slide | Part |
 |---|---|---|
-| 0:00–0:35 | **1. The problem** (Challenge 1 + Challenge 3) | Demo, step 1 |
-| 0:35–1:55 | **2. Our solution, live** (12 key presses) | Demo, steps 1–12 |
-| 1:55–2:10 | **3. Why you can trust it** | Demo, last step (workflow on the right) |
-| 2:10–2:45 | **4. Business** | Go-to-market slide |
-| 2:45–3:00 | **5. Closing** | Closing slide |
-
-Tip: two people. One speaks, one presses the keys, so the speaker never looks down.
-
----
-
-## 1. The problem · 0:00–0:35
-
-> **Would you trust an AI with your health?** *(pause)* Not if it's just confident.
->
-> Here is what a doctor deals with every day. Older heart patients take five to ten medicines, and they don't
-> know the names. They say "*the red one… and the white one*". The pharmacy switches the maker and the pill
-> looks different. A painkiller from another doctor never makes it onto the list, because "it's only for the pain".
->
-> The information is all there: the prescription, the pharmacy, the blood tests, the official leaflets. It's
-> just scattered. Healthcare doesn't lack data. **It lacks connected intelligence you can trust.**
->
-> That's **MedGuard**: a second pair of ears in the consultation room. It connects the data, and when it isn't
-> sure, it doesn't guess. **It asks.**
-
-*(Step 1 is already on screen.)*
+| 0:00–0:08 | 1 · Title | Who we are |
+| 0:08–0:30 | 2 · The chatbot | The question |
+| 0:30–0:55 | 3 · The problem | Why doctors need help |
+| 0:55–1:15 | 4 · Our answer | What MedGuard does |
+| 1:15–2:35 | 5 · Live demo | The demo, 12 key presses |
+| 2:35–2:52 | 6 · What's next | Pilot, and our ask |
+| 2:52–3:00 | 7 · Thank you | Closing line |
 
 ---
 
-## 2. Our solution, live · 0:35–1:55
+## Slide 1 · Title (0:00–0:08)
 
-About 6–7 seconds per press. Say the line, then press.
+> Hi, we're Team MedGuard: Michael, Moeez and Rakif. We took on Challenge 3: healthcare AI you can trust.
 
-| Key | Step | Say |
+## Slide 2 · The chatbot (0:08–0:30)
+
+> Imagine your doctor types your symptoms into a chatbot. Swollen ankles, short of breath, kidneys getting worse.
+> And it answers: *"Too much knitting. Have a cup of tea."*
+> One hundred percent sure. No sources. No questions.
+>
+> *(pause)* Would your doctor trust that with your health?
+>
+> *(pause)* Not if it's just confident.
+
+## Slide 3 · The problem (0:30–0:55)
+
+> And doctors do need help. They have only a few minutes per patient, and so much to check:
+> the patient's whole history, whether her pills match the prescription, and what she means when she says
+> *"the red one"* and *"the white one"*.
+>
+> Older patients often take many medicines and don't know their names. That's where things get missed.
+
+## Slide 4 · Our answer (0:55–1:15)
+
+> So we built MedGuard: a second pair of ears in the consultation room.
+> It listens. It checks everything against her data in **Exasol**: her record, blood tests, pill photos and the
+> official leaflets. It suggests, and it shows the evidence. And the doctor always decides.
+>
+> Let me show you.
+
+*(Switch to the demo tab.)*
+
+## Slide 5 · Live demo (1:15–2:35)
+
+*(The demo is on step 1. One person speaks, one presses →. The audience can read the conversation, so don't read it out.)*
+
+| # | Key | Say |
 |---|---|---|
-| (on screen) | 1 · start | "Frau Weber, 72, routine heart check-up. MedGuard listens. Only the doctor sees what it says." |
-| → | 2 · dizzy | "She mentions dizziness. Two of her tablets lower blood pressure, so MedGuard **suggests** a quick check. It suggests; it doesn't decide." |
-| → | 3 · "the white one" | "Now the hard part. *The white one* could be **two** of her medicines. MedGuard shows both, highlights the difference, and suggests **one** question: round or oval?" |
-| → | 4 · "oval, with a line" | "91 percent. Still not certain, so it suggests one more question." |
-| → | 5 · "with my coffee" | "Now everything matches, and **Dr. Vogel** marks it as metoprolol." |
-| → | 6 · water tablet | "She admits she sometimes skips her water tablet…" |
-| → | 7 · "twice a week" | "…and it goes into her record." |
-| → | 8 · knee tablets | "Then, in passing: tablets for her knee. **Not on her prescription.** And they look just like her water tablet." |
-| → | 9 · "Ibuprofen 400" | "The box is in her bag: ibuprofen." |
-| → | 10 · the check | "MedGuard checks it against her medicines, the official leaflet and her blood results. Her kidney function is falling, and the leaflet warns about exactly this combination. It **suggests discussing it**, with the source quoted word for word." |
-| → | 11 · decision | "Dr. Vogel talks to her. MedGuard offers the paperwork: pause the painkiller, order a kidney test." |
-| → | 12 · final report | "Everything from the visit lands in one report. The doctor reviews it, unticks anything that shouldn't go in, and signs." *(Click **Sign report**.)* |
+| 1 | (on screen) | "Meet Frau Weber, 72, at her heart check-up. On the left, the conversation. On the right, what MedGuard does in the background. Only the doctor sees this." |
+| 2 | → | "She feels dizzy. MedGuard checks her medicines and spots two that can cause it. It doesn't diagnose. It suggests a quick check." |
+| 3 | → | "Now the tricky one: *the white one*. That could be two different pills. Instead of guessing, MedGuard suggests one simple question." *(point at the two pill photos)* |
+| 4 | → | "She answers. MedGuard is more sure, but not sure enough. So it asks again." |
+| 5 | → | "Now it all fits. The doctor confirms with one click." |
+| 6 | → | "Her water tablet: she sometimes skips it…" |
+| 7 | → | *(press without talking)* |
+| 8 | → | "Then, almost by accident: pills for her knee. **Not on her list**, and they look exactly like her water tablet." |
+| 9 | → | "The box says ibuprofen." |
+| 10 | → | "This is the moment." *(pause)* "**Exasol** connects the dots: her kidney results are getting worse, and the official leaflet warns about exactly this mix. MedGuard shows the proof, word for word." *(point at the quote)* |
+| 11 | → | "The doctor talks to her and decides. MedGuard just does the paperwork." |
+| 12 | → | "One report: every source, every decision. The doctor checks it and signs." *(click **Sign report**)* "That's AI you can trust." |
 
-If you're running late, skip steps 6 and 7 with two quick presses and no talking.
+*(Switch back to the slides.)* Don't click the suggestion buttons during the demo; pressing → counts each one as accepted.
+If it runs long, skip steps 6–7 with two quick presses. If the demo breaks, open it again, press **R**, then → twice to step 3,
+and talk over the two pill photos.
 
----
+## Slide 6 · What's next (2:35–2:52)
 
-## 3. Why you can trust it · 1:55–2:10
-
-*(Point at the dark panel on the right.)*
-
-> Three rules. **It shows its evidence:** every suggestion comes from her record, the pill database, her blood
-> tests or the official leaflet. **It asks instead of deciding:** the doctor makes every call. And **the data
-> stays put:** everything is joined in **Exasol** in one query. The AI only writes the wording.
-
----
-
-## 4. Business · 2:10–2:45
-
-*(Slide: go-to-market, three steps.)*
-
-> **How we get there:**
-> 1. **Pilot** with [2–3] heart-failure practices here in the Medical Valley region.
-> 2. **Integrate** into the practice software doctors already use, so there's no extra screen.
-> 3. **Expand** to pharmacies and health insurers, who carry the cost of hospital stays caused by medication errors.
+> What's next? We start small: a supervised pilot with practices here in the Medical Valley.
+> Then we build MedGuard into the software doctors already use. Then pharmacies and insurers.
+> We're looking for pilot practices and clinical partners.
 >
-> **Regulation:** decision-support software for a specific patient is likely a medical device under the EU MDR.
-> We start with a supervised pilot and build the certification path from day one.
+> So: would you trust an AI with your health? *(point at the line)* You can trust this one.
 
----
+## Slide 7 · Thank you (2:52–3:00)
 
-## 5. Closing · 2:45–3:00
-
-> We're looking for **[pilot practices / clinical partners / help with regulation]**.
->
-> So: would you trust an AI with your health? You can trust this one, because it shows its evidence, says when
-> it isn't sure, and leaves the decision to your doctor.
->
+> Because it shows its evidence, says when it isn't sure, and leaves the decision to the doctor.
 > Thank you.
 
 ---
 
 ## Before the pitch
 
-- **Rehearse with a timer, twice.** The demo part must fit in 80 seconds.
-- **Open the demo full screen** and click it once, so the keys and the clicker respond. Press **R** to start
-  from step 1.
-- **Fill in every [bracket]** (pilot count, the ask). No prices in the pitch yet.
-- **If the demo breaks:** say "let me show you the key moment", press → to step 3, and talk over the two
-  candidates.
+- **Rehearse twice with a timer.** The demo has to fit in 80 seconds.
+- **Open both tabs:** the slides in full screen (press **F**), and the demo already on step 1 (press **R**). Click once on each so the keys work.
+- **Decide who says what.** For example: one person does slides 1–4, the second runs the demo keys, the third does slides 6–7.
+- **No prices** in the pitch yet.
 
-### Likely questions
+## Likely questions
 
-- *"What if she can't describe the pill and doesn't have it with her?"* → MedGuard shows the photos so she can
-  point, checks the pharmacy history, or saves it as "described, not verified" for follow-up. The safety check
-  still runs, because it works on the ingredient, not the exact product.
-- *"Same medicine from two different companies?"* → MedGuard knows every maker's version and how each one looks,
-  and suggests the question that tells them apart.
-- *"Isn't this a medical device?"* → Likely, yes. See the regulation line in the business part.
-- *"Where does the data come from?"* → The patient record, lab results, a pill-appearance database and the
-  official leaflets, all joined in Exasol.
+- *"Is this live?"* → "It's a scripted walkthrough of how MedGuard works. The database and the AI connection are built; wiring them into this screen is next."
+- *"What if she doesn't have the pill with her?"* → MedGuard shows photos so she can point, checks the pharmacy history, or saves it as "described, not verified" for later. The safety check still works, because it checks the ingredient.
+- *"Same medicine from two companies?"* → MedGuard knows how each maker's version looks, and suggests the question that tells them apart.
+- *"Isn't this a medical device?"* → Probably, under the EU MDR. That's why we start with a supervised pilot and plan certification from day one.
+- *"Where does the data come from?"* → Her record, lab results, a pill-photo database and the official leaflets, all joined in Exasol. In the demo, the patient is invented.
