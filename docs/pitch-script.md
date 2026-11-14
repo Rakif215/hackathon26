@@ -1,7 +1,7 @@
 # MedGuard: 3-minute pitch script
 
 Deck: `MedGuard_slides.html` (7 slides). The demo is the link on slide 5. Simple words, short sentences, and pauses
-where marked. About 400 spoken words in all.
+where marked. About 330 spoken words in all.
 
 | Time | Slide | Part |
 |---|---|---|
@@ -9,9 +9,10 @@ where marked. About 400 spoken words in all.
 | 0:08–0:30 | 2 · The chatbot | The question |
 | 0:30–0:55 | 3 · The problem | Why doctors need help |
 | 0:55–1:15 | 4 · Our answer | What MedGuard does |
-| 1:15–2:35 | 5 · Live demo | The demo, 12 key presses |
-| 2:35–2:52 | 6 · What's next | Pilot, and our ask |
-| 2:52–3:00 | 7 · Thank you | Closing line |
+| 1:15–2:05 | 5 · Live demo | The demo, 5 steps |
+| 2:05–2:25 | 6 · What's next | Pilot, and our ask |
+| 2:25–2:35 | 7 · Thank you | Closing line |
+| 2:35–3:00 | | Spare time: speak slowly, pause, or take a question |
 
 ---
 
@@ -47,30 +48,22 @@ where marked. About 400 spoken words in all.
 
 *(Switch to the demo tab.)*
 
-## Slide 5 · Live demo (1:15–2:35)
+## Slide 5 · Live demo (1:15–2:05)
 
-*(The demo is on step 1. One person speaks, one presses →. The audience can read the conversation, so don't read it out.)*
+*(The demo opens on step 1 of 5. One person speaks, one presses →. The audience can read the conversation, so don't read it out.)*
 
 | # | Key | Say |
 |---|---|---|
 | 1 | (on screen) | "Meet Frau Weber, 72, at her heart check-up. On the left, the conversation. On the right, what MedGuard does in the background. Only the doctor sees this." |
-| 2 | → | "She feels dizzy. MedGuard checks her medicines and spots two that can cause it. It doesn't diagnose. It suggests a quick check." |
-| 3 | → | "Now the tricky one: *the white one*. That could be two different pills. Instead of guessing, MedGuard suggests one simple question." *(point at the two pill photos)* |
-| 4 | → | "She answers. MedGuard is more sure, but not sure enough. So it asks again." |
-| 5 | → | "Now it all fits. The doctor confirms with one click." |
-| 6 | → | "Her water tablet: she sometimes skips it…" |
-| 7 | → | *(press without talking)* |
-| 8 | → | "Then, almost by accident: pills for her knee. **Not on her list**, and they look exactly like her water tablet." |
-| 9 | → | "The box says ibuprofen." |
-| 10 | → | "This is the moment." *(pause)* "**Exasol** connects the dots: her kidney results are getting worse, and the official leaflet warns about exactly this mix. MedGuard shows the proof, word for word." *(point at the quote)* |
-| 11 | → | "The doctor talks to her and decides. MedGuard just does the paperwork." |
-| 12 | → | "One report: every source, every decision. The doctor checks it and signs." *(click **Sign report**)* "That's AI you can trust." |
+| 2 | → | "She says: *the red one, and the white one*. The red one is easy. But the white one could be **two different pills**. Instead of guessing, MedGuard checks her prescription and the pill photos in **Exasol**, and suggests one simple question: round or oval?" *(point at the two pill photos)* |
+| 3 | → | "She answers. MedGuard is more sure, but not sure enough. So it asks one more question." |
+| 4 | → | "Now everything fits. But MedGuard doesn't decide. **It asks the doctor.**" *(point at "Yes, metoprolol")* |
+| 5 | → | "Saved. Her prescription now shows a picture of each pill as she has it, so next time nobody has to guess. The doctor checks the report and signs." *(click **Sign report**)* "That's AI you can trust." |
 
-*(Switch back to the slides.)* Don't click the suggestion buttons during the demo; pressing → counts each one as accepted.
-If it runs long, skip steps 6–7 with two quick presses. If the demo breaks, open it again, press **R**, then → twice to step 3,
-and talk over the two pill photos.
+*(Switch back to the slides.)* About 120 words, roughly 50 seconds. Don't click the suggestion buttons; pressing → counts each one as accepted.
+The only click is **Sign report**. If the demo breaks, open it again (it starts on step 1), press → once to step 2, and talk over the two pill photos.
 
-## Slide 6 · What's next (2:35–2:52)
+## Slide 6 · What's next (2:05–2:25)
 
 > What's next? We start small: a supervised pilot with practices here in the Medical Valley.
 > Then we build MedGuard into the software doctors already use. Then pharmacies and insurers.
@@ -78,7 +71,7 @@ and talk over the two pill photos.
 >
 > So: would you trust an AI with your health? *(point at the line)* You can trust this one.
 
-## Slide 7 · Thank you (2:52–3:00)
+## Slide 7 · Thank you (2:25–2:35)
 
 > Because it shows its evidence, says when it isn't sure, and leaves the decision to the doctor.
 > Thank you.
@@ -87,8 +80,8 @@ and talk over the two pill photos.
 
 ## Before the pitch
 
-- **Rehearse twice with a timer.** The demo has to fit in 80 seconds.
-- **Open both tabs:** the slides in full screen (press **F**), and the demo already on step 1 (press **R**). Click once on each so the keys work.
+- **Rehearse twice with a timer.** The whole pitch is about 2:35, so you have 25 seconds spare. Use them to slow down.
+- **Open both tabs:** the slides in full screen (press **F**), and the demo (it opens on step 1). Click once on each so the keys work.
 - **Decide who says what.** For example: one person does slides 1–4, the second runs the demo keys, the third does slides 6–7.
 - **No prices** in the pitch yet.
 
