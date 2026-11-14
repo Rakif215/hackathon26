@@ -62,7 +62,7 @@ button{font-family:var(--f-ui)}
 .who{display:flex;align-items:center;gap:10px;flex:none}
 .listen{margin-left:auto;display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#B42318;background:#FEF3F2;border:1px solid #FECDCA;padding:4px 11px 4px 8px;border-radius:999px}
 .intro{background:#F8FAFC;border-radius:14px;padding:16px 18px;color:var(--ink2);font-size:17px;line-height:1.5}
-.talk{display:flex;flex-direction:column;gap:8px;flex:none}
+.talk{display:flex;flex-direction:column;justify-content:flex-end;gap:10px;flex:1;min-height:0;overflow:hidden}
 .row-d{align-self:flex-end;max-width:90%;display:flex;gap:8px;align-items:flex-end}
 .row-p{align-self:flex-start;max-width:92%;display:flex;gap:8px;align-items:flex-end}
 .bub-d{background:var(--blue);color:#fff;padding:8px 12px;border-radius:14px 14px 4px 14px;font-size:15px;line-height:1.4}
@@ -168,7 +168,7 @@ button{font-family:var(--f-ui)}
       </div>
       <div class="convo">
         <div id="r-talk" class="talk"></div>
-        <div id="r-card" style="display:flex;flex-direction:column;gap:10px;min-height:0"></div>
+        <div id="r-card" style="display:flex;flex-direction:column;gap:10px;flex:none"></div>
         <section class="box" id="r-acts" style="display:none"></section>
       </div>
       <div class="recrow">
@@ -212,13 +212,8 @@ button{font-family:var(--f-ui)}
 
   var LIST = [
     { kind: "intro", flow: [{ e: [], n: ["conv"], label: "listening", conv: "session started", cap: "Routine heart check-up. MedGuard listens in the background and only speaks to the doctor.", log: [["session", "lg-listen", "patient 1042 · record loaded · listening"]] }] },
-    { ex: ["How have the last few months been?", [["Fine, mostly. But I get "], ["dizzy when I stand up", "hl"], ["."]]],
-      card: { say: "Dizziness noted. Two of her tablets can lower blood pressure: ramipril and furosemide.", askLabel: "Suggested", ask: "Check her blood pressure standing up?",
-        choice: ["Add to this visit", "Skip"], acts: ["Blood pressure checked standing"],
-        more: [["“Have you fallen, or nearly fallen?”", "falls matter more at 72"], ["“Is it worse in the morning?”", "right after the tablets"], ["“Do you drink enough during the day?”", "water tablet + heat"]] },
-      flow: [listen("“dizzy when I stand up”"), look(["rec", "leaf"], "Which of her medicines can lower blood pressure?", "SELECT drug FROM prescription JOIN leaflet WHERE patient = 1042 AND effect = 'low blood pressure'"), suggest()] },
     { ex: ["Let’s go through your tablets.", [["The "], ["red capsule", "hl"], [" in the morning, and "], ["the white one", "hl"], ["."]]],
-      rx: { ram: "confirmed" },
+      rx: { ram: "confirmed" }, act: "Confirmed the red capsule is ramipril",
       card: { say: "The red capsule fits ramipril. “The white one” could be two of her medicines.", cands: "open", askLabel: "You could ask", ask: "“Is it round, or more oval?”",
         more: [["“Is there a line across it?”", "metoprolol has one, furosemide doesn’t"], ["“Is it bigger or smaller than the red one?”", "size differs"], ["“What do you take it for?”", "heart rhythm vs. water tablet"]] },
       flow: [listen("“red capsule” · “the white one”"), look(["rec", "pill"], "What on her prescription looks like a red capsule? And what is white?", "SELECT drug, colour, shape, size FROM prescription JOIN pill_db WHERE patient = 1042"),
@@ -230,53 +225,17 @@ button{font-family:var(--f-ui)}
         more: [["“Is it the one for your heart rhythm?”", "what it is for"], ["“How long have you had this one?”", "rules out a new maker"], ["“Could you bring the box next time?”", "if still unsure"]] },
       flow: [listen("“oval, with a line across”"), look(["pill"], "Shape and score line compared with both candidates.", "SELECT drug FROM pill_db WHERE shape = 'oval' AND scored = true AND drug IN (metoprolol, furosemide)"),
         found("Oval and scored: metoprolol 91%, furosemide 9%.", "oval + scored → metoprolol 91%", "metoprolol 91%"), suggest("Claude suggests one more question instead of deciding.")] },
-    { onlyIf: [3, 0],
+    { onlyIf: [2, 0],
       ex: ["Is that the one you take with breakfast?", [["Yes, "], ["with my coffee", "hl"], [", every morning."]]],
       card: { say: "Oval, a line across, taken with breakfast: that all matches metoprolol on her prescription.", askLabel: "Your call", ask: "Mark “the white one” as metoprolol?",
         choice: ["Yes, metoprolol", "Not sure"], rxOnPick: ["met", "confirmed", "not sure"], acts: ["Confirmed “the white one” is metoprolol"] },
       flow: [listen("“with my coffee, every morning”"), look(["rec"], "Her prescription says metoprolol is taken with breakfast.", "SELECT timing FROM prescription WHERE patient = 1042 AND drug = 'metoprolol'"),
         found("Shape, line and timing all match: metoprolol 97%.", "timing: with breakfast → metoprolol 97%", "metoprolol 97%"), suggest("Claude hands the decision to the doctor.")] },
-    { ex: ["And the water tablet?", [["The "], ["small round one", "hl"], [". I sometimes skip it, it keeps me up at night."]]],
-      rx: { fur: "confirmed · skipped sometimes" },
-      card: { say: "That is furosemide. She skips it sometimes, which can matter for her heart.", askLabel: "You could ask", ask: "“How often do you skip it?”", choice: ["Ask her", "Skip"],
-        more: [["“Have your ankles been swelling?”", "a sign of missed doses"], ["“Are you short of breath at night?”", "same reason"], ["“When do you usually take it?”", "timing can be discussed"]] },
-      flow: [save("Dr. Vogel’s confirmation is saved: “white oval” = metoprolol.", "confirmed metoprolol · appearance saved"), listen("“small round one” · “sometimes skip it”"),
-        look(["rec", "pill"], "Matches her water tablet on the prescription.", "SELECT drug FROM prescription JOIN pill_db WHERE patient = 1042 AND shape = 'round'"), suggest()] },
-    { onlyIf: [5, 0], act: "Noted: furosemide skipped about twice a week",
-      ex: ["How often do you skip it?", [["Maybe "], ["twice a week", "hl"], [", when I go out. I don’t want to look for a toilet."]]],
-      rx: { fur: "confirmed · skipped ~2×/week" },
-      card: { say: "Noted: furosemide skipped about twice a week, on days out. Added to her record so it can be looked at together with her symptoms.", askLabel: "Next", ask: "Ask about anything else she takes?" },
-      flow: [listen("“twice a week, when I go out”"), look(["rec"], "The skipped doses are written to her record.", "INSERT adherence_note (patient 1042, furosemide, '~2× per week, days out')"),
-        suggest("Claude summarises it and suggests moving on to anything else she takes.")] },
-    { ex: ["Anything else? Even from another doctor?", [["My GP gave me "], ["small round white ones", "hl"], [" for my knee. Only for the pain."]]],
-      addRx: "ibu?", act: "Found a painkiller not on her prescription",
-      card: { say: "Something for pain that is not on her prescription.", like: true, askLabel: "You could ask", ask: "“Do you know the name, or have the box?”", choice: ["Ask her", "Skip"],
-        more: [["“How many a day do you take?”", "dose matters"], ["“Since when?”", "how long the kidneys were exposed"], ["“Do you buy anything else at the pharmacy?”", "other hidden medicines"]] },
-      flow: [listen("“small round white ones” · “for my knee”"), look(["rec", "pill"], "Is anything like this on her prescription? And what looks like it?", "SELECT drug FROM prescription JOIN pill_db WHERE patient = 1042 AND colour = 'white' AND shape = 'round'"),
-        found("Not on her prescription. It looks like her water tablet.", "no match on prescription · look-alike: furosemide", "new · looks like furosemide"), suggest()] },
-    { ex: ["Do you know what they’re called?", [["The box is in my bag… it says "], ["Ibuprofen 400", "hl"], ["."]]],
-      addRx: "ibu",
-      card: { say: "Ibuprofen 400 mg. Not on her prescription.", askLabel: "Suggested", ask: "Check it against her medicines and blood results?",
-        choice: ["Check it", "Not now"], acts: ["Checked ibuprofen against her medicines and blood results"] },
-      flow: [listen("“Ibuprofen 400”"), look(["pill"], "The product name is looked up in the pill database.", "SELECT drug, class FROM pill_db WHERE name = 'Ibuprofen 400'"),
-        found("Ibuprofen 400 mg, a painkiller of the NSAID group.", "ibuprofen 400 mg · NSAID", "ibuprofen · not prescribed"), suggest()] },
-    { addRx: "ibu",
-      card: { say: "The ramipril leaflet mentions this combination and the kidneys. Her kidney score has been falling. It may be worth discussing whether she still needs the ibuprofen.", risk: true,
-        choice: ["Discuss with her", "Dismiss"], acts: ["Discussed the kidney risk of ibuprofen with her"] },
-      flow: [look(["rec", "lab", "leaf"], "Exasol joins the painkiller with her medicines, her kidney results and the ramipril leaflet, in one query.", "JOIN prescription · lab_result(eGFR) · leaflet(ramipril §7.5)  WHERE patient = 1042"),
-        found("Leaflet section 7.5 matches. Her eGFR: 62 → 55 → 48.", "ramipril §7.5 · NSAIDs · eGFR 62 → 55 → 48", "risk to discuss"),
-        suggest("Claude writes it as something to discuss, with the leaflet quoted word for word.")] },
-    { ex: ["With your heart tablets, these can strain your kidneys. Let’s find something else for the knee, and do a blood test today.", [["Oh. I didn’t know that."]]],
-      addRx: "ibu",
-      card: { say: "Shall I update her prescription and add a kidney test to this visit?", askLabel: "Suggested", ask: "Ibuprofen → “paused”. Kidney test today.",
-        choice: ["Yes, update", "Not now"], rxOnPick: ["ibu", "paused", "not prescribed"], acts: ["Ibuprofen paused on her prescription", "Kidney test ordered (eGFR, potassium)"] },
-      flow: [listen("“find something else” · “blood test today”"), suggest("MedGuard offers the paperwork. The doctor decides.")] },
-    { addRx: "ibu",
-      card: { say: "Saved. Her prescription now shows a picture of each pill as she has it, the paused painkiller, and today’s actions. Review them in the final report." },
-      flow: [save("Everything is saved in Exasol: prescription, pictures, actions, and every suggestion with the doctor’s decision.", "UPDATE prescription · INSERT visit_summary · decisions logged")] }
+    { card: { say: "Saved. Her prescription now shows a picture of each pill as she has it, and “the white one” is marked as metoprolol. Review today’s actions in the final report." },
+      flow: [save("Everything is saved in Exasol: prescription, pill pictures, and every suggestion with the doctor’s decision.", "UPDATE prescription · INSERT visit_summary · decisions logged")] }
   ];
 
-  var S = { b: LIST.length - 1, s: 99, pick: {}, more: false, off: {}, signed: false };
+  var S = { b: 0, s: 0, pick: {}, more: false, off: {}, signed: false };  // always open on step 1
   var timer = null;
   var handlers = {};
 
@@ -319,9 +278,9 @@ button{font-family:var(--f-ui)}
     var logAll = []; upto.forEach(function (f) { f.log.forEach(function (g) { logAll.push(g); }); });
     var log = logAll.slice(-7);
 
-    // conversation: the last two exchanges
+    // conversation: every exchange so far; older ones scroll up out of view
     var exAll = LIST.slice(0, b + 1).filter(function (x, k) { return x.ex && allowed(k); });
-    var talk = exAll.slice(-2);
+    var talk = exAll;
 
     // prescription + actions
     var status = { ram: "prescribed", met: "prescribed", fur: "prescribed" };
@@ -370,7 +329,7 @@ button{font-family:var(--f-ui)}
       : d.talk.map(function (x, k) {
           var older = k < d.talk.length - 1;
           var pt = (x.ex[1] || []).map(function (p) { return p[1] ? '<span class="hl">' + esc(p[0]) + "</span>" : esc(p[0]); }).join("");
-          return '<div class="' + (older ? "" : "pv-in") + '" style="display:flex;flex-direction:column;gap:7px;opacity:' + (older ? ".5" : "1") + '">' +
+          return '<div class="' + (older ? "" : "pv-in") + '" style="display:flex;flex-direction:column;gap:7px;flex:none;opacity:' + (older ? ".55" : "1") + '">' +
             '<div class="row-d"><div class="bub-d">' + esc(x.ex[0]) + "</div>" + DOC_AV + "</div>" +
             (pt ? '<div class="row-p">' + PT_AV + '<div class="bub-p">' + pt + "</div></div>" : "") + "</div>";
         }).join("");
@@ -437,7 +396,6 @@ button{font-family:var(--f-ui)}
     }).join("");
     if (d.finalStep) acts += '<div style="display:flex;gap:10px;align-items:center;border-top:1px solid #EEF1F5;padding-top:6px"><button class="choice choice-sm ' + (S.signed ? "choice-on" : "") + '" data-a="sign">' + (S.signed ? "✓ Signed by Dr. Vogel" : "Sign report") + '</button><span style="font-size:13px;color:var(--muted)">' + nOn + " of " + d.tasks.length + " actions included</span></div>";
     var ab = document.getElementById("r-acts"); ab.style.display = d.finalStep ? "" : "none"; ab.style.borderColor = d.finalStep ? "#2F5BEA" : "";
-    document.getElementById("r-talk").style.display = d.finalStep ? "none" : "";
     put("r-acts", acts);
     handlers.tog = function (i) { var a = d.tasks[i]; var o = {}; for (var k in S.off) o[k] = S.off[k]; o[a] = !o[a]; set({ off: o, signed: false }); };
 
@@ -533,6 +491,7 @@ button{font-family:var(--f-ui)}
   window.addEventListener("resize", fit);
   fit();
   render();
+  handlers.go(0, 0);  // start on step 1 and play its workflow
 })();
 </script>
 
