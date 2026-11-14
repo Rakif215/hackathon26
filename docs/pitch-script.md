@@ -1,92 +1,97 @@
 # MedGuard: 3-minute pitch script
 
-About 400 spoken words at a calm pace. Times are targets, not limits. Text in [brackets] is for the team to fill in or check.
+Demo file: `web/medguard-pitch.html` (12 steps, keys only). About 420 spoken words.
+Text in [brackets] is for the team to fill in or check before the pitch.
 
 | Time | Part | Screen |
 |---|---|---|
-| 0:00–0:30 | The problem | Pitch view, step 1 (intro) |
-| 0:30–1:50 | Live demo, 11 key presses | Pitch view, steps 2–11 |
-| 1:50–2:10 | Why you can trust it | Pitch view, last step (workflow on the right) |
-| 2:10–2:45 | Business and go-to-market | 1–2 slides |
-| 2:45–3:00 | The ask and close | Closing slide |
+| 0:00–0:35 | **1. The problem** (Challenge 1 + Challenge 3) | Demo, step 1 |
+| 0:35–1:55 | **2. Our solution, live** (12 key presses) | Demo, steps 1–12 |
+| 1:55–2:10 | **3. Why you can trust it** | Demo, last step (workflow on the right) |
+| 2:10–2:45 | **4. Business** | 1–2 slides |
+| 2:45–3:00 | **5. Closing** | Closing slide |
+
+Tip: two people. One speaks, one presses the keys, so the speaker never looks down.
 
 ---
 
-## 0:00–0:30 · The problem
+## 1. The problem · 0:00–0:35
 
 > **Would you trust an AI with your health?** *(pause)* Not if it's just confident.
 >
-> Frau Weber, 72, heart patient. Her medicines live in four places: her prescription, her pharmacy, her blood tests, and a box in her handbag her doctor has never seen.
+> Here is what a doctor deals with every day. Older heart patients take five to ten medicines, and they don't
+> know the names. They say "*the red one… and the white one*". The pharmacy switches the maker and the pill
+> looks different. A painkiller from another doctor never makes it onto the list, because "it's only for the pain".
 >
-> When she says "*I take the white one*", a confident AI would guess. A wrong guess can harm her kidneys.
+> The information is all there: the prescription, the pharmacy, the blood tests, the official leaflets. It's
+> just scattered. Healthcare doesn't lack data. **It lacks connected intelligence you can trust.**
 >
-> Healthcare doesn't lack data. It lacks **connected intelligence you can trust**.
->
-> **MedGuard** connects all four, and when it isn't sure, it doesn't guess. **It asks.**
+> That's **MedGuard**: a second pair of ears in the consultation room. It connects the data, and when it isn't
+> sure, it doesn't guess. **It asks.**
 
-*(Step 1 is on screen: the intro card.)*
-
-**Alternative openings** if the team prefers:
-- *Question to the room:* "Hands up if you'd let an AI decide your grandmother's medication. *(pause)* Nobody. Good. Now: would you let it help her doctor ask the right question? That's MedGuard."
-- *Exasol's own contrast:* "'Everything looks normal.' That's what a confident AI says. 'Here's the evidence. One thing is unclear. Please ask her.' That's what a trustworthy AI says. MedGuard is the second one."
+*(Step 1 is already on screen.)*
 
 ---
 
-## 0:30–1:50 · Demo (one key press per line)
+## 2. Our solution, live · 0:35–1:55
 
-| Press | Step | Say |
+About 6–7 seconds per press. Say the line, then press.
+
+| Key | Step | Say |
 |---|---|---|
-| → | 2 · dizziness | "Frau Weber mentions she gets dizzy. MedGuard knows two of her tablets lower blood pressure, and **suggests** a standing blood-pressure check. It doesn't decide; it suggests." |
-| → | 3 · "the white one" | "Here's the hard part. *The white one* could be **two** of her medicines. MedGuard doesn't guess. It shows both, highlights what tells them apart, and suggests **one** question: round or oval?" |
-| → | 4 · "oval, with a line" | "Her answer moves it to 91 percent. Still not certain, so it suggests one more question. *(Optional: click **More questions** to show the alternatives.)*" |
-| → | 5 · "with my coffee" | "Now it all matches. And only Dr. Vogel marks it as metoprolol." |
-| → | 6 · water tablet | "She admits she skips her water tablet sometimes. MedGuard suggests asking how often…" |
-| → | 7 · "twice a week" | "…and writes it to her record." |
-| → | 8 · knee tablets | "Then, almost in passing: tablets for her knee. **Not on her prescription.** And MedGuard notices they look exactly like her water tablet." |
-| → | 9 · "Ibuprofen 400" | "She has the box in her bag: ibuprofen." |
-| → | 10 · the check | "MedGuard checks it against her other medicines, the official leaflet and her blood results. Her kidney function has been falling, and the leaflet warns about exactly this combination. It **suggests discussing it**, with the source quoted word for word." |
-| → | 11 · decision | "Dr. Vogel decides. Prescription updated, kidney test ordered, every suggestion and decision saved." |
+| (on screen) | 1 · start | "Frau Weber, 72, routine heart check-up. MedGuard listens. Only the doctor sees what it says." |
+| → | 2 · dizzy | "She mentions dizziness. Two of her tablets lower blood pressure, so MedGuard **suggests** a quick check. It suggests; it doesn't decide." |
+| → | 3 · "the white one" | "Now the hard part. *The white one* could be **two** of her medicines. MedGuard shows both, highlights the difference, and suggests **one** question: round or oval?" |
+| → | 4 · "oval, with a line" | "91 percent. Still not certain, so it suggests one more question." |
+| → | 5 · "with my coffee" | "Now everything matches, and **Dr. Vogel** marks it as metoprolol." |
+| → | 6 · water tablet | "She admits she sometimes skips her water tablet…" |
+| → | 7 · "twice a week" | "…and it goes into her record." |
+| → | 8 · knee tablets | "Then, in passing: tablets for her knee. **Not on her prescription.** And they look just like her water tablet." |
+| → | 9 · "Ibuprofen 400" | "The box is in her bag: ibuprofen." |
+| → | 10 · the check | "MedGuard checks it against her medicines, the official leaflet and her blood results. Her kidney function is falling, and the leaflet warns about exactly this combination. It **suggests discussing it**, with the source quoted word for word." |
+| → | 11 · decision | "Dr. Vogel talks to her. MedGuard offers the paperwork: pause the painkiller, order a kidney test." |
+| → | 12 · final report | "Everything from the visit lands in one report. The doctor reviews it, unticks anything that shouldn't go in, and signs." *(Click **Sign report**.)* |
 
-**Pace:** about 8 seconds per press. If you're running late, skip the "More questions" click at step 4.
-
----
-
-## 1:50–2:10 · Why you can trust it
-
-*(Point at the workflow on the right.)*
-
-> Three rules:
->
-> **It shows its evidence.** Every suggestion comes from her record, the pill database, her lab results or the official leaflet, and you can see which.
->
-> **It asks; it doesn't decide.** When it isn't sure, it suggests a question. The doctor always makes the call.
->
-> **Your data stays put.** Everything is joined in **Exasol**, in one query, with no copying patient data around. The AI only writes the wording.
+If you're running late, skip steps 6 and 7 with two quick presses and no talking.
 
 ---
 
-## 2:10–2:45 · Business and go-to-market
+## 3. Why you can trust it · 1:55–2:10
 
-> **Who pays:** GP practices and cardiology outpatient clinics, as a subscription per doctor: [price, e.g. €X per month].
+*(Point at the dark panel on the right.)*
+
+> Three rules. **It shows its evidence:** every suggestion comes from her record, the pill database, her blood
+> tests or the official leaflet. **It asks instead of deciding:** the doctor makes every call. And **the data
+> stays put:** everything is joined in **Exasol** in one query. The AI only writes the wording.
+
+---
+
+## 4. Business · 2:10–2:45
+
+*(Slide: who pays · why now · three steps.)*
+
+> **Who pays:** GP practices and cardiology outpatient clinics, as a monthly subscription per doctor:
+> [price, e.g. €X per doctor per month].
 >
-> **Why now:** Germany's electronic patient record and e-prescriptions make medication data available for the first time. [Check the latest rollout status before the pitch.]
+> **Why now:** Germany's electronic patient record and e-prescriptions are making medication data available
+> to practices. [Check the current rollout status before the pitch.]
 >
-> **How we get in:**
+> **How we get there:**
 > 1. **Pilot** with [2–3] heart-failure practices here in the Medical Valley region.
-> 2. **Integrate** with practice management software, so it runs inside the tools doctors already use.
-> 3. **Expand** to pharmacies and insurers, who carry the cost of avoidable hospital stays caused by medication errors.
+> 2. **Integrate** into the practice software doctors already use, so there's no extra screen.
+> 3. **Expand** to pharmacies and health insurers, who carry the cost of hospital stays caused by medication errors.
 >
-> **Regulation:** decision-support software for a specific patient is likely a medical device under the EU MDR. We start with a supervised pilot and build the certification path from day one.
-
-*(Slide: three steps, pilot → integrate → expand.)*
+> **Regulation:** decision-support software for a specific patient is likely a medical device under the EU MDR.
+> We start with a supervised pilot and build the certification path from day one.
 
 ---
 
-## 2:45–3:00 · The ask and close
+## 5. Closing · 2:45–3:00
 
-> We're looking for **[pilot practices / clinical partners / mentors in regulation]**.
+> We're looking for **[pilot practices / clinical partners / help with regulation]**.
 >
-> So: would you trust an AI with your health? You can trust this one, because it shows its evidence, says when it isn't sure, and leaves the decision to your doctor.
+> So: would you trust an AI with your health? You can trust this one, because it shows its evidence, says when
+> it isn't sure, and leaves the decision to your doctor.
 >
 > Thank you.
 
@@ -94,11 +99,20 @@ About 400 spoken words at a calm pace. Times are targets, not limits. Text in [b
 
 ## Before the pitch
 
-- **Rehearse the 11 presses twice** with a timer. The demo must fit in 80 seconds.
-- **Click the page once** before you start, so the keys and the clicker respond.
-- **Facts to check and fill in:** the price, the ePA/e-prescription status, and the number of pilot practices. Don't present a number nobody has checked.
-- **If the demo breaks:** say "let me show you the key moment", jump to step 3 with the arrow keys, and narrate the two candidates.
-- **Likely questions from judges:**
-  - *"What if she can't describe the pill and doesn't have it with her?"* → Photo line-up on screen, pharmacy history, or save it as "described, not verified" and follow up. The safety check still runs, because it works on the ingredient.
-  - *"Isn't this a medical device?"* → Yes, likely; see the regulation line above.
-  - *"Where does the data come from?"* → The patient record, lab results, a pill-appearance database and the official leaflets, all joined in Exasol.
+- **Rehearse with a timer, twice.** The demo part must fit in 80 seconds.
+- **Open the demo full screen** and click it once, so the keys and the clicker respond. Press **R** to start
+  from step 1.
+- **Fill in every [bracket].** Don't present a number nobody has checked.
+- **If the demo breaks:** say "let me show you the key moment", press → to step 3, and talk over the two
+  candidates.
+
+### Likely questions
+
+- *"What if she can't describe the pill and doesn't have it with her?"* → MedGuard shows the photos so she can
+  point, checks the pharmacy history, or saves it as "described, not verified" for follow-up. The safety check
+  still runs, because it works on the ingredient, not the exact product.
+- *"Same medicine from two different companies?"* → MedGuard knows every maker's version and how each one looks,
+  and suggests the question that tells them apart.
+- *"Isn't this a medical device?"* → Likely, yes. See the regulation line in the business part.
+- *"Where does the data come from?"* → The patient record, lab results, a pill-appearance database and the
+  official leaflets, all joined in Exasol.
